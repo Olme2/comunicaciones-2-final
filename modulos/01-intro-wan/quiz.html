@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 1 · Introducción a redes WAN — Quiz</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --card:#ffffff; --text:#1b2531; --muted:#6a7685; --border:#e4e8ee;
+    --accent:#2e6fb0; --accent-soft:#e9f1f9; --ok:#1f8a4c; --ok-bg:#e9f7ef; --ok-bd:#9fd9b6;
+    --no:#c0392b; --no-bg:#fcebea; --no-bd:#eeb4ae; --warn:#b8860b;
+    --shadow:0 1px 3px rgba(20,30,45,.06),0 1px 2px rgba(20,30,45,.04);
+  }
+  html.dark{
+    --bg:#0f141a; --card:#19212b; --text:#e6ebf1; --muted:#93a1b0; --border:#2a3542;
+    --accent:#5fa8e0; --accent-soft:#1d2c3a; --ok:#54c483; --ok-bg:#142a1e; --ok-bd:#2f6b47;
+    --no:#e06a5f; --no-bg:#2c1a19; --no-bd:#6b332f; --warn:#d6a94a;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;font-size:16px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:var(--accent-soft);color:var(--accent);padding:.05em .35em;border-radius:5px;font-size:.86em;font-family:ui-monospace,Menlo,monospace}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:780px;margin:0 auto}
+  .htop .lbl{font-size:.72rem;color:var(--muted)}
+  .htop h1{font-size:1.02rem;margin:1px 0 0;font-weight:700;letter-spacing:-.01em}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+  #shufBtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+  .stats{max-width:780px;margin:11px auto 0;display:flex;align-items:center;gap:12px}
+  .progress{flex:1;height:9px;background:var(--border);border-radius:99px;overflow:hidden}
+  #bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#5ac8a8));border-radius:99px;transition:width .35s ease}
+  #score{font-size:.8rem;white-space:nowrap}
+  #score b{color:var(--ok)} #score .pct{font-weight:800;color:var(--accent);margin-left:3px}
+
+  main{max-width:780px;margin:0 auto;padding:14px}
+  .intro{font-size:.84rem;color:var(--muted);margin:2px 4px 14px;line-height:1.5}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;margin-bottom:12px;box-shadow:var(--shadow);border-left:4px solid var(--border)}
+  .card.cok{border-left-color:var(--ok)} .card.cno{border-left-color:var(--no)}
+  .qhead{display:flex;gap:8px;align-items:center;margin-bottom:9px;flex-wrap:wrap}
+  .badge{font-size:.66rem;font-weight:700;padding:3px 8px;border-radius:7px;background:var(--accent-soft);color:var(--accent);font-family:ui-monospace,Menlo,monospace}
+  .badge.ty{background:transparent;border:1px solid var(--border);color:var(--muted)}
+  .qprompt{font-size:1rem;line-height:1.5;margin-bottom:12px;font-weight:500}
+
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opt{width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--border);color:var(--text);border-radius:11px;padding:11px 13px;font-size:.94rem;line-height:1.4;cursor:pointer;display:flex;align-items:center;gap:11px;min-height:48px;transition:border-color .12s,background .12s;font-family:inherit}
+  .opts.vf .opt{justify-content:center;font-weight:700}
+  @media(hover:hover){.opt:not(.locked):hover{border-color:var(--accent);background:var(--accent-soft)}}
+  .okey{flex:none;width:25px;height:25px;border-radius:50%;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:var(--muted)}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .okey{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .opt.ok{border-color:var(--ok-bd);background:var(--ok-bg)} .opt.ok .okey{background:var(--ok);color:#fff;border-color:var(--ok)}
+  .opt.no{border-color:var(--no-bd);background:var(--no-bg)} .opt.no .okey{background:var(--no);color:#fff;border-color:var(--no)}
+  .opt.miss{border-color:var(--ok-bd);border-style:dashed}
+  .opt.locked{cursor:default}
+
+  .btn{background:var(--accent);color:#fff;border:none;border-radius:11px;padding:10px 15px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px}
+  .btn:disabled{opacity:.5;cursor:default}
+  .fb{margin-top:11px;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px}
+  .fb.good{color:var(--ok)} .fb.bad{color:var(--no)}
+  .expl{margin-top:9px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;font-size:.88rem;line-height:1.5}
+
+  .result{display:none;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:12px;box-shadow:var(--shadow);text-align:center}
+  .result.show{display:block}
+  .result .big{font-size:3rem;font-weight:800;line-height:1;margin:6px 0}
+  .result p{color:var(--muted);font-size:.9rem;margin:6px 0 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 1 · Quiz</span><h1>Introducción a redes WAN</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <button class="iconbtn" id="shufBtn" title="Mezclar preguntas">⤨ Mezclar</button>
+      <button class="iconbtn" id="resetBtn" title="Reiniciar quiz">↺ Reiniciar</button>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="progress"><div id="bar"></div></div>
+    <span id="score">0/20 · <b>0</b> correctas<span class="pct">0%</span></span>
+  </div>
+</header>
+
+<main>
+  <p class="intro">20 preguntas estilo cátedra sobre el Módulo 1 (base: Quiz 1 real + TP1 + extras). Respondé y recibí la corrección al toque, con la explicación. Rehacelo cuantas veces quieras — <b>Reiniciar</b> lo deja en blanco y <b>Mezclar</b> cambia el orden.</p>
+  <div class="result" id="result"></div>
+  <div id="quiz"></div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  var QUESTIONS = [
+    {id:1,type:"single",prompt:"En el contexto de redes WAN, un PoP (Point of Presence) es:",
+     opts:[{t:"Un nodo físico donde un ISP o carrier tiene equipos para dar acceso a su red",ok:true},
+           {t:"Una técnica de multiplexión usada en conmutación de circuitos"},
+           {t:"Un protocolo de enrutamiento entre sistemas autónomos"},
+           {t:"Una unidad modular de cómputo dentro de un datacenter"}],
+     expl:"El PoP es el punto físico de acceso a la red del proveedor: aloja routers, switches y equipos de seguridad, y suele interconectar con otros ISP (peering)."},
+
+    {id:2,type:"single",prompt:"En infraestructura de datacenter, un PoD (Point of Delivery) se refiere a:",
+     opts:[{t:"Una unidad modular de cómputo, red y almacenamiento dentro de un datacenter",ok:true},
+           {t:"El punto físico donde se cruzan diferentes carriers internacionales"},
+           {t:"El servidor dedicado a la conmutación de paquetes"},
+           {t:"Un tipo de protocolo para multiplexión de datos"}],
+     expl:"El PoD agrupa cómputo + almacenamiento + red + energía en un bloque estandarizado para escalar el datacenter de forma ordenada. Ojo: no confundir con PoP."},
+
+    {id:3,type:"single",prompt:"El programa Open Connect de Netflix consiste en:",
+     opts:[{t:"Colocar servidores de contenido (caché) dentro de los ISP locales para acercar el video al usuario",ok:true},
+           {t:"Un protocolo de ruteo propietario entre datacenters de Netflix"},
+           {t:"Una red de fibra troncal exclusiva que reemplaza a los IXP"},
+           {t:"Un estándar de compresión de video para redes móviles"}],
+     expl:"Es una CDN: pone cachés dentro de los ISP para reducir el tráfico internacional y mejorar la experiencia. Google Global Cache sigue la misma idea."},
+
+    {id:4,type:"single",prompt:"¿Cuál es el objetivo principal de un IXP (Internet Exchange Point)?",
+     opts:[{t:"Que los ISP intercambien tráfico manteniéndolo local, reduciendo costos y latencia",ok:true},
+           {t:"Asignar direcciones IP públicas a los abonados"},
+           {t:"Multiplexar canales de voz sobre una misma fibra"},
+           {t:"Cifrar el tráfico entre sedes de una empresa"}],
+     expl:"El IXP evita el tromboning (que el tráfico entre dos redes locales salga a otro país y vuelva), abaratando el tránsito y bajando el delay."},
+
+    {id:5,type:"single",prompt:"El equipo del lado del proveedor que adapta la señal del usuario al medio de la WAN es el:",
+     opts:[{t:"DCE (Data Circuit-terminating Equipment)",ok:true},
+           {t:"DTE (Data Terminal Equipment)"},
+           {t:"CPE (Customer Premises Equipment)"},
+           {t:"CO (Central Office)"}],
+     expl:"El DCE (módem, CSU/DSU) adapta la señal del DTE del usuario al medio de transmisión de la red del proveedor."},
+
+    {id:6,type:"vf",prompt:"El DTE (Data Terminal Equipment) es el equipo del proveedor de servicios.",
+     opts:[{t:"Verdadero"},{t:"Falso",ok:true}],
+     expl:"Falso. El DTE es el equipo del usuario final (router, PC). El del proveedor es el DCE."},
+
+    {id:7,type:"multi",prompt:"¿Cuáles de los siguientes son estándares de la capa física de una WAN? (múltiple)",
+     opts:[{t:"V.35",ok:true},{t:"X.21",ok:true},{t:"EIA/TIA-232",ok:true},
+           {t:"PPP"},{t:"MPLS"}],
+     expl:"V.35, X.21 y EIA/TIA-232 (además de EIA/TIA-449/530 y 612/613-HSSI) son de capa física. PPP y MPLS son de capa de enlace."},
+
+    {id:8,type:"single",prompt:"¿Qué protocolo de capa de enlace se usa típicamente en un enlace punto a punto dedicado?",
+     opts:[{t:"HDLC o PPP",ok:true},{t:"ATM"},{t:"ISDN"},{t:"DWDM"}],
+     expl:"En el punto a punto dedicado corren HDLC (Cisco) o PPP. ATM/MPLS son para paquetes, ISDN para circuitos, y DWDM es transporte óptico (no un protocolo de enlace)."},
+
+    {id:9,type:"single",prompt:"El ancho de banda de un enlace E1 es:",
+     opts:[{t:"2.048 Mbps",ok:true},{t:"1.544 Mbps"},{t:"64 kbps"},{t:"34 Mbps"}],
+     expl:"E1 = 2.048 Mbps (32 canales de 64 kbps). El de 1.544 Mbps es el T1 (norteamericano)."},
+
+    {id:10,type:"single",prompt:"En ISDN, el acceso básico BRI está compuesto por:",
+     opts:[{t:"2 canales B de 64 kbps + 1 canal D de 16 kbps",ok:true},
+           {t:"30 canales B de 64 kbps + 1 canal D de 64 kbps"},
+           {t:"24 canales de 64 kbps"},
+           {t:"1 canal de 2.048 Mbps"}],
+     expl:"BRI = 2B(64k) + 1D(16k). La opción de 30B + 1D(64k) es el PRI (primario)."},
+
+    {id:11,type:"single",prompt:"La celda de ATM tiene un tamaño fijo de:",
+     opts:[{t:"53 bytes",ok:true},{t:"48 bytes"},{t:"64 bytes"},{t:"Tamaño variable"}],
+     expl:"La celda ATM es de 53 bytes (5 de cabecera + 48 de payload)."},
+
+    {id:12,type:"vf",prompt:"En conmutación de circuitos, el camino queda reservado durante toda la sesión aunque no haya tráfico circulando.",
+     opts:[{t:"Verdadero",ok:true},{t:"Falso"}],
+     expl:"Verdadero. Esa reserva garantiza calidad y retardo constante, pero es ineficiente cuando no hay datos que enviar."},
+
+    {id:13,type:"single",prompt:"¿Cuál es una ventaja de la conmutación de paquetes frente a la de circuitos?",
+     opts:[{t:"Uso más eficiente del ancho de banda",ok:true},
+           {t:"Retardo siempre constante"},
+           {t:"Camino dedicado garantizado"},
+           {t:"Imposibilidad de pérdida de paquetes"}],
+     expl:"Los paquetes comparten los enlaces, así que aprovechan mejor el ancho de banda. A cambio, el retardo es variable y puede haber pérdida."},
+
+    {id:14,type:"single",prompt:"Los dos modos de conmutación de paquetes son:",
+     opts:[{t:"Datagrama y circuito virtual",ok:true},
+           {t:"Simplex y dúplex"},
+           {t:"Síncrono y asíncrono"},
+           {t:"Unicast y broadcast"}],
+     expl:"Datagrama: cada paquete se rutea por separado. Circuito virtual: se establece una ruta previa que siguen todos los paquetes."},
+
+    {id:15,type:"single",prompt:"El equipo ubicado en la central telefónica que concentra las líneas DSL de los abonados se llama:",
+     opts:[{t:"DSLAM",ok:true},{t:"CSU/DSU"},{t:"DSU"},{t:"PoP"}],
+     expl:"El DSLAM (DSL Access Multiplexer) concentra las líneas DSL en la central; en el cliente está el módem DSL."},
+
+    {id:16,type:"vf",prompt:"WiMAX (IEEE 802.16) puede operar sin línea de vista directa y alcanzar hasta unos 50 km.",
+     opts:[{t:"Verdadero",ok:true},{t:"Falso"}],
+     expl:"Verdadero. WiMAX es un acceso metropolitano inalámbrico con mayor alcance que WiFi y tolerancia a la falta de línea de vista."},
+
+    {id:17,type:"single",prompt:"DWDM (Dense Wavelength Division Multiplexing) permite:",
+     opts:[{t:"Transmitir múltiples señales ópticas en distintas longitudes de onda por una misma fibra",ok:true},
+           {t:"Dividir el tiempo en ranuras asignadas a cada canal"},
+           {t:"Asignar direcciones IP en forma dinámica"},
+           {t:"Cifrar el tráfico de extremo a extremo"}],
+     expl:"Cada canal viaja en una longitud de onda (λ) distinta por la misma fibra monomodo, multiplicando la capacidad hasta el orden de los Tbps."},
+
+    {id:18,type:"single",prompt:"Una VPN sitio-a-sitio:",
+     opts:[{t:"Interconecta sedes corporativas de forma segura sobre infraestructura pública (Internet o MPLS)",ok:true},
+           {t:"Da acceso a un único teletrabajador desde su notebook"},
+           {t:"Reemplaza al DSLAM en la central"},
+           {t:"Es un protocolo de capa física"}],
+     expl:"La VPN sitio-a-sitio une redes de distintas sedes mediante gateways que tunelizan el tráfico (IPsec o MPLS VPN). La de acceso remoto es la del usuario individual."},
+
+    {id:19,type:"vf",prompt:"PoP y PoD son dos nombres para el mismo concepto.",
+     opts:[{t:"Verdadero"},{t:"Falso",ok:true}],
+     expl:"Falso. PoP = punto de acceso físico del proveedor a la red. PoD = módulo autónomo dentro de un datacenter. Son cosas distintas."},
+
+    {id:20,type:"multi",prompt:"¿Cuáles de las siguientes corresponden a infraestructura WAN PÚBLICA (accesos)? (múltiple)",
+     opts:[{t:"DSL",ok:true},{t:"Cable módem",ok:true},{t:"WiMAX",ok:true},
+           {t:"Líneas alquiladas E1"},{t:"ISDN"}],
+     expl:"DSL, cable módem y WiMAX son accesos públicos. Las líneas alquiladas (E1) e ISDN son infraestructura WAN privada."}
+  ];
+
+  var order=QUESTIONS.map(function(_,i){return i;});
+  var state={}; // id -> {answered, correct}
+  var shuffle=false;
+
+  function shuf(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+  function letter(i){ return String.fromCharCode(65+i); }
+
+  var quiz=document.getElementById("quiz");
+
+  function build(){
+    quiz.innerHTML=""; state={};
+    document.getElementById("result").className="result";
+    order.forEach(function(qi){
+      var q=QUESTIONS[qi];
+      var card=document.createElement("div"); card.className="card"; card.id="card-"+q.id;
+      var tyLabel=q.type==="multi"?"Selección múltiple":(q.type==="vf"?"Verdadero / Falso":"Opción única");
+      var head='<div class="qhead"><span class="badge">Q'+q.id+'</span><span class="badge ty">'+tyLabel+'</span></div>';
+      card.innerHTML=head+'<div class="qprompt">'+q.prompt+'</div>';
+      var opts=document.createElement("div"); opts.className="opts"+(q.type==="vf"?" vf":"");
+      q.opts.forEach(function(o,oi){
+        var b=document.createElement("button"); b.className="opt"; b.type="button";
+        b.innerHTML=(q.type==="vf"?"":'<span class="okey">'+letter(oi)+'</span>')+'<span>'+o.t+'</span>';
+        b.addEventListener("click",function(){ onOpt(q,oi,opts,card,b); });
+        opts.appendChild(b);
+      });
+      card.appendChild(opts);
+      if(q.type==="multi"){
+        var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Comprobar";
+        btn.addEventListener("click",function(){ checkMulti(q,opts,card,btn); });
+        card.appendChild(btn);
+      }
+      quiz.appendChild(card);
+    });
+    updateStats();
+  }
+
+  function onOpt(q,oi,opts,card,btn){
+    if(state[q.id]) return;                 // ya respondida
+    if(q.type==="multi"){ btn.classList.toggle("sel"); return; }  // multi: solo togglear
+    lockSingle(q,oi,opts);                  // single/vf: evaluar al instante
+  }
+
+  function lockSingle(q,chosen,opts){
+    var kids=opts.querySelectorAll(".opt"); var correct=false;
+    kids.forEach(function(k,ki){
+      k.classList.add("locked");
+      if(q.opts[ki].ok) k.classList.add("ok");
+      if(ki===chosen && !q.opts[ki].ok) k.classList.add("no");
+      if(ki===chosen && q.opts[ki].ok) correct=true;
+    });
+    finish(q,opts.parentNode,correct);
+  }
+
+  function checkMulti(q,opts,card,btn){
+    if(state[q.id]) return;
+    var kids=opts.querySelectorAll(".opt"); var allCorrect=true;
+    kids.forEach(function(k,ki){
+      var sel=k.classList.contains("sel"); var ok=!!q.opts[ki].ok;
+      k.classList.add("locked");
+      if(ok && sel) k.classList.add("ok");
+      else if(ok && !sel){ k.classList.add("miss"); allCorrect=false; }
+      else if(!ok && sel){ k.classList.add("no"); allCorrect=false; }
+    });
+    btn.disabled=true;
+    finish(q,card,allCorrect);
+  }
+
+  function finish(q,card,correct){
+    state[q.id]={answered:true,correct:correct};
+    card.classList.add(correct?"cok":"cno");
+    var fb=document.createElement("div"); fb.className="fb "+(correct?"good":"bad");
+    fb.textContent=correct?"✓ Correcto":"✗ Incorrecto";
+    card.appendChild(fb);
+    var ex=document.createElement("div"); ex.className="expl"; ex.innerHTML="<b>Por qué:</b> "+q.expl;
+    card.appendChild(ex);
+    updateStats();
+  }
+
+  function updateStats(){
+    var ans=0,cor=0;
+    Object.keys(state).forEach(function(k){ ans++; if(state[k].correct)cor++; });
+    var total=QUESTIONS.length;
+    document.getElementById("bar").style.width=Math.round(ans/total*100)+"%";
+    var pct=ans?Math.round(cor/total*100):0;
+    document.getElementById("score").innerHTML=ans+"/"+total+" · <b>"+cor+"</b> correctas<span class='pct'>"+pct+"%</span>";
+    if(ans===total) showResult(cor,total);
+  }
+
+  function showResult(cor,total){
+    var pct=Math.round(cor/total*100);
+    var msg = pct>=90?"Excelente, dominado.":pct>=70?"Bien, repasá los que fallaste.":pct>=50?"Aprobado justo — conviene reforzar.":"A repasar el módulo con el resumen.";
+    var r=document.getElementById("result");
+    r.className="result show";
+    r.innerHTML='<div style="font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Resultado</div>'+
+      '<div class="big" style="color:'+(pct>=70?"var(--ok)":pct>=50?"var(--warn)":"var(--no)")+'">'+pct+'%</div>'+
+      '<div style="font-weight:700">'+cor+' de '+total+' correctas</div><p>'+msg+'</p>';
+    r.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+
+  // controles
+  document.getElementById("resetBtn").addEventListener("click",build);
+  document.getElementById("shufBtn").addEventListener("click",function(){
+    shuffle=!shuffle; this.classList.toggle("on",shuffle);
+    order = shuffle ? shuf(QUESTIONS.map(function(_,i){return i;})) : QUESTIONS.map(function(_,i){return i;});
+    build();
+  });
+  var mem={};
+  var st; try{ st=localStorage.getItem("comii-theme"); }catch(e){ st=mem["comii-theme"]; }
+  if(st==="dark" || (!st && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+  document.getElementById("themeBtn").addEventListener("click",function(){
+    document.documentElement.classList.toggle("dark");
+    var v=document.documentElement.classList.contains("dark")?"dark":"light";
+    try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+  });
+
+  build();
+})();
+</script>
+</body>
+</html>

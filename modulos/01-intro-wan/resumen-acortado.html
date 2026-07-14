@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 1 · Introducción a redes WAN — Resumen acortado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f6f1; --card:#ffffff; --ink:#2b2b2b; --muted:#6d6a60; --border:#e7e2d5;
+    --accent:#2e6fb0;
+    --hl-pink:#ffc6cd; --hl-green:#c6ecca;
+    --key:#c78a00; --key-bg:#fff4d4; --key-bd:#ecd58c;
+    --shadow:0 1px 3px rgba(40,35,20,.06),0 1px 2px rgba(40,35,20,.04);
+    --font:"Comic Sans MS","Comic Neue","Chalkboard SE","Segoe Print",cursive;
+  }
+  html.dark{
+    --bg:#13151a; --card:#1b1f27; --ink:#e9e5d9; --muted:#9b988c; --border:#2c303a;
+    --accent:#5fa8e0;
+    --key:#e6bd52; --key-bg:#2b2410; --key-bd:#4a3d1c;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.72;font-size:17px;padding-bottom:env(safe-area-inset-bottom)}
+  mark{color:#2b2b2b;padding:.02em .16em;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  mark.p{background:var(--hl-pink)}
+  mark.s{background:var(--hl-green)}
+  u.w{text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:820px;margin:0 auto}
+  .htop .lbl{font-size:.74rem;color:var(--muted)}
+  .htop h1{font-size:1.06rem;margin:1px 0 0;font-weight:700}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--ink);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;font-family:var(--font)}
+
+  .wrap{max-width:820px;margin:0 auto;padding:18px 18px 44px}
+  .meta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+  .tag{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--muted)}
+  .tag.freq{color:var(--key);border-color:var(--key-bd);background:var(--key-bg)}
+
+  .lead{color:var(--muted);font-size:1rem;margin:2px 0 18px}
+  .lead b{color:var(--ink)}
+
+  h2.sec{font-size:1.24rem;margin:26px 0 6px;display:inline-block;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:5px}
+  p{margin:8px 0}
+
+  .idea{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;margin:10px 0 4px;box-shadow:var(--shadow)}
+
+  h2.big{font-size:1rem;color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px;margin:34px 0 4px}
+  .subt{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+
+  .punteros{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:620px){.punteros{grid-template-columns:1fr}}
+  details.punt{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:11px;padding:11px 14px;box-shadow:var(--shadow)}
+  details.punt summary{font-weight:700;cursor:pointer;list-style:none;outline:none;display:flex;align-items:flex-start;gap:7px}
+  details.punt summary::-webkit-details-marker{display:none}
+  details.punt summary::before{content:"▸";color:var(--accent);flex:none}
+  details.punt[open] summary::before{content:"▾"}
+  details.punt summary:focus-visible{text-decoration:underline}
+  details.punt .exp{margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);font-size:.92rem;color:var(--ink);line-height:1.6}
+  .hint{font-size:.82rem;color:var(--muted);margin:8px 2px 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 1 · Resumen acortado</span><h1>Introducción a redes WAN</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <a class="iconbtn" href="resumen-principal.html">Principal</a>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="meta">
+    <span class="tag freq">Frecuencia: media</span>
+    <span class="tag">Para leer y absorber · + oral</span>
+  </div>
+
+  <p class="lead">Versión corta para <b>entender los conceptos</b> y sus conexiones, sin el detalle numérico (eso está en el principal). Abajo tenés los <b>punteros para el oral</b>: leé el gatillo, expandilo de memoria y recién ahí abrilo para chequear si te salió completo.</p>
+
+  <h2 class="sec">La idea en cinco trazos</h2>
+
+  <div class="idea"><b>1. Qué es.</b> Una <mark class="p">WAN</mark> transporta mensajes entre dispositivos de usuario a gran distancia usando <mark class="s">conmutación</mark>. No los conecta directo: los une a través de una malla de <b>nodos y enlaces redundantes</b>. El último tramo, del nodo al usuario, mide 1–2 km.</div>
+
+  <div class="idea"><b>2. Quién es quién.</b> La frontera clave es <mark class="p">DTE ↔ DCE</mark>: el <mark class="s">DTE</mark> es el equipo del usuario (router); el <mark class="s">DCE</mark> es el del proveedor que adapta la señal al medio (módem, CSU/DSU). El camino sigue por el bucle local hasta la <mark class="s">CO</mark> y de ahí a la nube WAN.</div>
+
+  <div class="idea"><b>3. Cómo se transmite.</b> Dos filosofías: <mark class="p">circuitos</mark> (camino dedicado, calidad garantizada pero ineficiente si no hay tráfico) vs <mark class="p">paquetes</mark> (eficiente y flexible, pero con retardo variable). Los paquetes tienen dos modos: <b>datagrama</b> y <b>circuito virtual</b>.</div>
+
+  <div class="idea"><b>4. Con qué se arma.</b> <mark class="s">Privada</mark> (líneas alquiladas E1/T1, ISDN, ATM, Frame Relay, MPLS, Metro Ethernet, VSAT) y <mark class="s">pública</mark> (DSL, cable, WiFi/WiMAX, satelital, móvil 3G-4G-5G, VPN). El transporte troncal va por fibra con <mark class="s">DWDM</mark>.</div>
+
+  <div class="idea"><b>5. Cómo llega a Internet.</b> <mark class="p">PoP</mark> (punto de acceso del proveedor), <mark class="p">IXP</mark> (donde los ISP intercambian tráfico local y evitan el tromboning), <mark class="p">PoD</mark> (módulo dentro de un datacenter, <u class="w">no confundir con PoP</u>) y <mark class="s">CDN</mark> (cachés cerca del usuario, como Open Connect de Netflix).</p></div>
+
+  <h2 class="big">Punteros para rendir</h2>
+  <p class="subt">Leé el gatillo → explicalo en voz alta → abrí para verificar. Si no te sale completo, volvé al resumen principal.</p>
+
+  <div class="punteros">
+    <details class="punt"><summary>WAN: función + estructura</summary><div class="exp">Transporta mensajes entre dispositivos de usuario mediante conmutación. Estructura de nodos + enlaces redundantes (confiabilidad). Enlace último nodo↔usuario: 1–2 km. Escala de cientos a millones de usuarios.</div></details>
+
+    <details class="punt"><summary>DTE vs DCE</summary><div class="exp">DTE = equipo del usuario final (router, PC). DCE = equipo del proveedor que adapta la señal al medio (módem, CSU/DSU). Entre medio: bucle local → CO (oficina central). CPE = todo lo del lado del cliente.</div></details>
+
+    <details class="punt"><summary>Estándares de capa física WAN</summary><div class="exp">Definen lo mecánico, eléctrico y funcional de la interfaz DTE–DCE: EIA/TIA-232, EIA/TIA-449/530, EIA/TIA-612/613 (HSSI), V.35 (≤2 Mbps) y X.21 (ambos UIT-T).</div></details>
+
+    <details class="punt"><summary>Estándares de capa de enlace WAN</summary><div class="exp">Según el tipo de enlace: punto a punto dedicado → HDLC/PPP; conmutado por paquetes → MPLS/ATM; conmutado por circuitos → ISDN. También Frame Relay.</div></details>
+
+    <details class="punt"><summary>Circuitos vs paquetes</summary><div class="exp">Circuitos: camino dedicado toda la sesión, calidad y retardo constante, ineficiente sin tráfico (ej: PSTN). Paquetes: se rutean por separado, eficiente y flexible, retardo variable y posible pérdida. Modos: datagrama y circuito virtual.</div></details>
+
+    <details class="punt"><summary>E1 / T1 / ISDN</summary><div class="exp">E1 = 2.048 Mbps · T1 = 1.544 Mbps · Dial-up = 56 kbps. ISDN BRI = 2×B(64k) + 1×D(16k). ISDN PRI = 30×B(64k) + 1×D(64k).</div></details>
+
+    <details class="punt"><summary>ATM</summary><div class="exp">Conmutación de celdas de tamaño fijo = 53 bytes. Integra voz, video y datos con baja latencia.</div></details>
+
+    <details class="punt"><summary>Infraestructura pública (accesos)</summary><div class="exp">DSL (par de cobre, módem DSL + DSLAM en la central) · Cable (HFC: fibra al barrio + coaxial) · WiFi · WiMAX (IEEE 802.16, ~50 km, sin línea de vista) · Satelital · Móvil 3G/4G/5G · VPN (IPsec, SSL/TLS, MPLS VPN).</div></details>
+
+    <details class="punt"><summary>DWDM</summary><div class="exp">Multiplexa varias señales ópticas, cada una en una longitud de onda distinta (λ), por una misma fibra monomodo. Llega a Tbps sin tender cables nuevos. Base del transporte troncal.</div></details>
+
+    <details class="punt"><summary>PoP vs PoD</summary><div class="exp">PoP (Point of Presence) = instalación física del proveedor donde el usuario accede a la red / Internet. PoD (Point of Delivery) = módulo autónomo dentro de un datacenter (cómputo+almacenamiento+red+energía). NO son lo mismo.</div></details>
+
+    <details class="punt"><summary>IXP + tromboning</summary><div class="exp">IXP (Internet Exchange Point) = punto neutral donde múltiples ISP intercambian tráfico. Mantiene el tráfico local, reduce costos y latencia. Tromboning = tráfico entre dos redes locales que sale a otro país y vuelve; el IXP lo evita.</div></details>
+
+    <details class="punt"><summary>CDN / Open Connect</summary><div class="exp">CDN = red de servidores que cachean contenido cerca del usuario. Open Connect (Netflix) y Google Global Cache = servidores dentro de los ISP locales para acercar el contenido y bajar el tráfico internacional.</div></details>
+
+    <details class="punt"><summary>CABASE (cifras)</summary><div class="exp">28 IXP + ruteo central, +600 miembros, 5.6 Tb de capacidad, 3.000 ASN alcanzables, 93 % de redes conectadas, 24 millones de usuarios.</div></details>
+
+    <details class="punt"><summary>Evolución de las WAN</summary><div class="exp">De redes pequeñas y aisladas → sucursales conectadas → redes convergentes (voz+datos+video) sobre MPLS y VPNs, integrando oficinas, teletrabajadores y nube.</div></details>
+  </div>
+
+  <p class="hint">Cuando puedas expandir los 14 punteros sin abrirlos, tenés el Módulo 1 listo para el oral.</p>
+</div>
+
+<script>
+  (function(){
+    var mem={};
+    var s; try{ s=localStorage.getItem("comii-theme"); }catch(e){ s=mem["comii-theme"]; }
+    if(s==="dark" || (!s && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+    document.getElementById("themeBtn").addEventListener("click",function(){
+      document.documentElement.classList.toggle("dark");
+      var v=document.documentElement.classList.contains("dark")?"dark":"light";
+      try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+    });
+  })();
+</script>
+</body>
+</html>
