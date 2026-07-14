@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Glosario de siglas · Comunicaciones II</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --card:#ffffff; --text:#1b2531; --muted:#6a7685; --border:#e4e8ee;
+    --accent:#2e6fb0; --accent-soft:#e9f1f9; --ok:#1f8a4c;
+    --shadow:0 1px 3px rgba(20,30,45,.06),0 1px 2px rgba(20,30,45,.04);
+  }
+  html.dark{
+    --bg:#0f141a; --card:#19212b; --text:#e6ebf1; --muted:#93a1b0; --border:#2a3542;
+    --accent:#5fa8e0; --accent-soft:#1d2c3a; --ok:#54c483;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55;font-size:16px;padding-bottom:env(safe-area-inset-bottom)}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:860px;margin:0 auto}
+  .htop h1{font-size:1.05rem;margin:0;font-weight:700;letter-spacing:-.01em}
+  .htop span{font-size:.72rem;color:var(--muted)}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+
+  .search{max-width:860px;margin:11px auto 0;position:relative}
+  .search input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 14px;font-size:.95rem;font-family:inherit}
+  .search input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+
+  main{max-width:860px;margin:0 auto;padding:16px}
+  .modnav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+  .modnav a{font-size:.74rem;font-weight:700;text-decoration:none;color:var(--accent);background:var(--accent-soft);border-radius:99px;padding:5px 11px}
+
+  section.mod{margin-bottom:26px;scroll-margin-top:130px}
+  .mhead{display:flex;align-items:center;gap:9px;margin:0 2px 10px;padding-bottom:7px;border-bottom:2px solid var(--border)}
+  .mhead .mn{flex:none;width:28px;height:28px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem;font-family:ui-monospace,Menlo,monospace}
+  .mhead h2{margin:0;font-size:1rem;font-weight:700}
+  .mhead .cnt{margin-left:auto;font-size:.72rem;color:var(--muted);font-weight:600}
+
+  .glist{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media(max-width:640px){.glist{grid-template-columns:1fr}}
+  .term{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 13px;box-shadow:var(--shadow)}
+  .term .sig{font-weight:800;color:var(--accent);font-family:ui-monospace,Menlo,monospace;font-size:.9rem}
+  .term .exp{font-weight:600;font-size:.86rem;margin:1px 0 3px}
+  .term .desc{font-size:.82rem;color:var(--muted);line-height:1.45}
+  .empty{display:none;text-align:center;color:var(--muted);padding:40px 20px;font-size:.9rem}
+
+  .soon{background:var(--card);border:1px dashed var(--border);border-radius:10px;padding:14px;color:var(--muted);font-size:.86rem;text-align:center}
+
+  footer{max-width:860px;margin:20px auto 34px;padding:0 16px;font-size:.72rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><h1>Glosario de siglas</h1><span>Comunicaciones II · organizado por módulo</span></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="index.html">← Centro</a>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+  <div class="search"><input type="search" id="q" placeholder="Buscar sigla o significado (ej: DSLAM, tromboning, celda ATM)…" aria-label="Buscar en el glosario"></div>
+</header>
+
+<main>
+  <nav class="modnav" id="modnav"></nav>
+
+  <section class="mod" id="mod-1">
+    <div class="mhead"><span class="mn">01</span><h2>Introducción a redes WAN</h2><span class="cnt"></span></div>
+    <div class="glist" id="list-1"></div>
+  </section>
+
+  <section class="mod" id="mod-next">
+    <div class="mhead"><span class="mn">2–10</span><h2>Módulos siguientes</h2></div>
+    <div class="soon">Las siglas de los módulos 2 a 10 se agregan a medida que avancemos con cada módulo.</div>
+  </section>
+
+  <p class="empty" id="empty">No hay coincidencias para tu búsqueda.</p>
+</main>
+
+<footer>Buscá por sigla o por palabra del significado. Volvé al <a href="index.html" style="color:var(--accent)">Centro de estudio</a>.</footer>
+
+<script>
+(function(){
+  "use strict";
+  // Datos del glosario por módulo. sig = sigla, exp = expansión, d = significado breve.
+  var GLOSSARY = {
+    1: [
+      {sig:"WAN", exp:"Wide Area Network", d:"Red de área extensa: interconecta LANs y dispositivos a grandes distancias mediante conmutación."},
+      {sig:"LAN", exp:"Local Area Network", d:"Red de área local, dentro de un edificio o campus."},
+      {sig:"MAN", exp:"Metropolitan Area Network", d:"Red de área metropolitana, escala de ciudad."},
+      {sig:"DTE", exp:"Data Terminal Equipment", d:"Dispositivo del usuario final (router, PC)."},
+      {sig:"DCE", exp:"Data Circuit-terminating Equipment", d:"Equipo del proveedor que adapta la señal del DTE al medio (módem, CSU/DSU)."},
+      {sig:"DTU", exp:"Data Transfer Unit", d:"Unidad de datos que viaja entre nodos, en bloques según el protocolo."},
+      {sig:"DCU", exp:"Data Circuit-terminating Unit", d:"Adapta la señal del DTE al medio de la WAN (interfaz eléctrica/sincronización)."},
+      {sig:"CPE", exp:"Customer Premises Equipment", d:"Equipamiento instalado en las instalaciones del cliente."},
+      {sig:"CSU/DSU", exp:"Channel Service Unit / Data Service Unit", d:"Adapta la interfaz del equipo digital a la línea del proveedor."},
+      {sig:"CO", exp:"Central Office", d:"Oficina central de la telefónica donde termina el bucle local."},
+      {sig:"ISP", exp:"Internet Service Provider", d:"Proveedor de acceso a Internet."},
+      {sig:"PSTN", exp:"Public Switched Telephone Network", d:"Red telefónica pública conmutada; ejemplo clásico de conmutación de circuitos."},
+      {sig:"PBX", exp:"Private Branch Exchange", d:"Central telefónica privada de una organización."},
+      {sig:"MUX", exp:"Multiplexor", d:"Dispositivo que combina varias señales en un mismo medio."},
+      {sig:"PoP", exp:"Point of Presence", d:"Instalación física del proveedor donde el usuario se conecta a la red / Internet."},
+      {sig:"PoD", exp:"Point of Delivery", d:"Módulo autónomo dentro de un datacenter (cómputo+almacenamiento+red+energía)."},
+      {sig:"IXP", exp:"Internet Exchange Point", d:"Punto neutral donde ISPs intercambian tráfico local; evita el tromboning."},
+      {sig:"CABASE", exp:"Cámara Argentina de Internet", d:"Opera los IXP en Argentina (28 IXP, +600 miembros, 5.6 Tb)."},
+      {sig:"ASN", exp:"Autonomous System Number", d:"Identificador de un sistema autónomo (red bajo una administración)."},
+      {sig:"CDN", exp:"Content Delivery Network", d:"Servidores que cachean contenido cerca del usuario (Open Connect, Google Global Cache)."},
+      {sig:"ENACOM", exp:"Ente Nacional de Comunicaciones", d:"Organismo regulador de telecomunicaciones en Argentina."},
+      {sig:"DWDM", exp:"Dense Wavelength Division Multiplexing", d:"Multiplexa muchas señales ópticas (distintas longitudes de onda) en una fibra; base del transporte troncal."},
+      {sig:"WDM", exp:"Wavelength Division Multiplexing", d:"Multiplexación por longitud de onda (versión general de DWDM)."},
+      {sig:"ATM", exp:"Asynchronous Transfer Mode", d:"Conmutación de celdas fijas de 53 bytes; integra voz, video y datos."},
+      {sig:"FR", exp:"Frame Relay", d:"Conmutación de tramas; tecnología WAN de paquetes (detalle en módulo 5)."},
+      {sig:"MPLS", exp:"Multi-Protocol Label Switching", d:"Conmutación por etiquetas; rápida y con QoS (módulo 5)."},
+      {sig:"ISDN / RDSI", exp:"Integrated Services Digital Network", d:"Red digital de servicios integrados. BRI (2B+D) y PRI (30B+D)."},
+      {sig:"BRI", exp:"Basic Rate Interface", d:"ISDN básico: 2 canales B de 64 kbps + 1 canal D de 16 kbps."},
+      {sig:"PRI", exp:"Primary Rate Interface", d:"ISDN primario: 30 canales B de 64 kbps + 1 canal D de 64 kbps."},
+      {sig:"DSL", exp:"Digital Subscriber Line", d:"Datos sobre el par de cobre telefónico (voz baja frecuencia, datos alta)."},
+      {sig:"ADSL", exp:"Asymmetric DSL", d:"DSL asimétrica: más velocidad de bajada que de subida."},
+      {sig:"SDSL", exp:"Symmetric DSL", d:"DSL con velocidades simétricas de subida y bajada."},
+      {sig:"VDSL", exp:"Very high bit-rate DSL", d:"DSL de alta velocidad a corta distancia."},
+      {sig:"DSLAM", exp:"DSL Access Multiplexer", d:"Equipo en la central que concentra las líneas DSL de los abonados."},
+      {sig:"HFC", exp:"Hybrid Fibre-Coaxial", d:"Arquitectura de cable: fibra hasta el barrio, coaxial el último tramo."},
+      {sig:"VSAT", exp:"Very Small Aperture Terminal", d:"Terminal satelital de antena pequeña para acceso en sitios remotos."},
+      {sig:"WiMAX", exp:"Worldwide Interoperability for Microwave Access", d:"Acceso inalámbrico metropolitano (IEEE 802.16), hasta ~50 km."},
+      {sig:"WiFi", exp:"Wireless Fidelity", d:"Acceso local inalámbrico (interiores)."},
+      {sig:"VPN", exp:"Virtual Private Network", d:"Red privada sobre infraestructura pública; acceso remoto o sitio-a-sitio."},
+      {sig:"IPsec", exp:"Internet Protocol Security", d:"Estándar de tunelización con cifrado fuerte para VPN."},
+      {sig:"SSL/TLS", exp:"Secure Sockets Layer / Transport Layer Security", d:"Cifrado para VPN por navegador y comunicaciones seguras."},
+      {sig:"QoS", exp:"Quality of Service", d:"Priorización de tráfico (voz, video) para garantizar rendimiento."},
+      {sig:"SLA", exp:"Service Level Agreement", d:"Acuerdo de nivel de servicio con el proveedor."},
+      {sig:"VoIP", exp:"Voice over IP", d:"Voz digitalizada transportada en paquetes IP."},
+      {sig:"VoD", exp:"Video on Demand", d:"Video bajo demanda, apoyado en CDNs."},
+      {sig:"E1", exp:"Enlace europeo (UIT-T)", d:"Línea de 2.048 Mbps (32 canales de 64 kbps)."},
+      {sig:"T1", exp:"Enlace norteamericano", d:"Línea de 1.544 Mbps (24 canales de 64 kbps)."},
+      {sig:"V.35", exp:"Estándar UIT-T (capa física)", d:"Interfaz de alta velocidad (≤2 Mbps) entre DTE y DCE."},
+      {sig:"X.21", exp:"Estándar UIT-T (capa física)", d:"Interfaz para enlaces WAN digitales sincronizados DTE–DCE."},
+      {sig:"EIA/TIA", exp:"Electronic/Telecommunications Industries Association", d:"Estándares de interfaz serial (232, 449) en la capa física."},
+      {sig:"HDLC", exp:"High-Level Data Link Control", d:"Protocolo base de capa de enlace."},
+      {sig:"PPP", exp:"Point-to-Point Protocol", d:"Protocolo de enlace para conexiones punto a punto."},
+      {sig:"IP", exp:"Internet Protocol", d:"Protocolo de red que direcciona y encamina paquetes (módulo 6)."},
+      {sig:"IPv4 / IPv6", exp:"Internet Protocol v4 / v6", d:"Versiones de IP: 32 bits (v4) y 128 bits (v6)."},
+      {sig:"BGP", exp:"Border Gateway Protocol", d:"Protocolo de ruteo entre sistemas autónomos en Internet (módulo 7)."},
+      {sig:"DNS", exp:"Domain Name System", d:"Traduce nombres de dominio a direcciones IP (módulo 9)."}
+    ]
+  };
+
+  var mem={};
+  var s; try{ s=localStorage.getItem("comii-theme"); }catch(e){ s=mem["comii-theme"]; }
+  if(s==="dark" || (!s && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+  document.getElementById("themeBtn").addEventListener("click",function(){
+    document.documentElement.classList.toggle("dark");
+    var v=document.documentElement.classList.contains("dark")?"dark":"light";
+    try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+  });
+
+  function esc(t){ var d=document.createElement("div"); d.textContent=t; return d.innerHTML; }
+
+  // render módulo 1
+  var list1=document.getElementById("list-1");
+  GLOSSARY[1].forEach(function(t){
+    var div=document.createElement("div"); div.className="term";
+    div.setAttribute("data-search",(t.sig+" "+t.exp+" "+t.d).toLowerCase());
+    div.innerHTML='<div class="sig">'+esc(t.sig)+'</div><div class="exp">'+esc(t.exp)+'</div><div class="desc">'+esc(t.d)+'</div>';
+    list1.appendChild(div);
+  });
+  document.querySelector('#mod-1 .cnt').textContent=GLOSSARY[1].length+" siglas";
+
+  // nav
+  document.getElementById("modnav").innerHTML='<a href="#mod-1">01 · Intro WAN</a>';
+
+  // buscador
+  var q=document.getElementById("q");
+  q.addEventListener("input",function(){
+    var v=q.value.trim().toLowerCase();
+    var terms=document.querySelectorAll(".term"), shown=0;
+    terms.forEach(function(el){
+      var match=!v || el.getAttribute("data-search").indexOf(v)>-1;
+      el.style.display=match?"":"none"; if(match)shown++;
+    });
+    document.getElementById("empty").style.display=(v && shown===0)?"block":"none";
+    document.getElementById("mod-next").style.display=v?"none":"";
+  });
+})();
+</script>
+</body>
+</html>
