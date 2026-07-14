@@ -4,121 +4,78 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Comunicaciones II · Final libre — Centro de estudio</title>
-<style>
-  :root{
-    --bg:#f5f7fa; --card:#ffffff; --text:#1b2531; --muted:#6a7685; --border:#e4e8ee;
-    --accent:#2e6fb0; --accent-soft:#e9f1f9; --ok:#1f8a4c; --ok-bg:#e9f7ef; --ok-bd:#9fd9b6;
-    --no:#c0392b; --no-bg:#fcebea; --no-bd:#eeb4ae; --warn:#b8860b;
-    --shadow:0 1px 3px rgba(20,30,45,.06),0 1px 2px rgba(20,30,45,.04);
-  }
-  html.dark{
-    --bg:#0f141a; --card:#19212b; --text:#e6ebf1; --muted:#93a1b0; --border:#2a3542;
-    --accent:#5fa8e0; --accent-soft:#1d2c3a; --ok:#54c483; --ok-bg:#142a1e; --ok-bd:#2f6b47;
-    --no:#e06a5f; --no-bg:#2c1a19; --no-bd:#6b332f; --warn:#d6a94a;
-    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;font-size:16px;padding-bottom:env(safe-area-inset-bottom)}
-  code{background:var(--accent-soft);color:var(--accent);padding:.05em .35em;border-radius:5px;font-size:.86em;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
-  a{color:inherit}
-
-  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:12px 14px}
-  .htop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;max-width:820px;margin:0 auto}
-  .title h1{font-size:1.08rem;margin:0;font-weight:700;letter-spacing:-.01em}
-  .title span{font-size:.74rem;color:var(--muted)}
-  .hbtns{display:flex;gap:8px;flex-shrink:0}
-  .iconbtn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.76rem;font-weight:600;cursor:pointer;white-space:nowrap}
-  .iconbtn:active{transform:translateY(1px)}
-
-  .stats{max-width:820px;margin:11px auto 0;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .progress{flex:1;min-width:160px;height:9px;background:var(--border);border-radius:99px;overflow:hidden}
-  #bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#5ac8a8));border-radius:99px;transition:width .35s ease}
-  #pct{font-size:.85rem;font-weight:800;color:var(--accent);white-space:nowrap}
-  .countdown{font-size:.72rem;color:var(--muted);white-space:nowrap}
-  .countdown b{color:var(--text)}
-
-  main{max-width:820px;margin:0 auto;padding:14px}
-  .hint{font-size:.74rem;color:var(--muted);margin:2px 4px 14px;line-height:1.45}
-
-  .sechead{margin:20px 4px 10px}
-  .sechead h2{margin:0;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);font-weight:800}
-  .sechead p{margin:2px 0 0;font-size:.76rem;color:var(--muted)}
-
-  .modcard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px 14px;margin-bottom:11px;box-shadow:var(--shadow);border-left:4px solid var(--border)}
-  .modcard.done{border-left-color:var(--ok)}
-  .modhead{display:flex;align-items:center;gap:10px;margin-bottom:11px}
-  .modnum{flex:none;width:30px;height:30px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;font-family:ui-monospace,Menlo,monospace}
-  .modtitle{flex:1;font-weight:700;font-size:.98rem;letter-spacing:-.01em}
-  .modtitle small{display:block;font-weight:500;font-size:.72rem;color:var(--muted);letter-spacing:0}
-  .modcount{flex:none;font-size:.72rem;font-weight:700;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:99px;padding:3px 9px}
-  .modcount.full{color:var(--ok);border-color:var(--ok-bd);background:var(--ok-bg)}
-
-  .reslinks{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:11px}
-  .reslink{font-size:.78rem;font-weight:600;text-decoration:none;padding:6px 11px;border-radius:9px;border:1px solid var(--border);background:var(--bg);color:var(--accent);display:inline-flex;align-items:center;gap:6px}
-  .reslink .dot{width:7px;height:7px;border-radius:50%;background:var(--ok)}
-  .reslink.pending{color:var(--muted);cursor:not-allowed;opacity:.7}
-  .reslink.pending .dot{background:var(--muted)}
-  @media(hover:hover){.reslink:not(.pending):hover{border-color:var(--accent);background:var(--accent-soft)}}
-
-  .steps{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-  .step{display:inline-flex;align-items:center;gap:7px;font-size:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:6px 10px;cursor:pointer;user-select:none}
-  .step input{margin:0;accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
-  .step.checked{background:var(--ok-bg);border-color:var(--ok-bd);color:var(--ok)}
-  .score{display:inline-flex;align-items:center;gap:5px;font-size:.76rem;color:var(--muted);margin-left:2px}
-  .score input{width:46px;background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:4px 6px;font-size:.78rem;font-family:inherit;text-align:center}
-  .score input:focus{outline:none;border-color:var(--accent)}
-
-  .mile{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
-  .mile:last-child{border-bottom:none}
-  .mile input.mchk{margin:0;accent-color:var(--accent);width:17px;height:17px;flex:none;cursor:pointer}
-  .mile .mlabel{flex:1;font-size:.9rem;font-weight:600}
-  .mile.checked .mlabel{color:var(--muted);text-decoration:line-through}
-  .mile .mlink{font-size:.74rem;font-weight:600;text-decoration:none;padding:5px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--accent)}
-  .mile .mlink.pending{color:var(--muted);opacity:.7;cursor:not-allowed}
-
-  footer{max-width:820px;margin:22px auto 30px;padding:0 14px;font-size:.72rem;color:var(--muted);line-height:1.5}
-</style>
+<link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
-<header>
-  <div class="htop">
-    <div class="title">
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="brand">
       <h1>Comunicaciones II · Final libre</h1>
-      <span>Centro de estudio · Ing. Informática — FACET-UNT</span>
+      <p>Centro de estudio · Ing. Informática — FACET-UNT</p>
     </div>
-    <div class="hbtns">
-      <a class="iconbtn" href="calendario.html" title="Calendario de estudio">Calendario</a>
-      <button class="iconbtn" id="themeBtn" title="Tema claro / oscuro">◐ Tema</button>
-      <button class="iconbtn" id="resetBtn" title="Borrar progreso">↺ Reset</button>
-    </div>
+    <nav class="header-actions" aria-label="Acciones">
+      <a class="btn" href="calendario.html">Calendario</a>
+      <button class="btn" id="themeBtn" type="button" aria-pressed="false">Tema claro / oscuro</button>
+      <button class="btn" id="resetBtn" type="button">Borrar progreso</button>
+    </nav>
   </div>
-  <div class="stats">
-    <div class="progress"><div id="bar"></div></div>
-    <span id="pct">0%</span>
+  <div class="container header-stats">
+    <div class="progress-track" id="barTrack" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progreso total del curso">
+      <div class="progress-fill" id="bar"></div>
+    </div>
+    <span class="progress-pct" id="pct">0%</span>
     <span class="countdown" id="cd"></span>
   </div>
 </header>
 
-<main>
-  <p class="hint" id="saveHint"></p>
+<main id="main" class="container">
+  <p class="save-hint" id="saveHint"></p>
 
-  <div class="sechead">
+  <section class="dashboard" aria-label="Resumen general">
+    <div class="stat-tile headline">
+      <span class="stat-label">Progreso total</span>
+      <span class="stat-value" id="statTotal">0%</span>
+      <span class="stat-sub" id="statTotalSub">0/0 pasos</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-label">Módulos completos</span>
+      <span class="stat-value" id="statMods">0/10</span>
+      <span class="stat-sub">de 5 pasos cada uno</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-label">Promedio de quiz</span>
+      <span class="stat-value" id="statAvg">—</span>
+      <span class="stat-sub" id="statAvgSub">sin notas cargadas</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-label">Días al examen</span>
+      <span class="stat-value" id="statDays">—</span>
+      <span class="stat-sub">núcleo listo el 31 jul</span>
+    </div>
+  </section>
+
+  <div class="section-head">
     <h2>Módulos 1–10</h2>
     <p>Ciclo por módulo: PDF → TP → resumen → quiz → punteros. Tocá cada paso al completarlo.</p>
   </div>
-  <div id="modules"></div>
+  <div class="module-grid" id="modules"></div>
 
-  <div class="sechead">
+  <div class="section-head">
     <h2>Hitos y repaso general</h2>
     <p>Parciales reales, simulacros y material de integración final.</p>
   </div>
-  <div class="modcard" id="milestones"></div>
+  <div class="milestone-panel" id="milestones"></div>
 </main>
 
-<footer>
-  El progreso se guarda solo en este navegador (localStorage). Si abrís el archivo en otra
-  compu o navegador, arranca en blanco. En la vista previa dentro de Claude no se guarda entre
-  recargas — sí lo hace cuando lo abrís desde tu repo o localmente.
+<footer class="site-footer">
+  <div class="container">
+    El progreso se guarda solo en este navegador (localStorage). Si abrís el archivo en otra
+    compu o navegador, arranca en blanco. En la vista previa dentro de Claude no se guarda entre
+    recargas — sí lo hace cuando lo abrís desde tu repo o localmente. Calendario completo en
+    <a href="calendario.html">calendario.html</a>.
+  </div>
 </footer>
 
 <script>
@@ -126,16 +83,36 @@
   "use strict";
 
   var MODULES = [
-    {n:1,  slug:"01-intro-wan",     title:"Introducción a redes WAN"},
-    {n:2,  slug:"02-ultima-milla",  title:"Acceso de usuario: última milla"},
-    {n:3,  slug:"03-multiplexion",  title:"Multiplexión"},
-    {n:4,  slug:"04-conmutacion",   title:"Conmutación de circuitos y paquetes"},
-    {n:5,  slug:"05-redes-conmutadas", title:"Frame Relay · ATM · MPLS"},
-    {n:6,  slug:"06-protocolos-red",title:"Protocolos de red · Direccionamiento IP"},
-    {n:7,  slug:"07-ruteo",         title:"Protocolos de ruteo"},
-    {n:8,  slug:"08-transporte",    title:"Protocolos de transporte"},
-    {n:9,  slug:"09-servicios",     title:"Servicios TCP/IP"},
-    {n:10, slug:"10-seguridad",     title:"Seguridad de redes"}
+    {n:1,  slug:"01-intro-wan",     title:"Introducción a redes WAN", freq:"Media", parcial:"1er parcial", day:"Mar 14 jul",
+     desc:"Qué es una WAN, su infraestructura pública y privada, y cómo se conecta a Internet.",
+     subt:["Evolución y terminología (DTE/DCE/CPE)","Estándares capa física (V.35, X.21) y enlace (PPP, HDLC)","Infra privada: líneas alquiladas, ISDN, ATM, FR, MPLS, Metro Ethernet, VSAT","Infra pública: DSL, cable, WiFi, WiMAX, satelital, 3G/4G/5G, VPN","PoP, PoD, IXP"]},
+    {n:2,  slug:"02-ultima-milla",  title:"Acceso de usuario: última milla", freq:"Media", parcial:"1er parcial", day:"Mié 15 jul",
+     desc:"Tecnologías de acceso del usuario final: cobre, fibra, cable e inalámbrico.",
+     subt:["xDSL: ADSL, VDSL, DMT, FDM (rangos y distancias)","Fibra al hogar: FTTx, PON","Cable/HFC y Triple Play","Metro Ethernet: EVC, E-Line/E-LAN/E-Tree","Acceso inalámbrico: WLL, WiFi, WiMAX"]},
+    {n:3,  slug:"03-multiplexion", title:"Multiplexión", freq:"Alta", parcial:"1er parcial", day:"Jue 16 jul",
+     desc:"Cómo compartir un enlace entre muchas señales. Módulo con cuentas.",
+     subt:["FDM, TDM, STDM, WDM, OTN","PCM: canal de voz 64 kbps","E1 (2.048 Mbps) y T1 (1.544 Mbps)","Cálculo de eficiencia (%e)","Tramas de 125 µs"]},
+    {n:4,  slug:"04-conmutacion",   title:"Conmutación de circuitos y paquetes", freq:"Alta", parcial:"1er parcial", day:"Vie 17 jul",
+     desc:"Circuitos vs paquetes: cómo se establece y encamina la comunicación.",
+     subt:["Conmutación de circuitos: fases, conmutador digital","Conmutación de paquetes: datagrama vs circuito virtual","Cálculo de tiempos de transmisión","Overhead por fragmentación","Comparación circuitos vs paquetes"]},
+    {n:5,  slug:"05-redes-conmutadas", title:"Frame Relay · ATM · MPLS", freq:"Media", parcial:"1er parcial", day:"Sáb 18 jul",
+     desc:"Implementación de redes conmutadas de paquetes.",
+     subt:["Frame Relay: trama, DLCI","ATM: celda, VP/VC, campo PTI","MPLS: LER/LSR, etiquetas, campo S","LDP y su relación con OSPF"]},
+    {n:6,  slug:"06-protocolos-red",title:"Protocolos de red · Direccionamiento IP", freq:"Alta", parcial:"2do parcial", day:"Mar 21 jul",
+     desc:"IP, subredes y los protocolos que sostienen la interred.",
+     subt:["IP (RFC 791) y su cabecera","Clases y direcciones especiales","Máscara, subredes y VLSM","Públicas/privadas y NAT","ICMP, IGMP e IPv6"]},
+    {n:7,  slug:"07-ruteo",         title:"Protocolos de ruteo", freq:"Alta", parcial:"2do parcial", day:"Mié 22 jul",
+     desc:"Cómo el router elige el camino: estático y dinámico.",
+     subt:["El problema del encaminamiento","Ruteo estático y tabla de ruteo","Vector distancia: RIP, cuenta a infinito","Estado de enlace: OSPF","Sistema autónomo y BGP"]},
+    {n:8,  slug:"08-transporte",    title:"Protocolos de transporte", freq:"Alta", parcial:"2do parcial", day:"Jue 23 jul",
+     desc:"TCP y UDP: entregar datos de extremo a extremo.",
+     subt:["Suite TCP/IP y par socket","TCP: handshake de 3 vías","Ventana deslizante y control de congestión/flujo","Temporizadores y RTT","UDP"]},
+    {n:9,  slug:"09-servicios",     title:"Servicios TCP/IP", freq:"Alta", parcial:"2do parcial", day:"Vie 24 jul",
+     desc:"Los servicios que hacen usable la red: DHCP, DNS, correo, web.",
+     subt:["DHCP: DISCOVER/OFFER/REQUEST/ACK","DNS: zonas y modelo cliente/servidor","Tipos de registro (incl. MX), TTL, DDNS","SMTP","HTTP"]},
+    {n:10, slug:"10-seguridad",     title:"Seguridad de redes", freq:"Alta", parcial:"2do parcial", day:"Sáb 25 jul",
+     desc:"Proteger la red: criptografía y filtrado.",
+     subt:["Tipos de ataque","Criptografía simétrica (DES, 3DES, AES)","Asimétrica (RSA) y función hash (SHA)","Proxy","Firewall e iptables (NAT/DNAT/SNAT, políticas)"]}
   ];
 
   var STEPS = [
@@ -182,13 +159,36 @@
   // ---- helpers ----
   function el(tag, cls, html){ var e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; }
 
+  function daySlug(day){
+    var m = day.match(/(\d{1,2})\s+(\w+)/i);
+    return m ? ("d"+m[1]+"-"+m[2].toLowerCase()) : "";
+  }
+
+  function ringSVG(done,total){
+    var r=16, c=2*Math.PI*r;
+    var offset = c*(1-(total?done/total:0));
+    return '<svg class="ring" viewBox="0 0 40 40" aria-hidden="true" focusable="false">'+
+      '<circle class="ring-track" cx="20" cy="20" r="'+r+'"></circle>'+
+      '<circle class="ring-fill" cx="20" cy="20" r="'+r+'" style="stroke-dasharray:'+c.toFixed(2)+';stroke-dashoffset:'+offset.toFixed(2)+'"></circle>'+
+    '</svg>';
+  }
+
   var TOTAL = MODULES.length*STEPS.length + MILESTONES.filter(function(m){return m.type==="check";}).length;
 
-  function countDone(){
-    var d=0;
-    MODULES.forEach(function(m){ STEPS.forEach(function(s){ if(state["m"+m.n+"."+s.k]) d++; }); });
-    MILESTONES.forEach(function(m){ if(m.type==="check" && state["ms."+m.k]) d++; });
-    return d;
+  // ---- resumen: una sola pasada de estado, reusada por header y dashboard ----
+  function computeSummary(){
+    var doneSteps=0, modsFull=0, scores=[];
+    MODULES.forEach(function(m){
+      var d=0; STEPS.forEach(function(s){ if(state["m"+m.n+"."+s.k]) d++; });
+      doneSteps+=d;
+      if(d===STEPS.length) modsFull++;
+      var sc=parseFloat(state["m"+m.n+".quizscore"]);
+      if(isFinite(sc)) scores.push(sc);
+    });
+    var msDone=0;
+    MILESTONES.forEach(function(m){ if(m.type==="check" && state["ms."+m.k]) msDone++; });
+    var avg = scores.length ? Math.round(scores.reduce(function(a,b){return a+b;},0)/scores.length) : null;
+    return { totalDone: doneSteps+msDone, modsFull: modsFull, avg: avg, scoresCount: scores.length };
   }
 
   // ---- render módulos ----
@@ -199,49 +199,94 @@
       var doneCount=0; STEPS.forEach(function(s){ if(state["m"+m.n+"."+s.k]) doneCount++; });
       var full=doneCount===STEPS.length;
 
-      var card=el("div","modcard"+(full?" done":""));
-      var head=el("div","modhead");
-      head.appendChild(el("div","modnum", (m.n<10?"0":"")+m.n));
-      head.appendChild(el("div","modtitle", m.title));
-      head.appendChild(el("div","modcount"+(full?" full":""), doneCount+"/"+STEPS.length));
+      var card=el("article","module-panel"+(full?" done":""));
+
+      var head=el("div","module-head");
+      head.appendChild(el("div","module-num", (m.n<10?"0":"")+m.n));
+
+      var heading=el("div","module-heading");
+      heading.appendChild(el("h3","module-title", m.title));
+      var meta=el("div","module-meta");
+      meta.appendChild(el("span","badge badge-freq-"+m.freq.toLowerCase(), "Frecuencia "+m.freq.toLowerCase()));
+      meta.appendChild(el("span","badge badge-outline", m.parcial));
+      heading.appendChild(meta);
+      head.appendChild(heading);
+
+      var prog=el("div","module-progress");
+      prog.setAttribute("role","progressbar");
+      prog.setAttribute("aria-valuemin","0");
+      prog.setAttribute("aria-valuemax",String(STEPS.length));
+      prog.setAttribute("aria-valuenow",String(doneCount));
+      prog.setAttribute("aria-label","Progreso módulo "+m.n+": "+doneCount+" de "+STEPS.length+" pasos");
+      prog.innerHTML = ringSVG(doneCount, STEPS.length) + '<span class="ring-label">'+doneCount+"/"+STEPS.length+"</span>";
+      head.appendChild(prog);
+
       card.appendChild(head);
+      card.appendChild(el("p","module-desc", m.desc));
+
+      var chips=el("ul","chip-list");
+      chips.setAttribute("aria-label","Subtemas clave");
+      m.subt.forEach(function(s){ chips.appendChild(el("li","chip", s)); });
+      card.appendChild(chips);
+
+      var dayRow=el("div","module-day");
+      dayRow.appendChild(el("span","", "Día asignado:"));
+      var slug=daySlug(m.day);
+      var dayLink=el("a","", m.day);
+      dayLink.href = slug ? ("calendario.html#"+slug) : "calendario.html";
+      dayRow.appendChild(dayLink);
+      card.appendChild(dayRow);
 
       // recursos
-      var rl=el("div","reslinks");
+      var rl=el("div","resource-cards");
       RESOURCES.forEach(function(r){
         var avKey="m"+m.n+"."+r.k;
         var ok=AVAILABLE[avKey]===true;
         var path="modulos/"+m.slug+"/"+r.file;
         if(ok){
-          var a=el("a","reslink"); a.href=path; a.target="_blank"; a.rel="noopener";
-          a.appendChild(el("span","dot")); a.appendChild(document.createTextNode(r.label));
+          var a=el("a","resource-card is-available"); a.href=path; a.target="_blank"; a.rel="noopener";
+          a.appendChild(el("span","resource-dot"));
+          var body=el("span","resource-body");
+          body.appendChild(el("span","resource-label", r.label));
+          body.appendChild(el("span","resource-status", "Disponible"));
+          a.appendChild(body);
           rl.appendChild(a);
         } else {
-          var s=el("span","reslink pending", "");
-          s.appendChild(el("span","dot")); s.appendChild(document.createTextNode(r.label+" · pendiente"));
+          var s=el("span","resource-card is-pending");
+          s.setAttribute("aria-disabled","true");
+          s.appendChild(el("span","resource-dot"));
+          var body2=el("span","resource-body");
+          body2.appendChild(el("span","resource-label", r.label));
+          body2.appendChild(el("span","resource-status", "Pendiente"));
+          s.appendChild(body2);
           rl.appendChild(s);
         }
       });
       card.appendChild(rl);
 
       // pasos
-      var steps=el("div","steps");
+      var steps=el("div","steps-list");
+      steps.setAttribute("role","group");
+      steps.setAttribute("aria-label","Pasos del módulo "+m.n);
       STEPS.forEach(function(st){
         var key="m"+m.n+"."+st.k;
         var checked=!!state[key];
-        var lab=el("label","step"+(checked?" checked":""));
+        var lab=el("label","step-item"+(checked?" is-checked":""));
         var cb=el("input"); cb.type="checkbox"; cb.checked=checked;
-        cb.addEventListener("change",function(){ state[key]=cb.checked; if(!cb.checked && st.k==="quiz"){} persist(); });
+        cb.addEventListener("change",function(){ state[key]=cb.checked; persist(); });
         lab.appendChild(cb);
         lab.appendChild(document.createTextNode(st.label));
         steps.appendChild(lab);
 
         if(st.k==="quiz"){
-          var sc=el("span","score","");
-          sc.appendChild(document.createTextNode("nota"));
-          var inp=el("input"); inp.type="text"; inp.inputMode="numeric"; inp.placeholder="%";
+          var sc=el("span","step-score");
+          var scoreId="m"+m.n+"-quizscore";
+          var scLabel=el("label",""); scLabel.setAttribute("for",scoreId); scLabel.textContent="Nota";
+          sc.appendChild(scLabel);
+          var inp=el("input"); inp.type="text"; inp.inputMode="numeric"; inp.placeholder="%"; inp.id=scoreId;
           inp.value=state["m"+m.n+".quizscore"]||"";
           inp.addEventListener("input",function(){ state["m"+m.n+".quizscore"]=inp.value; store.save(state); });
+          inp.addEventListener("blur",function(){ render(); });
           sc.appendChild(inp);
           steps.appendChild(sc);
         }
@@ -257,27 +302,39 @@
     box.innerHTML="";
     MILESTONES.forEach(function(m){
       var checked=!!state["ms."+m.k];
-      var row=el("div","mile"+(checked?" checked":""));
-      var cb=el("input","mchk"); cb.type="checkbox"; cb.checked=checked;
+      var row=el("div","milestone-item"+(checked?" is-checked":""));
+      var cbId="ms-"+m.k;
+      var cb=el("input","milestone-check"); cb.type="checkbox"; cb.checked=checked; cb.id=cbId;
       cb.addEventListener("change",function(){ state["ms."+m.k]=cb.checked; persist(); });
       row.appendChild(cb);
-      row.appendChild(el("span","mlabel", m.label));
+      var label=el("label","milestone-label", m.label); label.setAttribute("for",cbId);
+      row.appendChild(label);
       if(m.file){
         var ok=AVAILABLE[m.k]===true;
-        if(ok){ var a=el("a","mlink","Abrir"); a.href=m.file; a.target="_blank"; a.rel="noopener"; row.appendChild(a); }
-        else { row.appendChild(el("span","mlink pending","pendiente")); }
+        if(ok){ var a=el("a","milestone-link","Abrir"); a.href=m.file; a.target="_blank"; a.rel="noopener"; row.appendChild(a); }
+        else { row.appendChild(el("span","milestone-link is-pending","Pendiente")); }
       }
       box.appendChild(row);
     });
   }
 
-  // ---- barra + countdown ----
-  function updateStats(){
-    var done=countDone();
-    var pct=Math.round(done/TOTAL*100);
+  // ---- barra + dashboard + countdown ----
+  function updateStats(sum){
+    var pct=Math.round(sum.totalDone/TOTAL*100);
     document.getElementById("bar").style.width=pct+"%";
-    document.getElementById("pct").textContent=pct+"%  ("+done+"/"+TOTAL+")";
+    document.getElementById("pct").textContent=pct+"%  ("+sum.totalDone+"/"+TOTAL+")";
+    document.getElementById("barTrack").setAttribute("aria-valuenow", String(pct));
   }
+
+  function updateDashboard(sum){
+    var pct=Math.round(sum.totalDone/TOTAL*100);
+    document.getElementById("statTotal").textContent = pct+"%";
+    document.getElementById("statTotalSub").textContent = sum.totalDone+"/"+TOTAL+" pasos";
+    document.getElementById("statMods").textContent = sum.modsFull+"/"+MODULES.length;
+    document.getElementById("statAvg").textContent = sum.avg!=null ? sum.avg+"%" : "—";
+    document.getElementById("statAvgSub").textContent = sum.scoresCount+" quiz"+(sum.scoresCount===1?"":"zes")+" con nota";
+  }
+
   function updateCountdown(){
     var exam=new Date(2026,7,2); // 2 ago 2026
     var core=new Date(2026,6,31); // 31 jul 2026
@@ -288,9 +345,16 @@
     if(dEx>0) t="Faltan <b>"+dEx+"</b> días para el examen · núcleo listo en <b>"+(dCore>0?dCore:0)+"</b>";
     else t="Ventana de examen";
     document.getElementById("cd").innerHTML=t;
+    document.getElementById("statDays").textContent = dEx>0 ? String(dEx) : "0";
   }
 
-  function render(){ buildModules(); buildMilestones(); updateStats(); }
+  function render(){
+    buildModules();
+    buildMilestones();
+    var sum=computeSummary();
+    updateStats(sum);
+    updateDashboard(sum);
+  }
 
   // ---- controles ----
   function initTheme(){
@@ -298,11 +362,13 @@
     if(saved==="dark" || (!saved && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)){
       document.documentElement.classList.add("dark");
     }
+    document.getElementById("themeBtn").setAttribute("aria-pressed", document.documentElement.classList.contains("dark") ? "true" : "false");
   }
   document.getElementById("themeBtn").addEventListener("click",function(){
     document.documentElement.classList.toggle("dark");
     var v=document.documentElement.classList.contains("dark")?"dark":"light";
     try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+    this.setAttribute("aria-pressed", v==="dark" ? "true" : "false");
   });
   document.getElementById("resetBtn").addEventListener("click",function(){
     if(confirm("¿Borrar todo el progreso guardado? Esto no se puede deshacer.")){
