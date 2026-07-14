@@ -3,87 +3,107 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Módulo 1 · Introducción a redes WAN — Resumen principal</title>
+<title>Módulo 1 · Introducción a redes WAN — Resumen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f5f7fa; --card:#ffffff; --text:#1b2531; --muted:#6a7685; --border:#e4e8ee;
-    --accent:#2e6fb0; --accent-soft:#e9f1f9; --ok:#1f8a4c; --ok-bg:#e9f7ef; --ok-bd:#9fd9b6;
-    --no:#c0392b; --warn:#b8860b; --warn-bg:#fbf3e2; --warn-bd:#e6d3a0;
-    --diag:#7a5cc0; --diag-bg:#efeaf8; --diag-bd:#d8ccef;
-    --shadow:0 1px 3px rgba(20,30,45,.06),0 1px 2px rgba(20,30,45,.04);
+    --bg:#f7f6f1; --card:#ffffff; --ink:#2b2b2b; --muted:#6d6a60; --border:#e7e2d5;
+    --accent:#2e6fb0;
+    --hl-pink:#ffc6cd; --hl-green:#c6ecca; --hl-yellow:#ffe6a3;
+    --diag:#6f56b0; --diag-bg:#efeaf8; --diag-bd:#d6c9ee;
+    --key:#c78a00; --key-bg:#fff4d4; --key-bd:#ecd58c;
+    --link:#1f8a4c; --link-bg:#e6f6ec; --link-bd:#a9dcbb;
+    --note:#b8860b; --note-bg:#fbf2df; --note-bd:#e6d3a0;
+    --shadow:0 1px 3px rgba(40,35,20,.06),0 1px 2px rgba(40,35,20,.04);
+    --font:"Comic Sans MS","Comic Neue","Chalkboard SE","Segoe Print",cursive;
   }
   html.dark{
-    --bg:#0f141a; --card:#19212b; --text:#e6ebf1; --muted:#93a1b0; --border:#2a3542;
-    --accent:#5fa8e0; --accent-soft:#1d2c3a; --ok:#54c483; --ok-bg:#142a1e; --ok-bd:#2f6b47;
-    --no:#e06a5f; --warn:#d6a94a; --warn-bg:#2c2413; --warn-bd:#4a3d1c;
-    --diag:#9b82d8; --diag-bg:#211b33; --diag-bd:#3a2f57;
+    --bg:#13151a; --card:#1b1f27; --ink:#e9e5d9; --muted:#9b988c; --border:#2c303a;
+    --accent:#5fa8e0;
+    --diag:#b7a3ec; --diag-bg:#211b33; --diag-bd:#3a2f57;
+    --key:#e6bd52; --key-bg:#2b2410; --key-bd:#4a3d1c;
+    --link:#54c483; --link-bg:#142a1e; --link-bd:#2f6b47;
+    --note:#d6a94a; --note-bg:#2b2410; --note-bd:#4a3d1c;
     --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.62;font-size:16px;padding-bottom:env(safe-area-inset-bottom)}
-  code{background:var(--accent-soft);color:var(--accent);padding:.05em .38em;border-radius:5px;font-size:.86em;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.72;font-size:17px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:#eef1f5;color:#245a92;padding:.04em .34em;border-radius:5px;font-size:.82em;font-family:ui-monospace,Menlo,monospace}
+  html.dark code{background:#20262f;color:#7fb6e6}
+
+  /* resaltadores tipo marcador — texto siempre oscuro para que se lean en ambos temas */
+  mark{color:#2b2b2b;padding:.02em .16em;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  mark.p{background:var(--hl-pink)}
+  mark.s{background:var(--hl-green)}
+  mark.y{background:var(--hl-yellow)}
+  .def{font-weight:700}
+  u.w{text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
 
   header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
   .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:760px;margin:0 auto}
-  .htop .lbl{font-size:.72rem;color:var(--muted);font-weight:600}
-  .htop h1{font-size:1.02rem;margin:1px 0 0;font-weight:700;letter-spacing:-.01em}
+  .htop .lbl{font-size:.74rem;color:var(--muted)}
+  .htop h1{font-size:1.06rem;margin:1px 0 0;font-weight:700}
   .hbtns{display:flex;gap:8px;flex-shrink:0}
-  .iconbtn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+  .iconbtn{background:var(--bg);color:var(--ink);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;font-family:var(--font)}
 
-  .wrap{max-width:760px;margin:0 auto;padding:18px 16px 40px}
+  .wrap{max-width:760px;margin:0 auto;padding:18px 18px 44px}
 
-  .meta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
-  .tag{font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--muted)}
-  .tag.freq{color:var(--warn);border-color:var(--warn-bd);background:var(--warn-bg)}
-  .tag.src{font-family:ui-monospace,Menlo,monospace;color:var(--accent);background:var(--accent-soft);border-color:transparent}
+  .meta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+  .tag{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--muted)}
+  .tag.freq{color:var(--key);border-color:var(--key-bd);background:var(--key-bg)}
 
-  nav.toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;margin-bottom:24px;box-shadow:var(--shadow)}
-  nav.toc h2{margin:0 0 8px;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);font-weight:800}
-  nav.toc ol{margin:0;padding-left:20px;columns:2;column-gap:26px;font-size:.86rem}
+  nav.toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 17px;margin-bottom:24px;box-shadow:var(--shadow)}
+  nav.toc h2{margin:0 0 8px;font-size:.9rem;color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
+  nav.toc ol{margin:0;padding-left:22px;columns:2;column-gap:26px;font-size:.9rem}
   nav.toc li{margin:3px 0;break-inside:avoid}
-  nav.toc a{color:var(--text);text-decoration:none}
+  nav.toc a{color:var(--ink);text-decoration:none}
   nav.toc a:hover{color:var(--accent);text-decoration:underline}
+  @media(max-width:560px){nav.toc ol{columns:1}}
 
-  h2.sec{font-size:1.18rem;margin:34px 0 4px;letter-spacing:-.01em;scroll-margin-top:74px}
-  h2.sec .n{color:var(--accent);font-family:ui-monospace,Menlo,monospace;font-size:.9rem;margin-right:8px;font-weight:700}
-  h3{font-size:1rem;margin:20px 0 4px;color:var(--text)}
+  h2.sec{font-size:1.28rem;margin:34px 0 6px;scroll-margin-top:74px;display:inline-block;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:5px}
+  h2.sec .n{color:var(--accent);font-size:.95rem;margin-right:8px}
+  h3{font-size:1.06rem;margin:20px 0 4px}
   p{margin:9px 0}
-  .lead{color:var(--muted);font-size:.95rem;margin-top:2px}
-  ul,ol.body{margin:9px 0;padding-left:22px}
-  li{margin:5px 0}
-  hr{border:none;border-top:1px solid var(--border);margin:30px 0}
+  .lead{color:var(--muted);font-size:1rem}
+  ul,ol.body{margin:9px 0;padding-left:26px}
+  ul{list-style:none}
+  ul>li{position:relative}
+  ul>li::before{content:"–";position:absolute;left:-20px;color:var(--accent);font-weight:700}
+  ul ul>li::before{content:"○";font-size:.7em;left:-18px}
+  li{margin:6px 0}
+  hr{border:none;border-top:1px dashed var(--border);margin:30px 0}
   b,strong{font-weight:700}
-  dfn{font-style:normal;font-weight:700;color:var(--accent)}
 
-  .callout{border-radius:11px;padding:12px 15px;margin:16px 0;font-size:.92rem;line-height:1.55;border:1px solid var(--border);border-left-width:4px}
-  .callout .ct{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;font-weight:800;margin-bottom:5px;display:block}
+  .callout{border-radius:12px;padding:13px 16px;margin:16px 0;font-size:.96rem;border:1px solid var(--border);border-left-width:5px}
+  .callout .ct{font-size:.78rem;font-weight:700;margin-bottom:5px;display:block;text-decoration:underline;text-underline-offset:3px}
+  .callout ul{margin:6px 0 0}
   .diagram{background:var(--diag-bg);border-color:var(--diag-bd);border-left-color:var(--diag)}
   .diagram .ct{color:var(--diag)}
-  .key{background:var(--accent-soft);border-color:var(--accent);border-left-color:var(--accent)}
-  .key .ct{color:var(--accent)}
-  .key ul{margin:6px 0 0;padding-left:20px}
-  .key li{margin:4px 0}
-  .link{background:var(--ok-bg);border-color:var(--ok-bd);border-left-color:var(--ok)}
-  .link .ct{color:var(--ok)}
-  .note{background:var(--warn-bg);border-color:var(--warn-bd);border-left-color:var(--warn)}
-  .note .ct{color:var(--warn)}
+  .key{background:var(--key-bg);border-color:var(--key-bd);border-left-color:var(--key)}
+  .key .ct{color:var(--key)}
+  .link{background:var(--link-bg);border-color:var(--link-bd);border-left-color:var(--link)}
+  .link .ct{color:var(--link)}
+  .note{background:var(--note-bg);border-color:var(--note-bd);border-left-color:var(--note)}
+  .note .ct{color:var(--note)}
 
-  dl.defs{margin:10px 0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.92rem}
-  dl.defs dt{font-weight:700;color:var(--accent);font-family:ui-monospace,Menlo,monospace;white-space:nowrap}
-  dl.defs dd{margin:0}
-  @media(max-width:560px){dl.defs{grid-template-columns:1fr;gap:2px}dl.defs dd{margin:0 0 8px}nav.toc ol{columns:1}}
+  dl.defs{margin:10px 0}
+  dl.defs dt{margin-top:9px}
+  dl.defs dt mark{font-weight:700}
+  dl.defs dd{margin:2px 0 0 4px;font-size:.96rem}
 
   .vs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
   @media(max-width:560px){.vs{grid-template-columns:1fr}}
-  .vs .col{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:12px 14px}
-  .vs .col h4{margin:0 0 6px;font-size:.92rem;color:var(--accent)}
-  .vs .col ul{margin:0;padding-left:18px;font-size:.88rem}
+  .vs .col{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 15px}
+  .vs .col h4{margin:0 0 6px;font-size:1rem}
+  .vs .col h4 mark{font-weight:700}
 </style>
 </head>
 <body>
 <header>
   <div class="htop">
-    <div><span class="lbl">Módulo 1 · Resumen principal</span><h1>Introducción a redes WAN</h1></div>
+    <div><span class="lbl">Módulo 1 · Resumen</span><h1>Introducción a redes WAN</h1></div>
     <div class="hbtns">
       <a class="iconbtn" href="../../index.html">← Centro</a>
       <a class="iconbtn" href="../../glosario.html">Glosario</a>
@@ -95,7 +115,7 @@
 <div class="wrap">
   <div class="meta">
     <span class="tag freq">Frecuencia: media</span>
-    <span class="tag src">Fuentes: Módulo 1 · TP1 · Quiz 1</span>
+    <span class="tag">Fuentes: Módulo 1 · TP1 · Quiz 1</span>
   </div>
 
   <nav class="toc">
@@ -117,47 +137,44 @@
     </ol>
   </nav>
 
-  <p class="lead">Este módulo es el mapa general de la materia: define qué es una red de área extensa, con qué tecnologías se arma (privadas y públicas) y cómo se conecta a Internet. Casi todo lo que viene después (última milla, multiplexión, conmutación, IP, ruteo, seguridad) es un zoom sobre alguna pieza que aparece acá.</p>
+  <p class="lead">Este módulo es el mapa general de la materia: define qué es una red de área extensa, con qué tecnologías se arma (privadas y públicas) y cómo se conecta a Internet. Casi todo lo que viene después es un zoom sobre alguna pieza que aparece acá.</p>
 
   <h2 class="sec" id="porque"><span class="n">01</span>Por qué importa</h2>
-  <p>Una <dfn>WAN</dfn> (Wide Area Network, red de área extensa) es la infraestructura de telecomunicaciones que interconecta redes locales (LANs) y dispositivos a través de grandes distancias: entre ciudades, países o continentes. Su trabajo concreto es <b>transportar los mensajes que se envían entre los dispositivos de usuario usando técnicas de conmutación</b>. Entender el módulo 1 es entender el "tablero completo" antes de estudiar cada casillero por separado.</p>
+  <p>Una <mark class="p">WAN</mark> (Wide Area Network, red de área extensa) es la infraestructura de telecomunicaciones que interconecta redes locales (LANs) y dispositivos a través de grandes distancias: entre ciudades, países o continentes. Su trabajo concreto es <b>transportar los mensajes que se envían entre los dispositivos de usuario usando técnicas de <mark class="s">conmutación</mark></b>. Entender el módulo 1 es tener el "tablero completo" antes de estudiar cada casillero.</p>
 
   <h2 class="sec" id="que"><span class="n">02</span>Qué es una WAN</h2>
   <p>Se define por cuatro rasgos:</p>
   <ul>
     <li><b>Función:</b> transportar mensajes entre dispositivos de usuario mediante conmutación.</li>
-    <li><b>Cobertura:</b> grandes distancias, de decenas a miles de kilómetros. Se implementa con nodos interconectados por <b>enlaces redundantes</b> para dar confiabilidad.</li>
+    <li><b>Cobertura:</b> grandes distancias, de decenas a miles de kilómetros. Se implementa con nodos interconectados por <mark class="s">enlaces redundantes</mark> para dar confiabilidad.</li>
     <li><b>Cantidad de usuarios:</b> de cientos a millones. Cada nodo puede tener conectados centenas o miles de dispositivos de usuario.</li>
-    <li><b>Estructura de nodos y enlaces:</b> los nodos se conectan entre sí; los enlaces entre nodos pueden medir muchos kilómetros, pero el enlace del último nodo al usuario es de <b>1 o 2 km</b>.</li>
+    <li><b>Estructura de nodos y enlaces:</b> los nodos se conectan entre sí; los enlaces entre nodos pueden medir muchos kilómetros, pero el enlace del último nodo al usuario es de <u class="w">1 o 2 km</u>.</li>
   </ul>
   <div class="callout diagram">
     <span class="ct">Qué muestra el diagrama (slide "Definición de una red WAN")</span>
-    Es un esquema de la estructura básica: dispositivos de usuario heterogéneos —cajero automático, teléfono, PC, PBX, FAX, mainframe, servidor, terminal— colgando de un <b>Nodo</b> mediante <b>Enlaces</b>, y varios nodos formando la <b>Red de comunicación</b>. La idea central que transmite: la WAN no conecta dispositivos directamente entre sí, sino a través de una malla de nodos.
+    Es un esquema de la estructura básica: dispositivos de usuario heterogéneos —cajero automático, teléfono, PC, PBX, FAX, mainframe, servidor, terminal— colgando de un <b>Nodo</b> mediante <b>Enlaces</b>, y varios nodos formando la <b>Red de comunicación</b>. Idea central: la WAN no conecta dispositivos directamente entre sí, sino a través de una malla de nodos.
   </div>
 
   <h2 class="sec" id="evol"><span class="n">03</span>Evolución de las redes WAN</h2>
-  <p>El módulo la presenta en dos saltos (dos slides de diagrama, "de la red pequeña al conjunto de oficinas" y "de las sucursales conectadas a las redes convergentes"):</p>
+  <p>Se presenta en dos saltos (dos slides de diagrama):</p>
   <ul>
     <li><b>Inicio:</b> redes pequeñas y aisladas, para compartir recursos periféricos y acceso básico a Internet.</li>
-    <li><b>Hoy:</b> redes <b>convergentes</b> que integran voz, datos y video, interconectando oficinas centrales, sucursales, teletrabajadores y servicios en la nube, apoyadas en tecnologías como <b>MPLS</b> y <b>VPNs</b>.</li>
+    <li><b>Hoy:</b> redes <mark class="p">convergentes</mark> que integran voz, datos y video, uniendo oficinas centrales, sucursales, teletrabajadores y la nube, apoyadas en <mark class="s">MPLS</mark> y <mark class="s">VPNs</mark>.</li>
   </ul>
 
   <h2 class="sec" id="term"><span class="n">04</span>Terminología fundamental</h2>
   <dl class="defs">
-    <dt>DTE</dt><dd>Data Terminal Equipment. Dispositivo del usuario final (router, computadora).</dd>
-    <dt>DCE</dt><dd>Data Circuit-terminating Equipment. Equipo del proveedor que adapta la señal del DTE al medio de la red (módem, CSU/DSU).</dd>
-    <dt>CPE</dt><dd>Customer Premises Equipment. Equipamiento instalado en las instalaciones del cliente.</dd>
-    <dt>CO</dt><dd>Central Office (oficina central). Edificio de la compañía telefónica donde termina el bucle local.</dd>
-    <dt>ISP</dt><dd>Internet Service Provider. Empresa que brinda acceso a Internet.</dd>
-    <dt>Carrier</dt><dd>Portadora: señal sinusoidal de frecuencia determinada que transporta información mediante modulación (base de FDM). También se usa "carrier" para nombrar al operador que provee el transporte.</dd>
-    <dt>DTU</dt><dd>Data Transfer Unit. Unidad de datos que viaja entre nodos, en bloques manejables según el protocolo.</dd>
-    <dt>DCU</dt><dd>Data Circuit-terminating Unit. Adapta la señal del DTE al medio de la WAN (interfaz eléctrica y de sincronización con la red del carrier).</dd>
-    <dt>Datacenter</dt><dd>Instalación que concentra servidores, almacenamiento y red para alojar datos y aplicaciones críticas.</dd>
-    <dt>Nube</dt><dd>Modelo donde almacenamiento, servidores y aplicaciones se ofrecen bajo demanda por Internet, sin infraestructura propia.</dd>
+    <dt><mark class="s">DTE</mark> — Data Terminal Equipment</dt><dd>Dispositivo del usuario final (router, computadora).</dd>
+    <dt><mark class="s">DCE</mark> — Data Circuit-terminating Equipment</dt><dd>Equipo del proveedor que adapta la señal del DTE al medio de la red (módem, CSU/DSU).</dd>
+    <dt><mark class="s">CPE</mark> — Customer Premises Equipment</dt><dd>Equipamiento instalado en las instalaciones del cliente.</dd>
+    <dt><mark class="s">CO</mark> — Central Office</dt><dd>Oficina central de la telefónica donde termina el bucle local.</dd>
+    <dt><mark class="s">ISP</mark> — Internet Service Provider</dt><dd>Empresa que brinda acceso a Internet.</dd>
+    <dt><mark class="s">Carrier</mark> (portadora)</dt><dd>Señal sinusoidal de frecuencia determinada que transporta información mediante modulación (base de FDM). También nombra al operador que provee el transporte.</dd>
+    <dt><mark class="s">DTU / DCU</mark></dt><dd>Data Transfer Unit (bloque de datos que viaja entre nodos) / Data Circuit-terminating Unit (adapta la señal del DTE al medio de la WAN).</dd>
   </dl>
   <div class="callout diagram">
     <span class="ct">Qué muestra el diagrama (slide "Terminología WAN")</span>
-    Ubica la frontera <b>DTE ↔ DCE</b>: el equipo del usuario (DTE, típicamente un router) se conecta a través del DCE (módem o CSU/DSU) al <b>bucle local</b>, que llega a la <b>CO</b> del carrier, y desde ahí a la nube de la WAN. Es el mapa de "quién es de quién": lo que está del lado del cliente vs. lo que administra el proveedor.
+    Ubica la frontera <b>DTE ↔ DCE</b>: el equipo del usuario (DTE, típicamente un router) se conecta a través del DCE (módem o CSU/DSU) al <b>bucle local</b>, que llega a la <b>CO</b> del carrier, y desde ahí a la nube de la WAN. Es el mapa de "quién es de quién": lo del lado del cliente vs. lo que administra el proveedor.
   </div>
 
   <h2 class="sec" id="disp"><span class="n">05</span>Dispositivos WAN</h2>
@@ -170,49 +187,48 @@
   </ul>
 
   <h2 class="sec" id="fisica"><span class="n">06</span>Estándares de capa física</h2>
-  <p>Definen las características <b>mecánicas, eléctricas y funcionales</b> de la interfaz entre DTE y DCE. Los que nombra el módulo:</p>
+  <p>Definen las características <u class="w">mecánicas, eléctricas y funcionales</u> de la interfaz entre DTE y DCE. Los que nombra el módulo:</p>
   <dl class="defs">
-    <dt>EIA/TIA-232</dt><dd>Interfaz serial clásica de baja velocidad.</dd>
-    <dt>EIA/TIA-449</dt><dd>Interfaz serial, mejora de alcance/velocidad sobre la 232.</dd>
-    <dt>V.35</dt><dd>Estándar UIT-T para interfaces de alta velocidad, <b>hasta 2 Mbps</b>. Conecta DTE (routers) con DCE (módems, CSU/DSU) en circuitos digitales.</dd>
-    <dt>X.21</dt><dd>Estándar UIT-T para la interfaz física de enlaces WAN digitales sincronizados entre DTE y DCE.</dd>
+    <dt><mark class="s">EIA/TIA-232</mark></dt><dd>Interfaz serial clásica de baja velocidad.</dd>
+    <dt><mark class="s">EIA/TIA-449/530</mark></dt><dd>Interfaz serial, mejora de alcance/velocidad sobre la 232.</dd>
+    <dt><mark class="s">V.35</mark></dt><dd>Estándar UIT-T para alta velocidad, <b>hasta 2 Mbps</b>. Conecta DTE (routers) con DCE (módems, CSU/DSU).</dd>
+    <dt><mark class="s">X.21</mark></dt><dd>Estándar UIT-T para enlaces WAN digitales sincronizados entre DTE y DCE.</dd>
   </dl>
   <div class="callout diagram">
     <span class="ct">Qué muestra el diagrama (slide "Estándares capa física")</span>
-    Coloca estos estándares exactamente en el punto de contacto físico entre el DTE del cliente y el DCE del proveedor. El mensaje: la capa física es la "toma de enchufe" entre ambos, y cada estándar define cómo es esa toma (conector, niveles eléctricos, señales de control).
+    Coloca estos estándares exactamente en el punto de contacto físico entre el DTE del cliente y el DCE del proveedor. La capa física es la "toma de enchufe" entre ambos, y cada estándar define cómo es esa toma (conector, niveles eléctricos, señales de control). En la slide la lista incluye también EIA/TIA-612/613 (HSSI).
   </div>
 
   <h2 class="sec" id="enlace"><span class="n">07</span>Estándares/protocolos de capa de enlace</h2>
-  <p>Gestionan la transmisión de datos <b>sobre</b> el enlace físico. Los del módulo:</p>
+  <p>Gestionan la transmisión de datos <b>sobre</b> el enlace físico. Los del módulo, según el tipo de enlace:</p>
   <dl class="defs">
-    <dt>PPP</dt><dd>Point-to-Point Protocol. Para conexiones punto a punto.</dd>
-    <dt>HDLC</dt><dd>High-Level Data Link Control. Protocolo base de enlace de datos.</dd>
-    <dt>Frame Relay</dt><dd>Conmutación de tramas (se ve en detalle en el módulo 5).</dd>
-    <dt>ATM</dt><dd>Conmutación de celdas fijas de 53 bytes (módulo 5).</dd>
-    <dt>MPLS</dt><dd>Conmutación de etiquetas multiprotocolo (módulo 5).</dd>
+    <dt><mark class="s">PPP</mark> / <mark class="s">HDLC (Cisco)</mark></dt><dd>Para el enlace <b>punto a punto dedicado</b>.</dd>
+    <dt><mark class="s">MPLS</mark> / <mark class="s">ATM</mark></dt><dd>Para redes <b>conmutadas por paquetes</b> (se ven en detalle en el módulo 5).</dd>
+    <dt><mark class="s">ISDN</mark></dt><dd>Para redes <b>conmutadas por circuitos</b>.</dd>
+    <dt><mark class="s">Frame Relay</mark></dt><dd>Conmutación de tramas (módulo 5).</dd>
   </dl>
   <div class="callout diagram">
     <span class="ct">Qué muestra el diagrama (slide "Estándares capa de enlace")</span>
-    Muestra qué protocolos de capa 2 pueden correr sobre el enlace WAN una vez resuelta la capa física. La idea: sobre la misma "toma" física, se puede hablar distintos "idiomas" de enlace (PPP, HDLC, Frame Relay, ATM, MPLS) según la tecnología de la red.
+    Muestra tres filas de routers según el tipo de enlace y qué protocolo L2 corre en cada caso: <b>punto a punto dedicado</b> → Cisco HDLC / PPP; <b>conmutado por paquetes</b> → nube MPLS / ATM; <b>conmutado por circuitos</b> → nube ISDN. Idea: sobre la misma "toma" física se puede hablar distintos "idiomas" de enlace según la tecnología de la red.
   </div>
 
   <h2 class="sec" id="trans"><span class="n">08</span>Técnicas de transmisión: conmutación</h2>
   <p>El módulo introduce las dos técnicas (la slide "Técnicas de transmisión" las contrasta). El detalle numérico —tiempos de transmisión, comparación cuantitativa— se desarrolla en el <b>módulo 4</b>.</p>
   <div class="vs">
     <div class="col">
-      <h4>Conmutación de circuitos</h4>
+      <h4><mark class="p">Conmutación de circuitos</mark></h4>
       <ul>
         <li>Camino <b>dedicado y exclusivo</b> durante toda la sesión.</li>
         <li>Ejemplo clásico: PSTN (red telefónica).</li>
         <li>Ventaja: calidad garantizada, retardos constantes.</li>
-        <li>Desventaja: ineficiente cuando no hay tráfico activo (la línea queda reservada igual).</li>
+        <li>Desventaja: ineficiente cuando no hay tráfico (la línea queda reservada igual).</li>
       </ul>
     </div>
     <div class="col">
-      <h4>Conmutación de paquetes</h4>
+      <h4><mark class="p">Conmutación de paquetes</mark></h4>
       <ul>
-        <li>Los datos se dividen en <b>paquetes</b> que se encaminan por la red.</li>
-        <li>Dos modos: <b>datagrama</b> (cada paquete se rutea por separado) y <b>circuito virtual</b> (ruta preestablecida).</li>
+        <li>Los datos se dividen en <b>paquetes</b> ruteados por la red.</li>
+        <li>Dos modos: <b>datagrama</b> (cada paquete por separado) y <b>circuito virtual</b> (ruta preestablecida).</li>
         <li>Ventaja: uso eficiente del ancho de banda, flexibilidad.</li>
         <li>Desventaja: retardos variables y posible pérdida de paquetes.</li>
       </ul>
@@ -220,50 +236,47 @@
   </div>
 
   <h2 class="sec" id="priv"><span class="n">09</span>Infraestructura WAN privada</h2>
-  <p>Cada una de estas tecnologías tiene su slide (título + diagrama). El módulo las nombra; el detalle de acceso se profundiza en módulos siguientes.</p>
+  <p>Cada tecnología tiene su slide (título + diagrama). El módulo las nombra; el detalle se profundiza en módulos siguientes.</p>
   <ul>
-    <li><b>Líneas alquiladas:</b> punto a punto dedicadas. <code>E1 = 2.048 Mbps</code>, <code>T1 = 1.544 Mbps</code>, E3/T3 mayores. Ancho de banda garantizado; costo proporcional a la distancia.</li>
-    <li><b>Dial-up:</b> acceso por módem telefónico (56 kbps).</li>
-    <li><b>ISDN / RDSI:</b> acceso digital integrado. <b>BRI</b> = 2 canales B de 64 kbps + 1 canal D de 16 kbps; <b>PRI</b> = 30 canales B de 64 kbps + 1 canal D de 64 kbps.</li>
-    <li><b>ATM:</b> conmutación de celdas de <b>53 bytes</b>, apta para tráfico multimedia.</li>
-    <li><b>Frame Relay, MPLS, Metro Ethernet, VSAT:</b> otras opciones de transporte privado (detalle en módulos 2 y 5).</li>
+    <li><mark class="s">Líneas alquiladas:</mark> punto a punto dedicadas. <code>E1 = 2.048 Mbps</code>, <code>T1 = 1.544 Mbps</code>, E3/T3 mayores. Ancho de banda garantizado; costo proporcional a la distancia.</li>
+    <li><mark class="s">Dial-up:</mark> acceso por módem telefónico (56 kbps).</li>
+    <li><mark class="s">ISDN / RDSI:</mark> <b>BRI</b> = 2 canales B de 64 kbps + 1 canal D de 16 kbps; <b>PRI</b> = 30 canales B de 64 kbps + 1 canal D de 64 kbps.</li>
+    <li><mark class="s">ATM:</mark> conmutación de celdas de <b>53 bytes</b>, apta para multimedia.</li>
+    <li><mark class="s">Frame Relay, MPLS, Metro Ethernet, VSAT:</mark> otras opciones de transporte privado (detalle en módulos 2 y 5).</li>
   </ul>
   <div class="callout diagram">
     <span class="ct">Qué muestran los diagramas (DWDM, "tipos de nodos", "proveedor de servicios")</span>
-    <b>DWDM</b> (Dense Wavelength Division Multiplexing): la slide ilustra cómo múltiples señales ópticas, cada una en una <b>longitud de onda distinta</b>, viajan simultáneamente por <b>una misma fibra</b>, multiplicando la capacidad hasta el orden de los <b>terabits por segundo</b> sin tender cables nuevos. Es la base del transporte troncal. Las slides "todos los tipos de nodos" y "proveedor de servicios WAN" muestran la complejidad interna de la red del prestador: distintos tipos de nodo (transmisión, conmutación, acceso de última milla) interconectados por enlaces redundantes.
+    <b>DWDM</b> (Dense Wavelength Division Multiplexing): la slide muestra un <b>MUX</b> que combina cuatro emisores, cada uno en una <b>longitud de onda distinta (λ1…λ4)</b>, viajando por <b>una misma fibra óptica monomodo</b> hasta un <b>DEMUX</b> que los separa hacia cada receptor. Multiplica la capacidad hasta el orden de los <b>terabits/seg</b> sin tender cables nuevos: es la base del transporte troncal. Las slides "todos los tipos de nodos" y "proveedor de servicios WAN" muestran la complejidad interna del prestador: <b>nodos principales, nodos colectores y nodos de última milla</b> interconectados por enlaces redundantes.
   </div>
 
   <h2 class="sec" id="pub"><span class="n">10</span>Infraestructura WAN pública</h2>
-  <p>Es la puerta de entrada de los usuarios a la WAN. El módulo las presenta; el <b>detalle de estas tecnologías de acceso es el módulo 2 (última milla)</b>.</p>
+  <p>Es la puerta de entrada de los usuarios a la WAN. El <b>detalle de estas tecnologías de acceso es el módulo 2 (última milla)</b>.</p>
   <ul>
-    <li><b>DSL:</b> usa el par de cobre telefónico. Multiplexa por frecuencia (voz en bajas, datos en altas). Variantes ADSL (asimétrica) y SDSL (simétrica). Módem DSL en el cliente, <b>DSLAM</b> en la central.</li>
-    <li><b>Cable módem:</b> aprovecha la TV por cable (coaxial). Arquitectura <b>HFC</b> (fibra hasta el barrio, coaxial el último tramo). Ancho de banda compartido entre usuarios del segmento.</li>
-    <li><b>WiFi:</b> acceso local inalámbrico (interiores).</li>
-    <li><b>WiMAX (IEEE 802.16):</b> acceso metropolitano inalámbrico, mayor alcance que WiFi (hasta ~50 km), puede operar sin línea de vista.</li>
-    <li><b>Internet satelital:</b> para áreas remotas. Alta latencia con satélites geoestacionarios; las constelaciones de órbita baja (Starlink) la reducen.</li>
-    <li><b>Datos móviles:</b> evolución 3G → 4G LTE → 5G (5G: latencia ultra-baja, altísimas velocidades).</li>
-    <li><b>VPN:</b> red privada sobre infraestructura pública. De <b>acceso remoto</b> (teletrabajadores) o <b>sitio-a-sitio</b> (entre sedes). Tunelización con <b>IPsec</b>, <b>SSL/TLS</b> o <b>MPLS VPN</b>.</li>
+    <li><mark class="s">DSL:</mark> usa el par de cobre telefónico. Multiplexa por frecuencia (voz baja, datos alta). Variantes ADSL (asimétrica) y SDSL (simétrica). Módem DSL en el cliente, <b>DSLAM</b> en la central.</li>
+    <li><mark class="s">Cable módem:</mark> aprovecha la TV por cable. Arquitectura <b>HFC</b> (fibra hasta el barrio, coaxial el último tramo). Ancho de banda compartido.</li>
+    <li><mark class="s">WiFi</mark> (acceso local) · <mark class="s">WiMAX</mark> (IEEE 802.16, hasta ~50 km, puede operar sin línea de vista).</li>
+    <li><mark class="s">Internet satelital:</mark> áreas remotas. Alta latencia con satélites geoestacionarios; las constelaciones de órbita baja (Starlink) la reducen.</li>
+    <li><mark class="s">Datos móviles:</mark> 3G → 4G LTE → 5G (5G: latencia ultra-baja, altísimas velocidades).</li>
+    <li><mark class="s">VPN:</mark> red privada sobre infraestructura pública. De <b>acceso remoto</b> o <b>sitio-a-sitio</b>. Tunelización con <b>IPsec</b>, <b>SSL/TLS</b> o <b>MPLS VPN</b>.</li>
   </ul>
 
   <h2 class="sec" id="inet"><span class="n">11</span>Internet: PoP, PoD, IXP</h2>
   <dl class="defs">
-    <dt>PoP</dt><dd>Point of Presence. Instalación física del proveedor (carrier/ISP) donde el usuario se conecta a la red WAN o a Internet. Concentra routers, switches y equipos de seguridad; suele interconectar con otros ISP (peering).</dd>
-    <dt>IXP</dt><dd>Internet Exchange Point. Punto neutral donde múltiples ISP intercambian tráfico. Mantiene el tráfico local dentro de la región, reduce costos (evita pagar tránsito internacional) y baja la latencia al evitar el <b>tromboning</b> (que tráfico entre dos redes locales salga a otro país y vuelva).</dd>
-    <dt>PoD</dt><dd>Point of Delivery. Módulo autónomo <b>dentro de un datacenter</b> que agrupa cómputo, almacenamiento, red y energía en un bloque estandarizado, para escalar de forma ordenada. Ojo: no confundir con PoP.</dd>
-    <dt>CDN</dt><dd>Content Delivery Network. Red de servidores que cachean contenido cerca del usuario. Ejemplos: <b>Open Connect</b> de Netflix y <b>Google Global Cache</b>, que ponen servidores dentro de los ISP locales.</dd>
+    <dt><mark class="p">PoP</mark> — Point of Presence</dt><dd>Instalación física del proveedor donde el usuario se conecta a la red WAN o a Internet. Concentra routers, switches y equipos de seguridad; suele interconectar con otros ISP (peering).</dd>
+    <dt><mark class="p">IXP</mark> — Internet Exchange Point</dt><dd>Punto neutral donde múltiples ISP intercambian tráfico. Mantiene el tráfico local en la región, reduce costos (evita tránsito internacional) y baja la latencia al evitar el <b>tromboning</b> (que tráfico entre dos redes locales salga a otro país y vuelva).</dd>
+    <dt><mark class="p">PoD</mark> — Point of Delivery</dt><dd>Módulo autónomo <b>dentro de un datacenter</b> (cómputo + almacenamiento + red + energía) para escalar de forma ordenada. <u class="w">Ojo: no confundir con PoP.</u></dd>
+    <dt><mark class="s">CDN</mark> — Content Delivery Network</dt><dd>Servidores que cachean contenido cerca del usuario. Ejemplos: <b>Open Connect</b> de Netflix y <b>Google Global Cache</b>, dentro de los ISP locales.</dd>
   </dl>
   <div class="callout key">
     <span class="ct">CABASE — IXPs en Argentina (cifras del módulo)</span>
     <ul>
-      <li>28 IXP + ruteo central</li>
-      <li>+600 miembros</li>
-      <li>5.6 Tb de capacidad de red</li>
-      <li>3.000 ASN (sistemas autónomos) alcanzables</li>
+      <li>28 IXP + ruteo central · +600 miembros</li>
+      <li>5.6 Tb de capacidad de red · 3.000 ASN alcanzables</li>
       <li>93 % de redes conectadas · 24 millones de usuarios finales</li>
     </ul>
     Beneficios que remarca: minimiza costo, eficientiza el ruteo y reduce el delay.
   </div>
-  <p class="lead">En el Quiz 1 se evaluó justamente la distinción <b>PoP vs PoD</b> y el programa <b>Open Connect de Netflix</b>: es el tipo de pregunta conceptual que conviene tener afiladísima.</p>
+  <p class="lead">En el <b>Quiz 1</b> se evaluó justo <mark class="p">PoP vs PoD</mark> y el programa <mark class="p">Open Connect de Netflix</mark>: es el tipo de pregunta conceptual que conviene tener afiladísima.</p>
 
   <hr>
 
@@ -275,9 +288,9 @@
       <li><b>E1 = 2.048 Mbps</b> · <b>T1 = 1.544 Mbps</b> · Dial-up = 56 kbps.</li>
       <li>ISDN <b>BRI</b> = 2×B(64 kbps) + 1×D(16 kbps) · <b>PRI</b> = 30×B(64 kbps) + 1×D(64 kbps).</li>
       <li>Celda <b>ATM = 53 bytes</b>.</li>
-      <li>Capa física (interfaz DTE–DCE): EIA/TIA-232, EIA/TIA-449, <b>V.35 (≤2 Mbps)</b>, X.21 (UIT-T).</li>
-      <li>Capa de enlace: PPP, HDLC, Frame Relay, ATM, MPLS.</li>
-      <li><b>WiMAX = IEEE 802.16</b> (~50 km) · WiFi = acceso local.</li>
+      <li>Capa física (interfaz DTE–DCE): EIA/TIA-232, EIA/TIA-449/530, EIA/TIA-612/613 (HSSI), <b>V.35 (≤2 Mbps)</b>, X.21.</li>
+      <li>Capa de enlace: PPP, HDLC, Frame Relay, ATM, MPLS, ISDN.</li>
+      <li><b>WiMAX = IEEE 802.16</b> (~50 km).</li>
       <li>Tunelización VPN: IPsec, SSL/TLS, MPLS VPN.</li>
       <li>CABASE: 28 IXP, +600 miembros, 5.6 Tb, 3.000 ASN, 93 %, 24 M usuarios.</li>
     </ul>
@@ -288,7 +301,7 @@
     <span class="ct">Cómo se enlaza con el resto del programa</span>
     <ul>
       <li><b>Última milla (M2):</b> DSL, cable módem, fibra e inalámbrico se profundizan ahí.</li>
-      <li><b>Multiplexión (M3):</b> DWDM, E1/T1 y la portadora (carrier) se explican en detalle.</li>
+      <li><b>Multiplexión (M3):</b> DWDM, E1/T1 y la portadora (carrier) en detalle.</li>
       <li><b>Conmutación (M4):</b> el detalle y los tiempos de circuitos vs paquetes.</li>
       <li><b>Frame Relay / ATM / MPLS (M5):</b> las tecnologías conmutadas nombradas acá.</li>
       <li><b>Direccionamiento IP (M6):</b> IP, subredes y la nube de Internet.</li>
