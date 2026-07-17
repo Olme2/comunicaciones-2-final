@@ -45,6 +45,7 @@
   .term .sig{font-weight:800;color:var(--accent);font-family:ui-monospace,Menlo,monospace;font-size:.9rem}
   .term .exp{font-weight:600;font-size:.86rem;margin:1px 0 3px}
   .term .desc{font-size:.82rem;color:var(--muted);line-height:1.45}
+  .totalcount{font-size:.74rem;color:var(--muted);margin:0 4px 16px;font-weight:600}
   .empty{display:none;text-align:center;color:var(--muted);padding:40px 20px;font-size:.9rem}
 
   .soon{background:var(--card);border:1px dashed var(--border);border-radius:10px;padding:14px;color:var(--muted);font-size:.86rem;text-align:center}
@@ -66,16 +67,9 @@
 
 <main>
   <nav class="modnav" id="modnav"></nav>
+  <p class="totalcount" id="totalcount"></p>
 
-  <section class="mod" id="mod-1">
-    <div class="mhead"><span class="mn">01</span><h2>Introducción a redes WAN</h2><span class="cnt"></span></div>
-    <div class="glist" id="list-1"></div>
-  </section>
-
-  <section class="mod" id="mod-next">
-    <div class="mhead"><span class="mn">2–10</span><h2>Módulos siguientes</h2></div>
-    <div class="soon">Las siglas de los módulos 2 a 10 se agregan a medida que avancemos con cada módulo.</div>
-  </section>
+  <div id="sections"></div>
 
   <p class="empty" id="empty">No hay coincidencias para tu búsqueda.</p>
 </main>
@@ -85,9 +79,10 @@
 <script>
 (function(){
   "use strict";
-  // Datos del glosario por módulo. sig = sigla, exp = expansión, d = significado breve.
-  var GLOSSARY = {
-    1: [
+
+  // ---- Datos: un objeto por módulo. Para sumar el módulo N, agregá su entrada acá. ----
+  var MODULES = [
+    { n:1, slug:"01-intro-wan", nav:"Intro WAN", title:"Introducción a redes WAN", terms:[
       {sig:"WAN", exp:"Wide Area Network", d:"Red de área extensa: interconecta LANs y dispositivos a grandes distancias mediante conmutación."},
       {sig:"LAN", exp:"Local Area Network", d:"Red de área local, dentro de un edificio o campus."},
       {sig:"MAN", exp:"Metropolitan Area Network", d:"Red de área metropolitana, escala de ciudad."},
@@ -144,9 +139,91 @@
       {sig:"IPv4 / IPv6", exp:"Internet Protocol v4 / v6", d:"Versiones de IP: 32 bits (v4) y 128 bits (v6)."},
       {sig:"BGP", exp:"Border Gateway Protocol", d:"Protocolo de ruteo entre sistemas autónomos en Internet (módulo 7)."},
       {sig:"DNS", exp:"Domain Name System", d:"Traduce nombres de dominio a direcciones IP (módulo 9)."}
-    ]
-  };
+    ]},
+    { n:2, slug:"02-ultima-milla", nav:"Última milla", title:"Acceso de usuario: la última milla", terms:[
+      {sig:"xDSL", exp:"x Digital Subscriber Line", d:"Familia de tecnologías que transmiten información digital sobre pares de cobre."},
+      {sig:"POTS", exp:"Plain Old Telephone Service", d:"Servicio telefónico analógico clásico. En ADSL ocupa los 25 KHz inferiores; en VDSL, 0–4 KHz."},
+      {sig:"UDSL / G.Lite", exp:"Universal ADSL / DSL Lite", d:"Mueve la separación del usuario a la estación base; al no tener splitter, reduce mucho la velocidad."},
+      {sig:"RADSL", exp:"Rate-Adaptive DSL", d:"Detecta la máxima velocidad posible de la línea y la ajusta."},
+      {sig:"HDSL", exp:"High bit-rate DSL", d:"DSL simétrica sobre 2 pares; transmite tramas E1 más eficientemente que el E1 tradicional."},
+      {sig:"G.SHDSL", exp:"Single pair High-speed DSL", d:"Simétrica: 2,3 Mbps (1 par) / 4,6 Mbps (2 pares), hasta 3,9 km. Estándar ITU-T de feb. 2001."},
+      {sig:"DMT", exp:"Discrete MultiTone", d:"Divide la banda en subcanales de 4 KHz, mide S/N de cada uno y asigna más bits a los mejores."},
+      {sig:"FDM", exp:"Frequency Division Multiplexing", d:"Multiplexación por división de frecuencia: cada señal viaja en una banda distinta. Base de ADSL."},
+      {sig:"QAM", exp:"Quadrature Amplitude Modulation", d:"Modulación en amplitud y fase; usada por DMT en cada subcanal."},
+      {sig:"PSK", exp:"Phase Shift Keying", d:"Modulación por desplazamiento de fase; alternativa a QAM en DMT."},
+      {sig:"CAP", exp:"Carrierless Amplitude/Phase", d:"Codificación de línea; en la tabla xDSL, ADSL figura como CAP/DMT."},
+      {sig:"2B1Q", exp:"2 Binary 1 Quaternary", d:"Codificación de línea de las xDSL simétricas (HDSL, SDSL, G.SHDSL). 4 bits por ciclo."},
+      {sig:"S/N (SNR)", exp:"Relación señal a ruido", d:"Mide la calidad de un subcanal. Decrece al subir la frecuencia por mayor atenuación."},
+      {sig:"UTP", exp:"Unshielded Twisted Pair", d:"Par trenzado sin blindaje. ADSL aprovecha 1 MHz de su ancho de banda."},
+      {sig:"SDH", exp:"Synchronous Digital Hierarchy", d:"Red de transporte de capa 1. También soporta servicios EPL de Metro Ethernet."},
+      {sig:"OTH", exp:"Optical Transport Hierarchy", d:"Redes ópticas transparentes; tecnología de transporte de capa 1."},
+      {sig:"TDM", exp:"Time Division Multiplexing", d:"Multiplexación por división de tiempo. EPL se describe como una línea TDM con interfaz Ethernet."},
+      {sig:"PLC", exp:"Power Line Communications", d:"Acceso fijo a través de la red eléctrica."},
+      {sig:"FTTx", exp:"Fiber To The x", d:"Familia de arquitecturas de fibra según cuán cerca llega del domicilio."},
+      {sig:"FTTH", exp:"Fiber To The Home", d:"Fibra hasta el hogar."},
+      {sig:"FTTB", exp:"Fiber To The Building", d:"Fibra hasta el edificio."},
+      {sig:"FTTC / FTTCab", exp:"Fiber To The Cabinet", d:"Fibra hasta el gabinete de calle; híbrido cobre/fibra. VDSL se apoya en ella."},
+      {sig:"PON", exp:"Passive Optical Network", d:"Red óptica pasiva: el splitter reparte la señal sin electrónica ni alimentación."},
+      {sig:"AON", exp:"Active Optical Network", d:"Red óptica con elementos activos (contraparte de PON)."},
+      {sig:"EPON", exp:"Ethernet Passive Optical Network", d:"Permite compartir entre varios abonados los costes de terminaciones de red."},
+      {sig:"GPON", exp:"Gigabit PON", d:"Estándar PON: 1,2 Gbps de subida y 2,5 Gbps de bajada."},
+      {sig:"XG-PON", exp:"10 Gigabit PON", d:"Estándar PON: 2,5/10 Gbps de subida y 10 Gbps de bajada."},
+      {sig:"XGS-PON", exp:"Symmetric XG-PON", d:"Estándar PON simétrico: 10 Gbps en ambos sentidos."},
+      {sig:"NG-PON2", exp:"Next-Generation PON2", d:"Estándar PON: 40 Gbps en ambos sentidos."},
+      {sig:"OLT", exp:"Optical Line Terminal", d:"Equipo en la central del proveedor donde arranca la fibra PON."},
+      {sig:"ONT", exp:"Optical Network Terminal", d:"Equipo óptico en el domicilio del cliente."},
+      {sig:"ONU", exp:"Optical Network Unit", d:"Unidad óptica del lado del usuario cuando termina en un punto intermedio."},
+      {sig:"ODN", exp:"Optical Distribution Network", d:"Red de distribución óptica: los splitters pasivos entre el OLT y los abonados."},
+      {sig:"CATV", exp:"Community Antenna Television", d:"Televisión por cable; uso típico de las redes HFC."},
+      {sig:"DOCSIS", exp:"Data Over Cable Service Interface Specification", d:"Estándar de datos sobre cable. El módulo cita un router Cisco con DOCSIS 3.0."},
+      {sig:"EFM", exp:"Ethernet in the First Mile", d:"Ethernet en la primera milla. Estandarizada por IEEE 802.3ah (no 802.3ab)."},
+      {sig:"MEF", exp:"Metro Ethernet Forum", d:"Organismo que define los tipos de EVC: E-Line, E-LAN y E-Tree."},
+      {sig:"EVC", exp:"Ethernet Virtual Connection", d:"Conecta dos o más UNIs y aísla a quienes no son del mismo EVC. Similar a un PVC ATM."},
+      {sig:"UNI", exp:"User Network Interface", d:"Punto de interfaz entre el cliente y la red del proveedor en Metro Ethernet."},
+      {sig:"E-Line", exp:"Ethernet Line Service", d:"EVC punto a punto."},
+      {sig:"E-LAN", exp:"Ethernet LAN Service", d:"EVC multipunto."},
+      {sig:"E-Tree", exp:"Ethernet Tree Service", d:"EVC punto a multipunto."},
+      {sig:"EPL", exp:"Ethernet Private Line", d:"E-Line con ancho de banda dedicado; el cliente siempre dispone del CIR. Sobre SDH o MPLS."},
+      {sig:"EVPL", exp:"Ethernet Virtual Private Line", d:"E-Line con CIR + EIR y métrica para SLA. Similar al Frame Relay."},
+      {sig:"EPLan", exp:"Ethernet Private LAN", d:"E-LAN multipunto entre dos o más UNIs con ancho de banda dedicado."},
+      {sig:"EVPLan", exp:"Ethernet Virtual Private LAN", d:"E-LAN virtual; también llamada VPLS, TLS o VPSN. El servicio más rentable para el proveedor."},
+      {sig:"VPLS", exp:"Virtual Private LAN Service", d:"Otro nombre de EVPLan."},
+      {sig:"TLS (Metro E)", exp:"Transparent LAN Service", d:"Otro nombre de EVPLan. Ojo: no confundir con TLS de cifrado (Transport Layer Security)."},
+      {sig:"VPSN", exp:"Virtual Private Switched Network", d:"Otro nombre de EVPLan."},
+      {sig:"CIR", exp:"Committed Information Rate", d:"Caudal garantizado al cliente. EPL lo da siempre; EVPL lo combina con EIR."},
+      {sig:"EIR", exp:"Excess Information Rate", d:"Caudal excedente, no garantizado. Aparece en EVPL junto al CIR."},
+      {sig:"PIR", exp:"Peak Information Rate", d:"Caudal pico. Concepto del TP, en el contexto de Internet satelital."},
+      {sig:"NGN", exp:"Next Generation Network", d:"Redes de nueva generación; contexto donde EPL se implementa sobre canales SDH."},
+      {sig:"SAN", exp:"Storage Area Network", d:"Red de almacenamiento; una de las aplicaciones de Metro Ethernet."},
+      {sig:"WLL / WiLL", exp:"Wireless Local Loop", d:"Bucle inalámbrico: radio en lugar de cobre. Mayoría opera en 1–3 GHz."},
+      {sig:"LMDS", exp:"Local Multipoint Distribution Service", d:"Bucle inalámbrico en la banda de 26–28 GHz."},
+      {sig:"MMDS", exp:"Multichannel Multipoint Video Distribution System", d:"Bucle inalámbrico; genérico en la banda de 40 GHz."},
+      {sig:"WLAN", exp:"Wireless Local Area Network", d:"Red local inalámbrica (hotspots). Limitaciones en seguridad, QoS, movilidad e interferencias."},
+      {sig:"HiperLAN2", exp:"High Performance Radio LAN type 2", d:"Estándar de red local inalámbrica, junto a WLAN y Wi-Fi."},
+      {sig:"HAPs", exp:"High Altitude Platforms", d:"Plataformas de gran altitud; óptica por aire."},
+      {sig:"FSO", exp:"Free Space Optics", d:"Óptica por aire (espacio libre) como acceso inalámbrico."},
+      {sig:"TDT", exp:"Televisión Digital Terrestre", d:"Tecnología de acceso inalámbrica listada en el módulo."},
+      {sig:"CDMA", exp:"Code Division Multiple Access", d:"Tecnología de comunicaciones móviles."},
+      {sig:"GSM", exp:"Global System for Mobile communications", d:"Tecnología de comunicaciones móviles de segunda generación."},
+      {sig:"UMTS", exp:"Universal Mobile Telecommunications System", d:"Tecnología de comunicaciones móviles de tercera generación."},
+      {sig:"SSH", exp:"Secure Shell", d:"Acceso seguro a consola remota; permite port forwarding. ssh -L ip_local:puerto:host:puerto user@servidor."},
+      {sig:"OpenVPN", exp:"—", d:"Implementación de VPN usada en el TP (modo roadwarrior). Config del cliente en el archivo .ovpn."},
+      {sig:"SOCKS", exp:"Socket Secure", d:"Proxy dinámico; se levanta con ssh -D 9999 -C."}
+    ]}
+  ];
 
+  var TODOS = [
+    {n:3,  title:"Multiplexión"},
+    {n:4,  title:"Conmutación de circuitos y paquetes"},
+    {n:5,  title:"Frame Relay · ATM · MPLS"},
+    {n:6,  title:"Protocolos de red · Direccionamiento IP"},
+    {n:7,  title:"Protocolos de ruteo"},
+    {n:8,  title:"Protocolos de transporte"},
+    {n:9,  title:"Servicios TCP/IP"},
+    {n:10, title:"Seguridad de redes"}
+  ];
+
+  // ---- tema ----
   var mem={};
   var s; try{ s=localStorage.getItem("comii-theme"); }catch(e){ s=mem["comii-theme"]; }
   if(s==="dark" || (!s && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
@@ -157,31 +234,63 @@
   });
 
   function esc(t){ var d=document.createElement("div"); d.textContent=t; return d.innerHTML; }
+  function pad(n){ return (n<10?"0":"")+n; }
 
-  // render módulo 1
-  var list1=document.getElementById("list-1");
-  GLOSSARY[1].forEach(function(t){
-    var div=document.createElement("div"); div.className="term";
-    div.setAttribute("data-search",(t.sig+" "+t.exp+" "+t.d).toLowerCase());
-    div.innerHTML='<div class="sig">'+esc(t.sig)+'</div><div class="exp">'+esc(t.exp)+'</div><div class="desc">'+esc(t.d)+'</div>';
-    list1.appendChild(div);
+  // ---- render de módulos ----
+  var main=document.getElementById("sections");
+  var navHtml=[];
+  var total=0;
+
+  MODULES.forEach(function(mod){
+    total += mod.terms.length;
+    navHtml.push('<a href="#mod-'+mod.n+'">'+pad(mod.n)+' · '+esc(mod.nav)+'</a>');
+
+    var sec=document.createElement("section");
+    sec.className="mod"; sec.id="mod-"+mod.n;
+    sec.innerHTML='<div class="mhead"><span class="mn">'+pad(mod.n)+'</span><h2>'+esc(mod.title)+'</h2>'+
+                  '<span class="cnt">'+mod.terms.length+' siglas</span></div>';
+    var list=document.createElement("div"); list.className="glist";
+    mod.terms.forEach(function(t){
+      var div=document.createElement("div"); div.className="term";
+      div.setAttribute("data-search",(t.sig+" "+t.exp+" "+t.d).toLowerCase());
+      div.innerHTML='<div class="sig">'+esc(t.sig)+'</div>'+
+                    (t.exp && t.exp!=="—" ? '<div class="exp">'+esc(t.exp)+'</div>' : '')+
+                    '<div class="desc">'+esc(t.d)+'</div>';
+      list.appendChild(div);
+    });
+    sec.appendChild(list);
+    main.appendChild(sec);
   });
-  document.querySelector('#mod-1 .cnt').textContent=GLOSSARY[1].length+" siglas";
 
-  // nav
-  document.getElementById("modnav").innerHTML='<a href="#mod-1">01 · Intro WAN</a>';
+  // ---- módulos pendientes ----
+  if(TODOS.length){
+    var pend=document.createElement("section");
+    pend.className="mod"; pend.id="mod-next";
+    pend.innerHTML='<div class="mhead"><span class="mn">'+TODOS[0].n+'–'+TODOS[TODOS.length-1].n+'</span>'+
+                   '<h2>Módulos pendientes</h2></div>'+
+                   '<div class="soon">Las siglas de estos módulos se agregan a medida que avancemos:<br><b>'+
+                   TODOS.map(function(t){return pad(t.n)+" "+esc(t.title);}).join(" · ")+'</b></div>';
+    main.appendChild(pend);
+  }
 
-  // buscador
+  document.getElementById("modnav").innerHTML=navHtml.join("");
+  document.getElementById("totalcount").textContent=total+" siglas en "+MODULES.length+" módulos";
+
+  // ---- buscador ----
   var q=document.getElementById("q");
   q.addEventListener("input",function(){
     var v=q.value.trim().toLowerCase();
-    var terms=document.querySelectorAll(".term"), shown=0;
-    terms.forEach(function(el){
-      var match=!v || el.getAttribute("data-search").indexOf(v)>-1;
-      el.style.display=match?"":"none"; if(match)shown++;
+    var shown=0;
+    document.querySelectorAll("section.mod").forEach(function(sec){
+      if(sec.id==="mod-next"){ sec.style.display=v?"none":""; return; }
+      var vis=0;
+      sec.querySelectorAll(".term").forEach(function(el){
+        var match=!v || el.getAttribute("data-search").indexOf(v)>-1;
+        el.style.display=match?"":"none"; if(match){ vis++; shown++; }
+      });
+      sec.style.display=vis?"":"none";  // ocultar módulos sin coincidencias
     });
     document.getElementById("empty").style.display=(v && shown===0)?"block":"none";
-    document.getElementById("mod-next").style.display=v?"none":"";
   });
 })();
 </script>

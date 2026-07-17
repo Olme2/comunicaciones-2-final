@@ -4,255 +4,371 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Calendario de estudio · Comunicaciones II</title>
-<link rel="stylesheet" href="assets/styles.css">
+<style>
+  :root{
+    --bg:#f5f7fa; --card:#ffffff; --text:#1b2531; --muted:#6a7685; --border:#e4e8ee;
+    --accent:#2e6fb0; --accent-soft:#e9f1f9; --ok:#1f8a4c; --ok-bg:#e9f7ef;
+    --shadow:0 1px 3px rgba(20,30,45,.06),0 1px 2px rgba(20,30,45,.04);
+    --c-mod:#2e6fb0; --c-mod-bg:#e9f1f9;
+    --c-parc:#b8860b; --c-parc-bg:#fbf3e2;
+    --c-colch:#6a7685; --c-colch-bg:#eef1f4;
+    --c-integ:#7a5cc0; --c-integ-bg:#efeaf8;
+    --c-exam:#1f8a4c; --c-exam-bg:#e9f7ef;
+  }
+  html.dark{
+    --bg:#0f141a; --card:#19212b; --text:#e6ebf1; --muted:#93a1b0; --border:#2a3542;
+    --accent:#5fa8e0; --accent-soft:#1d2c3a; --ok:#54c483; --ok-bg:#142a1e;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+    --c-mod:#5fa8e0; --c-mod-bg:#16283a;
+    --c-parc:#d6a94a; --c-parc-bg:#2c2413;
+    --c-colch:#93a1b0; --c-colch-bg:#20272f;
+    --c-integ:#9b82d8; --c-integ-bg:#211b33;
+    --c-exam:#54c483; --c-exam-bg:#142a1e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;font-size:16px;padding-bottom:env(safe-area-inset-bottom)}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:12px 14px}
+  .htop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;max-width:840px;margin:0 auto}
+  .title h1{font-size:1.08rem;margin:0;font-weight:700;letter-spacing:-.01em}
+  .title span{font-size:.74rem;color:var(--muted)}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.76rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+
+  main{max-width:840px;margin:0 auto;padding:14px}
+  .intro{font-size:.82rem;color:var(--muted);margin:2px 4px 14px;line-height:1.5}
+  .intro b{color:var(--text)}
+
+  .legend{display:flex;flex-wrap:wrap;gap:7px;margin:0 4px 18px}
+  .lchip{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:99px;padding:4px 10px}
+  .lchip .sw{width:9px;height:9px;border-radius:3px}
+
+  .wkhead{margin:20px 4px 10px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+  .wkhead h2{margin:0;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);font-weight:800}
+  .wkhead span{font-size:.74rem;color:var(--muted)}
+
+  .day{display:flex;gap:12px;background:var(--card);border:1px solid var(--border);border-left:4px solid var(--c-colch);border-radius:12px;padding:11px 13px;margin-bottom:9px;box-shadow:var(--shadow)}
+  .day.mod{border-left-color:var(--c-mod)}
+  .day.parc{border-left-color:var(--c-parc)}
+  .day.colch{border-left-color:var(--c-colch)}
+  .day.integ{border-left-color:var(--c-integ)}
+  .day.exam{border-left-color:var(--c-exam)}
+  .day.today{box-shadow:0 0 0 2px var(--accent), var(--shadow)}
+  .day.past{opacity:.5}
+  .day.past .dtitle{text-decoration:line-through;text-decoration-color:var(--muted)}
+  .examband.today{box-shadow:0 0 0 2px var(--c-exam), var(--shadow)}
+  @media (prefers-reduced-motion: no-preference){
+    .day.today{transition:box-shadow .3s ease}
+  }
+
+  .date{flex:none;width:52px;text-align:center;border-right:1px solid var(--border);padding-right:10px}
+  .date .dw{font-size:.64rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700}
+  .date .dn{font-size:1.5rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
+  .date .dm{font-size:.64rem;color:var(--muted);text-transform:uppercase;font-weight:700}
+
+  .body{flex:1;min-width:0}
+  .toprow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:3px}
+  .tag{font-size:.64rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em;padding:2px 8px;border-radius:6px}
+  .tag.mod{color:var(--c-mod);background:var(--c-mod-bg)}
+  .tag.parc{color:var(--c-parc);background:var(--c-parc-bg)}
+  .tag.colch{color:var(--c-colch);background:var(--c-colch-bg)}
+  .tag.integ{color:var(--c-integ);background:var(--c-integ-bg)}
+  .tag.exam{color:var(--c-exam);background:var(--c-exam-bg)}
+  .todaytag{font-size:.62rem;font-weight:800;color:#fff;background:var(--accent);padding:2px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.03em}
+  .dtitle{font-weight:700;font-size:.96rem;letter-spacing:-.01em}
+  .ddetail{font-size:.82rem;color:var(--muted);margin-top:3px;line-height:1.5}
+  .ddetail code{background:var(--accent-soft);color:var(--accent);padding:.03em .3em;border-radius:4px;font-size:.9em;font-family:ui-monospace,Menlo,monospace}
+
+  .examband{background:var(--c-exam-bg);border:1px solid var(--border);border-left:4px solid var(--c-exam);border-radius:12px;padding:14px;margin-bottom:9px}
+  .examband .dtitle{font-size:1rem}
+  .examband .ddetail{color:var(--text)}
+
+  footer{max-width:840px;margin:22px auto 34px;padding:0 14px;font-size:.74rem;color:var(--muted);line-height:1.55}
+  footer b{color:var(--text)}
+</style>
 </head>
 <body>
-<a class="skip-link" href="#main">Saltar al contenido</a>
-
-<header class="site-header">
-  <div class="container header-inner">
-    <div class="brand">
+<header>
+  <div class="htop">
+    <div class="title">
       <h1>Calendario de estudio</h1>
-      <p>Comunicaciones II · Final libre — 14 jul → examen 2–7 ago</p>
+      <span>Comunicaciones II · Final libre — 14 jul → examen 2–7 ago</span>
     </div>
-    <nav class="header-actions" aria-label="Acciones">
-      <a class="btn" href="index.html">← Centro de estudio</a>
-      <button class="btn" id="themeBtn" type="button" aria-pressed="false">Tema claro / oscuro</button>
-    </nav>
+    <div class="hbtns">
+      <a class="iconbtn" href="index.html">← Centro</a>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
   </div>
 </header>
 
-<main id="main" class="container">
-  <div class="cal-shell">
-    <p class="cal-intro">
-      <b>19 días útiles</b> a 2–4 h. La idea es el <b>ciclo rodante</b>: cada módulo se hace entero
-      (PDF → TP → resumen → quiz → punteros) antes de pasar al siguiente. Los <b>colchones</b> son tu
-      margen de error: si un día no estudiás o algo se atrasa, se recupera ahí sin mover la fecha final.
-      El <b>núcleo</b> queda listo el 31/7, con el examen recién a partir del 2/8.
-    </p>
+<main>
+  <p class="intro">
+    <b>19 días útiles</b> a 2–4 h. La idea es el <b>ciclo rodante</b>: cada módulo se hace entero
+    (PDF → TP → resumen → quiz → punteros) antes de pasar al siguiente. Los <b>colchones</b> son tu
+    margen de error: si un día no estudiás o algo se atrasa, se recupera ahí sin mover la fecha final.
+    El <b>núcleo</b> queda listo el 31/7, con el examen recién a partir del 2/8.
+  </p>
 
-    <div class="legend" aria-label="Referencia de categorías">
-      <span class="legend-chip"><span class="sw" style="background:var(--c-mod)"></span>Módulo</span>
-      <span class="legend-chip"><span class="sw" style="background:var(--c-parc)"></span>Parcial</span>
-      <span class="legend-chip"><span class="sw" style="background:var(--c-integ)"></span>Integración</span>
-      <span class="legend-chip"><span class="sw" style="background:var(--c-colch)"></span>Colchón</span>
-      <span class="legend-chip"><span class="sw" style="background:var(--c-exam)"></span>Examen</span>
+  <p class="intro" id="outnote" style="display:none;color:var(--c-parc);font-weight:600"></p>
+
+  <div class="legend">
+    <span class="lchip"><span class="sw" style="background:var(--c-mod)"></span>Módulo</span>
+    <span class="lchip"><span class="sw" style="background:var(--c-parc)"></span>Parcial</span>
+    <span class="lchip"><span class="sw" style="background:var(--c-integ)"></span>Integración</span>
+    <span class="lchip"><span class="sw" style="background:var(--c-colch)"></span>Colchón</span>
+    <span class="lchip"><span class="sw" style="background:var(--c-exam)"></span>Examen</span>
+  </div>
+
+  <!-- SEMANA 1 -->
+  <div class="wkhead"><h2>Semana 1</h2><span>14–20 jul · Módulos 1–5 + 1er parcial</span></div>
+
+  <div class="day mod" data-date="2026-07-14">
+    <div class="date"><div class="dw">Mar</div><div class="dn">14</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag mod">Módulo 1</span></div>
+      <div class="dtitle">Introducción a redes WAN</div>
+      <div class="ddetail">Ciclo completo: leer PDF → TP1 → resumen principal → quiz → punteros en voz alta. Anotá tu % de quiz en el tracker.</div>
     </div>
+  </div>
 
-    <!-- SEMANA 1 -->
-    <div class="week-head"><h2>Semana 1</h2><span>14–20 jul · Módulos 1–5 + 1er parcial</span></div>
-
-    <article class="day-card mod is-today" id="d14-jul">
-      <div class="day-date"><div class="dw">Mar</div><div class="dn">14</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag mod">Módulo 1</span><span class="today-tag">Hoy</span></div>
-        <div class="day-title">Introducción a redes WAN</div>
-        <div class="day-detail">Ciclo completo: leer PDF → TP1 → resumen principal → quiz → punteros en voz alta. Anotá tu % de quiz en el tracker.</div>
-      </div>
-    </article>
-
-    <article class="day-card mod" id="d15-jul">
-      <div class="day-date"><div class="dw">Mié</div><div class="dn">15</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag mod">Módulo 2</span></div>
-        <div class="day-title">Acceso de usuario: última milla</div>
-        <div class="day-detail">Mismo ciclo. Ojo con rangos y velocidades (ADSL, VDSL, DMT): son detalle de examen.</div>
-      </div>
-    </article>
-
-    <article class="day-card mod" id="d16-jul">
-      <div class="day-date"><div class="dw">Jue</div><div class="dn">16</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag mod">Módulo 3</span></div>
-        <div class="day-title">Multiplexión</div>
-        <div class="day-detail">Fórmulas clave: PCM 64 kbps, E1/T1, cálculo de %e. Módulo con cuentas: practicá el quiz numérico.</div>
-      </div>
-    </article>
-
-    <article class="day-card mod" id="d17-jul">
-      <div class="day-date"><div class="dw">Vie</div><div class="dn">17</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag mod">Módulo 4</span></div>
-        <div class="day-title">Conmutación de circuitos y paquetes</div>
-        <div class="day-detail">Tiempos de transmisión y comparación circuitos vs paquetes. Es tema de peso en el 1er parcial.</div>
-      </div>
-    </article>
-
-    <article class="day-card mod" id="d18-jul">
-      <div class="day-date"><div class="dw">Sáb</div><div class="dn">18</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag mod">Módulo 5</span></div>
-        <div class="day-title">Frame Relay · ATM · MPLS</div>
-        <div class="day-detail">Cierra el bloque 1–5. Con esto ya podés rendir el 1er parcial de práctica.</div>
-      </div>
-    </article>
-
-    <article class="day-card parc" id="d19-jul">
-      <div class="day-date"><div class="dw">Dom</div><div class="dn">19</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag parc">1er parcial</span></div>
-        <div class="day-title">1er parcial de práctica (módulos 1–5)</div>
-        <div class="day-detail">Completo, cronometrado, a libro cerrado. Después: te lo corrijo y re-quiz de lo que haya fallado.</div>
-      </div>
-    </article>
-
-    <article class="day-card colch" id="d20-jul">
-      <div class="day-date"><div class="dw">Lun</div><div class="dn">20</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag colch">Colchón 1</span></div>
-        <div class="day-title">Recuperar / reforzar</div>
-        <div class="day-detail">Sin material nuevo. Recuperás lo atrasado o reforzás el módulo más flojo de 1–5. Si vas al día, es repaso extra.</div>
-      </div>
-    </article>
-
-    <!-- SEMANA 2 -->
-    <div class="week-head"><h2>Semana 2</h2><span>21–27 jul · Módulos 6–10 + 2do parcial</span></div>
-
-    <article class="day-card mod" id="d21-jul">
-      <div class="day-date"><div class="dw">Mar</div><div class="dn">21</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag mod">Módulo 6</span></div>
-        <div class="day-title">Protocolos de red · Direccionamiento IP</div>
-        <div class="day-detail">Subredes / VLSM: <b>alta frecuencia</b> en el 2do parcial. Practicá subnetting hasta que salga solo.</div>
-      </div>
-    </article>
-
-    <article class="day-card mod" id="d22-jul">
-      <div class="day-date"><div class="dw">Mié</div><div class="dn">22</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag mod">Módulo 7</span></div>
-        <div class="day-title">Protocolos de ruteo</div>
-        <div class="day-detail">Tabla de ruteo estática: <b>alta frecuencia</b>. También RIP, OSPF, BGP a nivel concepto.</div>
-      </div>
-    </article>
-
-    <article class="day-card mod" id="d23-jul">
-      <div class="day-date"><div class="dw">Jue</div><div class="dn">23</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag mod">Módulo 8</span></div>
-        <div class="day-title">Protocolos de transporte</div>
-        <div class="day-detail">TCP (handshake, ventana, congestión) y UDP. Aparece en el análisis de captura del parcial.</div>
-      </div>
-    </article>
-
-    <article class="day-card mod" id="d24-jul">
-      <div class="day-date"><div class="dw">Vie</div><div class="dn">24</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag mod">Módulo 9</span></div>
-        <div class="day-title">Servicios TCP/IP</div>
-        <div class="day-detail">DHCP y DNS: <b>alta frecuencia</b> (resolución de nombres, tipos de registro, TTL). SMTP y HTTP.</div>
-      </div>
-    </article>
-
-    <article class="day-card mod" id="d25-jul">
-      <div class="day-date"><div class="dw">Sáb</div><div class="dn">25</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag mod">Módulo 10</span></div>
-        <div class="day-title">Seguridad de redes</div>
-        <div class="day-detail">iptables: <b>alta frecuencia</b> (NAT, DNAT, SNAT, políticas). Criptografía y proxy a nivel concepto.</div>
-      </div>
-    </article>
-
-    <article class="day-card parc" id="d26-jul">
-      <div class="day-date"><div class="dw">Dom</div><div class="dn">26</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag parc">2do parcial</span></div>
-        <div class="day-title">2do parcial · variante 1 (módulos 6–10)</div>
-        <div class="day-detail">Completo y cronometrado. Corrección conmigo. Las variantes 2 y 3 quedan para la semana de integración.</div>
-      </div>
-    </article>
-
-    <article class="day-card colch" id="d27-jul">
-      <div class="day-date"><div class="dw">Lun</div><div class="dn">27</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag colch">Colchón 2</span></div>
-        <div class="day-title">Recuperar / reforzar</div>
-        <div class="day-detail">Igual que el colchón 1, pero para el bloque 6–10.</div>
-      </div>
-    </article>
-
-    <!-- SEMANA 3 -->
-    <div class="week-head"><h2>Semana 3</h2><span>28 jul–1 ago · Integración y repaso</span></div>
-
-    <article class="day-card integ" id="d28-jul">
-      <div class="day-date"><div class="dw">Mar</div><div class="dn">28</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag integ">Integración</span></div>
-        <div class="day-title">Resumen general + arrancar quiz general</div>
-        <div class="day-detail">Leer el resumen acortado general (une conceptos entre módulos) y empezar el quiz general grande.</div>
-      </div>
-    </article>
-
-    <article class="day-card integ" id="d29-jul">
-      <div class="day-date"><div class="dw">Mié</div><div class="dn">29</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag integ">Integración</span></div>
-        <div class="day-title">2do parcial · variantes 2 y 3</div>
-        <div class="day-detail">Las dos variantes restantes, cronometradas, con corrección. Detectar cualquier hueco que quede.</div>
-      </div>
-    </article>
-
-    <article class="day-card integ" id="d30-jul">
-      <div class="day-date"><div class="dw">Jue</div><div class="dn">30</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag integ">Integración</span></div>
-        <div class="day-title">Simulacro mixto + cheat sheet</div>
-        <div class="day-detail">Simulacro que combina varios temas (como el final real) y armado/repaso de la hoja única de fórmulas.</div>
-      </div>
-    </article>
-
-    <article class="day-card integ" id="d31-jul">
-      <div class="day-date"><div class="dw">Vie</div><div class="dn">31</div><div class="dm">Jul</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag integ">Integración</span><span class="tag exam">Núcleo listo</span></div>
-        <div class="day-title">Rehacer parciales flojos + quiz general completo</div>
-        <div class="day-detail">Rehacés los parciales donde sacaste menos y cerrás el quiz general. Acá el estudio "pesado" está terminado.</div>
-      </div>
-    </article>
-
-    <article class="day-card colch" id="d01-ago">
-      <div class="day-date"><div class="dw">Sáb</div><div class="dn">01</div><div class="dm">Ago</div></div>
-      <div class="day-body">
-        <div class="day-toprow"><span class="tag colch">Colchón 3</span></div>
-        <div class="day-title">Repaso ligero</div>
-        <div class="day-detail">Resúmenes acortados + punteros en voz alta. Sin contenido nuevo. Margen final por si algo quedó pendiente.</div>
-      </div>
-    </article>
-
-    <!-- EXAMEN -->
-    <div class="week-head"><h2>Ventana de examen</h2><span>2–7 ago</span></div>
-
-    <div class="exam-band">
-      <div class="day-toprow"><span class="tag exam">Examen</span></div>
-      <div class="day-title">Repaso liviano hasta el día que te toque</div>
-      <div class="day-detail">Leés tus resúmenes acortados, repasás punteros y la cheat sheet. Rehacés algún quiz si querés mantener el ritmo. <b>El día previo al examen: descanso, nada nuevo.</b> Llegás con todo consolidado desde el 31/7.</div>
+  <div class="day mod" data-date="2026-07-15">
+    <div class="date"><div class="dw">Mié</div><div class="dn">15</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag mod">Módulo 2</span></div>
+      <div class="dtitle">Acceso de usuario: última milla</div>
+      <div class="ddetail">Mismo ciclo. Ojo con rangos y velocidades (ADSL, VDSL, DMT): son detalle de examen.</div>
     </div>
+  </div>
+
+  <div class="day mod" data-date="2026-07-16">
+    <div class="date"><div class="dw">Jue</div><div class="dn">16</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag mod">Módulo 3</span></div>
+      <div class="dtitle">Multiplexión</div>
+      <div class="ddetail">Fórmulas clave: PCM 64 kbps, E1/T1, cálculo de %e. Módulo con cuentas: practicá el quiz numérico.</div>
+    </div>
+  </div>
+
+  <div class="day mod" data-date="2026-07-17">
+    <div class="date"><div class="dw">Vie</div><div class="dn">17</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag mod">Módulo 4</span></div>
+      <div class="dtitle">Conmutación de circuitos y paquetes</div>
+      <div class="ddetail">Tiempos de transmisión y comparación circuitos vs paquetes. Es tema de peso en el 1er parcial.</div>
+    </div>
+  </div>
+
+  <div class="day mod" data-date="2026-07-18">
+    <div class="date"><div class="dw">Sáb</div><div class="dn">18</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag mod">Módulo 5</span></div>
+      <div class="dtitle">Frame Relay · ATM · MPLS</div>
+      <div class="ddetail">Cierra el bloque 1–5. Con esto ya podés rendir el 1er parcial de práctica.</div>
+    </div>
+  </div>
+
+  <div class="day parc" data-date="2026-07-19">
+    <div class="date"><div class="dw">Dom</div><div class="dn">19</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag parc">1er parcial</span></div>
+      <div class="dtitle">1er parcial de práctica (módulos 1–5)</div>
+      <div class="ddetail">Completo, cronometrado, a libro cerrado. Después: te lo corrijo y re-quiz de lo que haya fallado.</div>
+    </div>
+  </div>
+
+  <div class="day colch" data-date="2026-07-20">
+    <div class="date"><div class="dw">Lun</div><div class="dn">20</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag colch">Colchón 1</span></div>
+      <div class="dtitle">Recuperar / reforzar</div>
+      <div class="ddetail">Sin material nuevo. Recuperás lo atrasado o reforzás el módulo más flojo de 1–5. Si vas al día, es repaso extra.</div>
+    </div>
+  </div>
+
+  <!-- SEMANA 2 -->
+  <div class="wkhead"><h2>Semana 2</h2><span>21–27 jul · Módulos 6–10 + 2do parcial</span></div>
+
+  <div class="day mod" data-date="2026-07-21">
+    <div class="date"><div class="dw">Mar</div><div class="dn">21</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag mod">Módulo 6</span></div>
+      <div class="dtitle">Protocolos de red · Direccionamiento IP</div>
+      <div class="ddetail">Subredes / VLSM: <b>alta frecuencia</b> en el 2do parcial. Practicá subnetting hasta que salga solo.</div>
+    </div>
+  </div>
+
+  <div class="day mod" data-date="2026-07-22">
+    <div class="date"><div class="dw">Mié</div><div class="dn">22</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag mod">Módulo 7</span></div>
+      <div class="dtitle">Protocolos de ruteo</div>
+      <div class="ddetail">Tabla de ruteo estática: <b>alta frecuencia</b>. También RIP, OSPF, BGP a nivel concepto.</div>
+    </div>
+  </div>
+
+  <div class="day mod" data-date="2026-07-23">
+    <div class="date"><div class="dw">Jue</div><div class="dn">23</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag mod">Módulo 8</span></div>
+      <div class="dtitle">Protocolos de transporte</div>
+      <div class="ddetail">TCP (handshake, ventana, congestión) y UDP. Aparece en el análisis de captura del parcial.</div>
+    </div>
+  </div>
+
+  <div class="day mod" data-date="2026-07-24">
+    <div class="date"><div class="dw">Vie</div><div class="dn">24</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag mod">Módulo 9</span></div>
+      <div class="dtitle">Servicios TCP/IP</div>
+      <div class="ddetail">DHCP y DNS: <b>alta frecuencia</b> (resolución de nombres, tipos de registro, TTL). SMTP y HTTP.</div>
+    </div>
+  </div>
+
+  <div class="day mod" data-date="2026-07-25">
+    <div class="date"><div class="dw">Sáb</div><div class="dn">25</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag mod">Módulo 10</span></div>
+      <div class="dtitle">Seguridad de redes</div>
+      <div class="ddetail">iptables: <b>alta frecuencia</b> (NAT, DNAT, SNAT, políticas). Criptografía y proxy a nivel concepto.</div>
+    </div>
+  </div>
+
+  <div class="day parc" data-date="2026-07-26">
+    <div class="date"><div class="dw">Dom</div><div class="dn">26</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag parc">2do parcial</span></div>
+      <div class="dtitle">2do parcial · variante 1 (módulos 6–10)</div>
+      <div class="ddetail">Completo y cronometrado. Corrección conmigo. Las variantes 2 y 3 quedan para la semana de integración.</div>
+    </div>
+  </div>
+
+  <div class="day colch" data-date="2026-07-27">
+    <div class="date"><div class="dw">Lun</div><div class="dn">27</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag colch">Colchón 2</span></div>
+      <div class="dtitle">Recuperar / reforzar</div>
+      <div class="ddetail">Igual que el colchón 1, pero para el bloque 6–10.</div>
+    </div>
+  </div>
+
+  <!-- SEMANA 3 -->
+  <div class="wkhead"><h2>Semana 3</h2><span>28 jul–1 ago · Integración y repaso</span></div>
+
+  <div class="day integ" data-date="2026-07-28">
+    <div class="date"><div class="dw">Mar</div><div class="dn">28</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag integ">Integración</span></div>
+      <div class="dtitle">Resumen general + arrancar quiz general</div>
+      <div class="ddetail">Leer el resumen acortado general (une conceptos entre módulos) y empezar el quiz general grande.</div>
+    </div>
+  </div>
+
+  <div class="day integ" data-date="2026-07-29">
+    <div class="date"><div class="dw">Mié</div><div class="dn">29</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag integ">Integración</span></div>
+      <div class="dtitle">2do parcial · variantes 2 y 3</div>
+      <div class="ddetail">Las dos variantes restantes, cronometradas, con corrección. Detectar cualquier hueco que quede.</div>
+    </div>
+  </div>
+
+  <div class="day integ" data-date="2026-07-30">
+    <div class="date"><div class="dw">Jue</div><div class="dn">30</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag integ">Integración</span></div>
+      <div class="dtitle">Simulacro mixto + cheat sheet</div>
+      <div class="ddetail">Simulacro que combina varios temas (como el final real) y armado/repaso de la hoja única de fórmulas.</div>
+    </div>
+  </div>
+
+  <div class="day integ" data-date="2026-07-31">
+    <div class="date"><div class="dw">Vie</div><div class="dn">31</div><div class="dm">Jul</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag integ">Integración</span><span class="tag exam">Núcleo listo</span></div>
+      <div class="dtitle">Rehacer parciales flojos + quiz general completo</div>
+      <div class="ddetail">Rehacés los parciales donde sacaste menos y cerrás el quiz general. Acá el estudio "pesado" está terminado.</div>
+    </div>
+  </div>
+
+  <div class="day colch" data-date="2026-08-01">
+    <div class="date"><div class="dw">Sáb</div><div class="dn">01</div><div class="dm">Ago</div></div>
+    <div class="body">
+      <div class="toprow"><span class="tag colch">Colchón 3</span></div>
+      <div class="dtitle">Repaso ligero</div>
+      <div class="ddetail">Resúmenes acortados + punteros en voz alta. Sin contenido nuevo. Margen final por si algo quedó pendiente.</div>
+    </div>
+  </div>
+
+  <!-- EXAMEN -->
+  <div class="wkhead"><h2>Ventana de examen</h2><span>2–7 ago</span></div>
+
+  <div class="examband" data-from="2026-08-02" data-to="2026-08-07">
+    <div class="toprow"><span class="tag exam">Examen</span></div>
+    <div class="dtitle">Repaso liviano hasta el día que te toque</div>
+    <div class="ddetail">Leés tus resúmenes acortados, repasás punteros y la cheat sheet. Rehacés algún quiz si querés mantener el ritmo. <b>El día previo al examen: descanso, nada nuevo.</b> Llegás con todo consolidado desde el 31/7.</div>
   </div>
 </main>
 
-<footer class="site-footer">
-  <div class="container">
-    <b>Cómo leer este calendario:</b> cada día tiene su tarea concreta. Los colchones absorben imprevistos —
-    si perdés 2–3 días sueltos, igual cerrás el núcleo el 31/7 con el examen recién a partir del 2/8. Volvé
-    al <a href="index.html">Centro de estudio</a> para marcar tu progreso.
-  </div>
+<footer>
+  <b>Cómo leer este calendario:</b> cada día tiene su tarea concreta. Los colchones absorben imprevistos —
+  si perdés 2–3 días sueltos, igual cerrás el núcleo el 31/7 con el examen recién a partir del 2/8. Volvé
+  al <a href="index.html" style="color:var(--accent)">Centro de estudio</a> para marcar tu progreso.
 </footer>
 
 <script>
   (function(){
+    // ---- tema ----
     var mem={};
     var saved; try{ saved=localStorage.getItem("comii-theme"); }catch(e){ saved=mem["comii-theme"]; }
     if(saved==="dark" || (!saved && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)){
       document.documentElement.classList.add("dark");
     }
-    var btn=document.getElementById("themeBtn");
-    btn.setAttribute("aria-pressed", document.documentElement.classList.contains("dark") ? "true" : "false");
-    btn.addEventListener("click",function(){
+    document.getElementById("themeBtn").addEventListener("click",function(){
       document.documentElement.classList.toggle("dark");
       var v=document.documentElement.classList.contains("dark")?"dark":"light";
       try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
-      btn.setAttribute("aria-pressed", v==="dark" ? "true" : "false");
     });
+
+    // ---- marcar HOY y los días ya pasados (se recalcula en cada carga) ----
+    function midnight(d){ var x=new Date(d); x.setHours(0,0,0,0); return x; }
+    function parse(s){ var p=s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+
+    var today=midnight(new Date());
+    var todayEl=null;
+
+    document.querySelectorAll(".day[data-date]").forEach(function(el){
+      var d=parse(el.getAttribute("data-date"));
+      if(d.getTime()===today.getTime()){
+        el.classList.add("today");
+        var row=el.querySelector(".toprow");
+        if(row){ var b=document.createElement("span"); b.className="todaytag"; b.textContent="Hoy"; row.appendChild(b); }
+        todayEl=el;
+      } else if(d<today){
+        el.classList.add("past");
+      }
+    });
+
+    // ventana de examen (rango de fechas)
+    var band=document.querySelector(".examband[data-from]");
+    if(band){
+      var f=parse(band.getAttribute("data-from")), t=parse(band.getAttribute("data-to"));
+      if(today>=f && today<=t){
+        band.classList.add("today");
+        var r=band.querySelector(".toprow");
+        if(r){ var b2=document.createElement("span"); b2.className="todaytag"; b2.textContent="Hoy"; r.appendChild(b2); }
+      }
+    }
+
+    // aviso si la fecha cae fuera del plan
+    if(!todayEl && !(band && band.classList.contains("today"))){
+      var n=document.getElementById("outnote");
+      if(n){
+        n.style.display="block";
+        n.textContent = (today < parse("2026-07-14"))
+          ? "El plan arranca el 14 de julio."
+          : "La fecha de hoy quedó fuera del plan (terminó el 7 de agosto).";
+      }
+    }
   })();
 </script>
 </body>

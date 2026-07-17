@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 2 · Última milla — Resumen acortado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f6f1; --card:#ffffff; --ink:#2b2b2b; --muted:#6d6a60; --border:#e7e2d5;
+    --accent:#2e6fb0;
+    --hl-pink:#ffc6cd; --hl-green:#c6ecca;
+    --key:#c78a00; --key-bg:#fff4d4; --key-bd:#ecd58c;
+    --shadow:0 1px 3px rgba(40,35,20,.06),0 1px 2px rgba(40,35,20,.04);
+    --font:"Comic Sans MS","Comic Neue","Chalkboard SE","Segoe Print",cursive;
+  }
+  html.dark{
+    --bg:#13151a; --card:#1b1f27; --ink:#e9e5d9; --muted:#9b988c; --border:#2c303a;
+    --accent:#5fa8e0;
+    --key:#e6bd52; --key-bg:#2b2410; --key-bd:#4a3d1c;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.72;font-size:17px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:#eef1f5;color:#245a92;padding:.04em .34em;border-radius:5px;font-size:.8em;font-family:ui-monospace,Menlo,monospace;word-break:break-word}
+  html.dark code{background:#20262f;color:#7fb6e6}
+  mark{color:#2b2b2b;padding:.02em .16em;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  mark.p{background:var(--hl-pink)}
+  mark.s{background:var(--hl-green)}
+  u.w{text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:820px;margin:0 auto}
+  .htop .lbl{font-size:.74rem;color:var(--muted)}
+  .htop h1{font-size:1.04rem;margin:1px 0 0;font-weight:700}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--ink);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;font-family:var(--font)}
+
+  .wrap{max-width:820px;margin:0 auto;padding:18px 18px 44px}
+  .meta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+  .tag{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--muted)}
+  .tag.freq{color:var(--key);border-color:var(--key-bd);background:var(--key-bg)}
+
+  .lead{color:var(--muted);font-size:1rem;margin:2px 0 18px}
+  .lead b{color:var(--ink)}
+
+  h2.sec{font-size:1.22rem;margin:26px 0 6px;display:inline-block;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:5px}
+  p{margin:8px 0}
+  .idea{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;margin:10px 0 4px;box-shadow:var(--shadow)}
+
+  h2.big{font-size:1rem;color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px;margin:34px 0 4px}
+  .subt{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+
+  .punteros{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:620px){.punteros{grid-template-columns:1fr}}
+  details.punt{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:11px;padding:11px 14px;box-shadow:var(--shadow)}
+  details.punt summary{font-weight:700;cursor:pointer;list-style:none;outline:none;display:flex;align-items:flex-start;gap:7px}
+  details.punt summary::-webkit-details-marker{display:none}
+  details.punt summary::before{content:"▸";color:var(--accent);flex:none}
+  details.punt[open] summary::before{content:"▾"}
+  details.punt summary:focus-visible{text-decoration:underline}
+  details.punt .exp{margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);font-size:.92rem;color:var(--ink);line-height:1.6}
+  .hint{font-size:.82rem;color:var(--muted);margin:8px 2px 0}
+  .warnbox{background:var(--key-bg);border:1px solid var(--key-bd);border-left:5px solid var(--key);border-radius:12px;padding:12px 15px;margin:16px 0;font-size:.94rem}
+  .warnbox b{color:var(--key)}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 2 · Resumen acortado</span><h1>Acceso de usuario: la última milla</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <a class="iconbtn" href="resumen-principal.html">Principal</a>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="meta">
+    <span class="tag freq">Frecuencia: media</span>
+    <span class="tag">Para leer y absorber · + oral</span>
+  </div>
+
+  <p class="lead">Versión corta para <b>entender los conceptos</b> y sus conexiones, sin el detalle numérico (eso está en el principal). Abajo tenés los <b>punteros para el oral</b>: leé el gatillo, expandilo de memoria y recién ahí abrilo para chequear.</p>
+
+  <h2 class="sec">La idea en seis trazos</h2>
+
+  <div class="idea"><b>1. El problema.</b> La <mark class="p">última milla</mark> es el tramo entre el usuario y la central. Es <u class="w">el elemento más caro de toda la red</u> (sobre todo si hay que hacer ductos) y en zonas rurales hay pocos usuarios para repartir el costo de la "milla intermedia". Por eso los precios al cliente son altos. La tecnología que elijas condiciona <b>ancho de banda, inversión y costos de operación</b>.</div>
+
+  <div class="idea"><b>2. El cobre viejo, exprimido.</b> <mark class="p">xDSL</mark> mete datos digitales sobre el par telefónico. Antes se usaban sólo 4 KHz (voz); ADSL usa <b>1 MHz</b> con FDM, deja los <b>25 KHz de abajo</b> para el POTS y una guarda entre 4 y 25 KHz. Dos familias: <mark class="s">asimétricos</mark> (ADSL, VDSL — más bajada que subida, para navegar y VoD) y <mark class="s">simétricos</mark> (HDSL, SDSL, G.SHDSL — para videoconferencia).</div>
+
+  <div class="idea"><b>3. El truco fino: DMT.</b> Parte el espectro en <b>subcanales de 4 KHz</b>, mide la <b>relación señal/ruido</b> de cada uno con señales de test, y le da <u class="w">más bits a los canales buenos y menos a los malos</u>. Como la atenuación crece con la frecuencia, los subcanales altos llevan menos. Teoría: 256 × 60 kbps = 15,36 Mbps. Realidad: 1,5 a 10 Mbps.</div>
+
+  <div class="idea"><b>4. Los otros medios.</b> <mark class="s">Fibra (FTTx/PON)</mark>: la OLT en la central, un <b>splitter pasivo</b> reparte a muchos, y la ONT/ONU en la casa — sin electrónica en el medio, por eso es "pasiva". <mark class="s">HFC</mark>: fibra hasta el nodo óptico y coaxial el último tramo; medio <b>compartido</b> (poca seguridad) pero <u class="w">sin límite de distancia</u>; permite <b>Triple Play</b>. <mark class="s">Inalámbrico</mark>: WLL/LMDS/MMDS, con línea de vista y reúso de frecuencias.</div>
+
+  <div class="idea"><b>5. Metro Ethernet.</b> Ethernet como tecnología <b>única</b> para LAN, MAN y WAN. Es <mark class="p">una L2 VPN</mark>: el proveedor transporta tramas Ethernet y rutea por MAC. Un <mark class="p">EVC</mark> conecta UNIs y aísla a los que no son del grupo (como un PVC de ATM). Tres sabores: <b>E-Line</b> (punto a punto), <b>E-LAN</b> (multipunto), <b>E-Tree</b> (punto a multipunto).</div>
+
+  <div class="idea"><b>6. Lo que el quiz preguntó de verdad.</b> Tres de las cuatro preguntas fueron de <mark class="p">SSH port forwarding y VPN</mark>. La distinción que hay que tener clavada: con <b>SSH</b> tu cliente apunta al <u class="w">túnel local</u>; con <b>VPN</b> apunta a la <u class="w">IP real</u> del servidor, porque la VPN te mete adentro de la red.</div>
+
+  <div class="warnbox">
+    <b>Dos avisos que valen puntos:</b> (1) EFM es <b>IEEE 802.3ah</b>, no 802.3ab. (2) Las cifras de ADSL y VDSL <b>se contradicen entre slides</b> de la cátedra: la tabla comparativa (slide 20) es la fuente más específica. Está todo explicado en el resumen principal.
+  </div>
+
+  <h2 class="big">Punteros para rendir</h2>
+  <p class="subt">Leé el gatillo → explicalo en voz alta → abrí para verificar. Si no te sale completo, volvé al resumen principal.</p>
+
+  <div class="punteros">
+    <details class="punt"><summary>Última milla: definición + las 2 características</summary><div class="exp">Conexión entre el usuario final y la estación local/central/hub. Alámbrica o inalámbrica. (1) Tiene el costo más alto de todos los elementos de una red, sobre todo si hay que desarrollar ductos. (2) En áreas rurales hay pocos usuarios, así que la "milla intermedia" no se comparte eficientemente. Resultado: altos precios al cliente.</div></details>
+
+    <details class="punt"><summary>Qué condiciona la elección de tecnología</summary><div class="exp">Condiciona el ancho de banda, el monto de inversión y los costos de operación y venta. Debe basarse en el modelo de negocio: la tecnología tiene que ser actual y estar disponible; conviene estudiar modelos exitosos en otros países.</div></details>
+
+    <details class="punt"><summary>Transporte por capa (1 / 2 / 3)</summary><div class="exp">Capa 1: SDH, redes ópticas transparentes (OTH), cobre/microondas. Capa 2: ATM, Frame Relay, Ethernet. Capa 3: IP, IP/MPLS. (Pregunta textual del Quiz 2: capa 2 = ATM y Frame Relay.)</div></details>
+
+    <details class="punt"><summary>Tecnologías de acceso: alámbricas e inalámbricas</summary><div class="exp">Alámbricas: par de cobre (xDSL, módems), cable, HFC, red eléctrica (PLC), fibra (FTTx, PON, EFM). Inalámbricas: WLL (WiLL, LMDS, MMDS), MAN/LAN inalámbricas (WLAN, WiFi, WiMAX, HiperLAN2), móviles 2G–5G (CDMA, GSM, UMTS), óptica por aire (HAPs, FSO), satélite, TDT.</div></details>
+
+    <details class="punt"><summary>Tipos de DSL asimétrico</summary><div class="exp">ADSL: el primero y más popular, 1 par. UDSL / G.Lite / DSL Lite: mueve la separación del usuario a la estación base; al no tener splitter, baja mucho la velocidad. RADSL: detecta la máxima velocidad posible y la ajusta. VDSL: alta velocidad a corta distancia, junto con FTTC.</div></details>
+
+    <details class="punt"><summary>ADSL: estrategia de diseño</summary><div class="exp">Usa FDM para aprovechar 1 MHz del UTP. Reserva los 25 KHz inferiores para POTS (voz analógica). Entre 4 y 25 KHz va la banda de guarda contra interferencia voz/datos. Usa cancelación de eco para dar más ancho de banda a ascendente y descendente. FDM divide la secuencia de bits en secuencias paralelas, cada una en su banda.</div></details>
+
+    <details class="punt"><summary>DMT: qué es y cómo funciona</summary><div class="exp">Multitono discreto: varias portadoras a distintas frecuencias (FDM), modulando en QAM o PSK; los R bits de entrada se reparten entre canales. Ancho de banda dividido en subcanales de 4 KHz. Paso 1: el módem envía señales de test para medir S/N de cada subcanal. Paso 2: asigna más bits a los de mejor S/N y menos a los peores.</div></details>
+
+    <details class="punt"><summary>DMT: los números</summary><div class="exp">Ideal: 60 kbps por subcanal de 4 KHz. Realidad: a mayor frecuencia, mayor atenuación y menor S/N, así que los subcanales altos llevan menos bits. Diseños actuales: 256 subcanales descendentes. Teórico: 15,36 Mbps. Práctico: 1,5 a 10 Mbps según distancia y calidad de línea. En el diagrama: 0 &lt; ai &lt; 1, Σai = 1, f(i+1) = fi + 4 KHz.</div></details>
+
+    <details class="punt"><summary>VDSL: bandas y características</summary><div class="exp">Objetivo: como ADSL pero mucho más rápido, a costa de menos distancia. NO usa cancelación de eco, por eso usa bandas separadas: POTS 0–4 KHz, RDSI 4–80 KHz, ascendente 300–700 KHz (1,5–2,3 Mbps), descendente ≥1 MHz (13–52 Mbps). Distancia típica 1,5 km. Usa 4 canales (2 bajada + 2 subida) y FTTC (híbrido cobre/fibra).</div></details>
+
+    <details class="punt"><summary>DSL simétrico: HDSL, SDSL, G.SHDSL</summary><div class="exp">HDSL: transmite tramas E1 más eficientemente; el E1 tradicional ocupa ~1,5 MHz y sólo llega a 1 km entre repetidores. Usa 2 pares. SDSL: hace lo mismo con 1 solo par. G.SHDSL: 2,3 Mbps sobre 1 par, 4,6 sobre 2 (opcional 4,7), hasta 3,9 km; mejora a SDSL y HDSL; estándar ITU-T de febrero 2001. Todos transmiten E1/T1, ISDN y ATM.</div></details>
+
+    <details class="punt"><summary>Tabla xDSL: el patrón</summary><div class="exp">Simétricos (HDSL, SDSL, G.SHDSL): señalización digital, codificación 2B1Q, frecuencia 196 KHz, 4 bits por ciclo (G.SHDSL variable). Asimétricos (ADSL, VDSL): señalización analógica, codificación DMT (ADSL: CAP/DMT), frecuencias 1–5 MHz y 10 MHz, bits por ciclo variable. Pares: ADSL 1, HDSL 2, SDSL 1, G.SHDSL 1 o 2, VDSL 1.</div></details>
+
+    <details class="punt"><summary>DSLAM y transceptores</summary><div class="exp">Los accesos se concentran en la red pública mediante concentradores/multiplexores según el tipo de acceso. Cada acceso requiere DOS transceptores: uno en el domicilio y otro en el nodo de la red; el del nodo va integrado a un puerto del concentrador. Para DSL el concentrador es el DSLAM (ej: Huawei MA5603, multiservicio ADSL/VDSL/SHDSL/IP DSLAM).</div></details>
+
+    <details class="punt"><summary>Fibra: clasificación y FTTx</summary><div class="exp">Destraba el cuello de botella del acceso; hasta cientos de Gbps. Se clasifica por elementos pasivos/activos (AON vs PON) y por cercanía al domicilio (FTTx, FTTB, FTTC, FTTCab). FTTx instala fibra directa hasta hogares o edificios. Usan DWDM. Algunos montan Gigabit Ethernet sobre fibra oscura arrendada.</div></details>
+
+    <details class="punt"><summary>Arquitectura PON: los 4 elementos</summary><div class="exp">OLT (Optical Line Terminal): en la central del proveedor. Splitter (red ODN): divisor pasivo, sin electrónica, reparte una fibra a muchos abonados — por eso "pasiva". ONT (Optical Network Terminal): en el domicilio. ONU (Optical Network Unit): unidad óptica del lado del usuario en punto intermedio. EPON permite compartir entre abonados los costes de terminación.</div></details>
+
+    <details class="punt"><summary>HFC: qué es y sus límites</summary><div class="exp">Fibra en la troncal desde la cabecera hasta los nodos ópticos (que hacen la conversión óptico/eléctrica); desde ahí, coaxial. Para servicios bidireccionales necesita canal de retorno habilitado y buen diseño del área de cada nodo. Medio compartido, distribución en bus. Bus: 50 Mbps red→usuario, 10 Mbps usuario→red. Sin límite de distancia. Fortalezas: velocidad, precio, se vende por contenido. Debilidades: medio compartido (pobre seguridad) y estándares distintos EEUU/Europa.</div></details>
+
+    <details class="punt"><summary>Metro Ethernet: qué es</summary><div class="exp">Ethernet única para LAN, MAN y WAN. Punto a punto, punto a multipunto y multipunto a multipunto. Flexibilidad 10/100/1000/10000 Mbps. Independencia geográfica: Ethernet óptico, sobre IP o MPLS. Es una L2 VPN: el proveedor transporta tramas Ethernet y usa direcciones MAC para el encaminamiento. Una VLAN se asimila a un DLCI o un PVC. EFM = IEEE 802.3ah.</div></details>
+
+    <details class="punt"><summary>EVC: definición y los 3 tipos</summary><div class="exp">Conecta dos o más UNIs para transferir tramas Ethernet, e impide la transferencia entre usuarios que no son del mismo EVC (privacidad/seguridad, similar a un PVC ATM). No altera la trama original y nunca la devuelve al origen. Sirve para armar VPN de capa 2. Tipos según el MEF: E-Line (punto a punto), E-LAN (multipunto), E-Tree (punto a multipunto).</div></details>
+
+    <details class="punt"><summary>EPL vs EVPL</summary><div class="exp">EPL (Ethernet Private Line): EVC punto a punto con ancho de banda dedicado; el cliente siempre dispone del CIR; en canales SDH o redes MPLS; es como una línea TDM pero con interfaz Ethernet. EVPL (Ethernet Virtual Private Line): tiene CIR y EIR y métrica para SLA; es similar al Frame Relay; se implementa con canales TDM compartidos o conmutación de paquetes.</div></details>
+
+    <details class="punt"><summary>EPLan vs EVPLan</summary><div class="exp">EPLan (Ethernet Private LAN): conectividad multipunto entre dos o más UNIs con ancho de banda dedicado. EVPLan (Ethernet Virtual Private LAN), también llamada VPLS, TLS o VPSN: separa clientes vía encapsulación porque las etiquetas VLAN del proveedor no alcanzan (4096). Es el servicio más rentable para el proveedor.</div></details>
+
+    <details class="punt"><summary>WLL y sus bandas</summary><div class="exp">Bucles inalámbricos: WiLL (Wireless Local Loop), LMDS (Local Multipoint Distribution Service), MMDS (Multichannel Multipoint Video Distribution System). Bandas: 1–3 GHz mayoría WLL; 3,5 GHz estándar; 10 GHz uso muy limitado; 26–28 GHz LMDS; 40 GHz MMDS genérico. Requieren línea de vista y reutilización de frecuencias.</div></details>
+
+    <details class="punt"><summary>WLAN / WiFi / HiperLAN2</summary><div class="exp">Redes locales inalámbricas para interconectar equipos en área local (hotspots). La mayoría opera en bandas sin licencia; normadas por varios estándares IEEE 802. Limitaciones notables en seguridad, calidad de servicio, movilidad e interferencias con otras redes.</div></details>
+
+    <details class="punt"><summary>SSH: local vs remote forwarding</summary><div class="exp">Local forwarding: redirige el tráfico enviado a un puerto local hacia un puerto específico de un host remoto, bidireccional. Remote forwarding: establece un camino cifrado para que el tráfico contra un puerto de un host remoto se redirija a un puerto de un host local. SSH es simple, rápido y seguro; VPN (openvpn roadwarrior) es más compleja pero más potente.</div></details>
+
+    <details class="punt"><summary>ssh -L: la sintaxis</summary><div class="exp">ssh -L ip_local:puerto_local:host_destino:puerto_destino user@servidor_ssh. Ejemplo del quiz: ssh -L 127.100.0.100:6076:172.30.100.15:3306 user@171.25.25.10. Otros: ssh -D 9999 -C (proxy SOCKS dinámico con compresión); netstat -ptnauo | grep ssh (ver conexiones); usuario.ovpn (config del cliente OpenVPN).</div></details>
+
+    <details class="punt"><summary>SSH vs VPN: a dónde apunta el cliente</summary><div class="exp">Con SSH port forwarding el cliente apunta a la IP y puerto LOCALES del túnel (ej: host 127.100.0.100 port 6076). Con VPN (OpenVPN) el cliente apunta a la IP y puerto REALES del servidor (ej: host 172.30.100.15 port 3306), porque la VPN te mete dentro de la red. Esta distinción decidió 2 preguntas del Quiz 2.</div></details>
+  </div>
+
+  <p class="hint">Cuando puedas expandir los 24 punteros sin abrirlos, tenés el Módulo 2 listo para el oral.</p>
+</div>
+
+<script>
+  (function(){
+    var mem={};
+    var s; try{ s=localStorage.getItem("comii-theme"); }catch(e){ s=mem["comii-theme"]; }
+    if(s==="dark" || (!s && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+    document.getElementById("themeBtn").addEventListener("click",function(){
+      document.documentElement.classList.toggle("dark");
+      var v=document.documentElement.classList.contains("dark")?"dark":"light";
+      try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+    });
+  })();
+</script>
+</body>
+</html>

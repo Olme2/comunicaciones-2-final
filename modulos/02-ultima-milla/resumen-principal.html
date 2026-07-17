@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 2 · Acceso de usuario: la última milla — Resumen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f6f1; --card:#ffffff; --ink:#2b2b2b; --muted:#6d6a60; --border:#e7e2d5;
+    --accent:#2e6fb0;
+    --hl-pink:#ffc6cd; --hl-green:#c6ecca; --hl-yellow:#ffe6a3;
+    --diag:#6f56b0; --diag-bg:#efeaf8; --diag-bd:#d6c9ee;
+    --key:#c78a00; --key-bg:#fff4d4; --key-bd:#ecd58c;
+    --link:#1f8a4c; --link-bg:#e6f6ec; --link-bd:#a9dcbb;
+    --note:#b8860b; --note-bg:#fbf2df; --note-bd:#e6d3a0;
+    --warn:#b03030; --warn-bg:#fbe9e7; --warn-bd:#eab8b0;
+    --shadow:0 1px 3px rgba(40,35,20,.06),0 1px 2px rgba(40,35,20,.04);
+    --font:"Comic Sans MS","Comic Neue","Chalkboard SE","Segoe Print",cursive;
+  }
+  html.dark{
+    --bg:#13151a; --card:#1b1f27; --ink:#e9e5d9; --muted:#9b988c; --border:#2c303a;
+    --accent:#5fa8e0;
+    --diag:#b7a3ec; --diag-bg:#211b33; --diag-bd:#3a2f57;
+    --key:#e6bd52; --key-bg:#2b2410; --key-bd:#4a3d1c;
+    --link:#54c483; --link-bg:#142a1e; --link-bd:#2f6b47;
+    --note:#d6a94a; --note-bg:#2b2410; --note-bd:#4a3d1c;
+    --warn:#e08a7f; --warn-bg:#2e1a18; --warn-bd:#5e332e;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.72;font-size:17px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:#eef1f5;color:#245a92;padding:.04em .34em;border-radius:5px;font-size:.82em;font-family:ui-monospace,Menlo,monospace;word-break:break-word}
+  html.dark code{background:#20262f;color:#7fb6e6}
+
+  mark{color:#2b2b2b;padding:.02em .16em;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  mark.p{background:var(--hl-pink)}
+  mark.s{background:var(--hl-green)}
+  mark.y{background:var(--hl-yellow)}
+  u.w{text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:780px;margin:0 auto}
+  .htop .lbl{font-size:.74rem;color:var(--muted)}
+  .htop h1{font-size:1.04rem;margin:1px 0 0;font-weight:700}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--ink);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;font-family:var(--font)}
+
+  .wrap{max-width:780px;margin:0 auto;padding:18px 18px 44px}
+  .meta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+  .tag{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--muted)}
+  .tag.freq{color:var(--key);border-color:var(--key-bd);background:var(--key-bg)}
+
+  nav.toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 17px;margin-bottom:24px;box-shadow:var(--shadow)}
+  nav.toc h2{margin:0 0 8px;font-size:.9rem;color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
+  nav.toc ol{margin:0;padding-left:22px;columns:2;column-gap:26px;font-size:.9rem}
+  nav.toc li{margin:3px 0;break-inside:avoid}
+  nav.toc a{color:var(--ink);text-decoration:none}
+  nav.toc a:hover{color:var(--accent);text-decoration:underline}
+  @media(max-width:560px){nav.toc ol{columns:1}}
+
+  h2.sec{font-size:1.26rem;margin:34px 0 6px;scroll-margin-top:74px;display:inline-block;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:5px}
+  h2.sec .n{color:var(--accent);font-size:.95rem;margin-right:8px}
+  h3{font-size:1.06rem;margin:20px 0 4px}
+  p{margin:9px 0}
+  .lead{color:var(--muted);font-size:1rem}
+  ul{margin:9px 0;padding-left:26px;list-style:none}
+  ul>li{position:relative}
+  ul>li::before{content:"–";position:absolute;left:-20px;color:var(--accent);font-weight:700}
+  ul ul>li::before{content:"○";font-size:.7em;left:-18px}
+  li{margin:6px 0}
+  hr{border:none;border-top:1px dashed var(--border);margin:30px 0}
+  b,strong{font-weight:700}
+
+  .callout{border-radius:12px;padding:13px 16px;margin:16px 0;font-size:.96rem;border:1px solid var(--border);border-left-width:5px}
+  .callout .ct{font-size:.78rem;font-weight:700;margin-bottom:5px;display:block;text-decoration:underline;text-underline-offset:3px}
+  .callout ul{margin:6px 0 0}
+  .diagram{background:var(--diag-bg);border-color:var(--diag-bd);border-left-color:var(--diag)}
+  .diagram .ct{color:var(--diag)}
+  .key{background:var(--key-bg);border-color:var(--key-bd);border-left-color:var(--key)}
+  .key .ct{color:var(--key)}
+  .link{background:var(--link-bg);border-color:var(--link-bd);border-left-color:var(--link)}
+  .link .ct{color:var(--link)}
+  .note{background:var(--note-bg);border-color:var(--note-bd);border-left-color:var(--note)}
+  .note .ct{color:var(--note)}
+  .warn{background:var(--warn-bg);border-color:var(--warn-bd);border-left-color:var(--warn)}
+  .warn .ct{color:var(--warn)}
+
+  dl.defs{margin:10px 0}
+  dl.defs dt{margin-top:9px}
+  dl.defs dt mark{font-weight:700}
+  dl.defs dd{margin:2px 0 0 4px;font-size:.96rem}
+
+  .tablewrap{overflow-x:auto;margin:14px 0;border:1px solid var(--border);border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:560px}
+  th,td{padding:8px 11px;text-align:left;border-bottom:1px solid var(--border)}
+  th{background:var(--accent);color:#fff;font-weight:700;font-size:.82rem;position:sticky;top:0}
+  td:first-child{font-weight:700;color:var(--accent);white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  tbody tr:nth-child(even){background:rgba(0,0,0,.02)}
+  html.dark tbody tr:nth-child(even){background:rgba(255,255,255,.03)}
+  .tnote{font-size:.78rem;color:var(--muted);margin:4px 2px 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 2 · Resumen</span><h1>Acceso de usuario: la última milla</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <a class="iconbtn" href="../../glosario.html">Glosario</a>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="meta">
+    <span class="tag freq">Frecuencia: media</span>
+    <span class="tag">Fuentes: Módulo 2 · TP2 (2025) · TP3 (2023) · Quiz 2</span>
+  </div>
+
+  <nav class="toc">
+    <h2>Contenido</h2>
+    <ol>
+      <li><a href="#porque">Por qué importa</a></li>
+      <li><a href="#conc">Conceptos de última milla</a></li>
+      <li><a href="#tecno">Tecnologías de acceso</a></li>
+      <li><a href="#transp">Tecnologías de transporte</a></li>
+      <li><a href="#cobre">Par de cobre: xDSL</a></li>
+      <li><a href="#adsl">ADSL: diseño y FDM</a></li>
+      <li><a href="#dmt">DMT (multitono discreto)</a></li>
+      <li><a href="#vdsl">VDSL</a></li>
+      <li><a href="#sim">DSL simétrico</a></li>
+      <li><a href="#tabla">Tabla comparativa xDSL</a></li>
+      <li><a href="#hw">Hardware del proveedor</a></li>
+      <li><a href="#fibra">Fibra para el hogar</a></li>
+      <li><a href="#hfc">Cable módem y HFC</a></li>
+      <li><a href="#metro">Metro Ethernet</a></li>
+      <li><a href="#inal">Acceso inalámbrico</a></li>
+      <li><a href="#ssh">SSH y VPN (del TP)</a></li>
+      <li><a href="#datos">Datos clave</a></li>
+      <li><a href="#conex">Conexión con otros módulos</a></li>
+    </ol>
+  </nav>
+
+  <p class="lead">Si el Módulo 1 era el mapa general, este es el zoom sobre el tramo más caro y más problemático de toda la red: <b>cómo llega la conexión hasta la casa del usuario</b>. Acá viven las tecnologías concretas (xDSL, fibra, cable, Metro Ethernet, inalámbrico) con sus números.</p>
+
+  <h2 class="sec" id="porque"><span class="n">01</span>Por qué importa</h2>
+  <p>La <mark class="p">última milla</mark> es la conexión entre el <b>usuario final</b> y la <b>estación local / central / hub</b>. Puede ser alámbrica o inalámbrica. Es el tramo que define qué servicio podés vender y a qué precio.</p>
+  <div class="callout key">
+    <span class="ct">Las dos características que hay que saber sí o sí</span>
+    <ul>
+      <li>La infraestructura de última milla tiene el <u class="w">costo más alto de todos los elementos de una red</u>. Los costos iniciales son altos, sobre todo si hay que desarrollar <b>ductos</b>.</li>
+      <li>Hay <b>pocos usuarios en áreas rurales</b>, así que la <mark class="s">"milla intermedia"</mark> (del punto de acceso a la red de core) no se comparte eficientemente. Eso encarece los servicios en ciertas regiones.</li>
+    </ul>
+    Consecuencia: <b>se ofrecen altos precios a los clientes</b>.
+  </div>
+
+  <h2 class="sec" id="conc"><span class="n">02</span>Cómo se elige la tecnología</h2>
+  <p>La selección de la tecnología <b>condiciona</b>:</p>
+  <ul>
+    <li>El <mark class="s">ancho de banda</mark> que se puede ofrecer.</li>
+    <li>El <mark class="s">monto de inversión</mark>.</li>
+    <li>Los <mark class="s">costos de operación y de venta</mark>.</li>
+  </ul>
+  <p>Y debe estar <b>sólidamente basada en el modelo del negocio</b>: la tecnología elegida tiene que ser <b>actual y estar disponible</b>, y siempre conviene estudiar modelos de negocio exitosos en otros países para juzgar la viabilidad.</p>
+
+  <h2 class="sec" id="tecno"><span class="n">03</span>Tecnologías de acceso</h2>
+  <h3>Alámbricas</h3>
+  <ul>
+    <li>Redes de acceso por <mark class="s">par de cobre</mark> (xDSL, módems).</li>
+    <li>Redes de acceso por <mark class="s">cable</mark>.</li>
+    <li>Redes híbridas de <mark class="s">fibra y cable (HFC)</mark>.</li>
+    <li>Acceso fijo por <mark class="s">red eléctrica (PLC)</mark>.</li>
+    <li>Redes de acceso por <mark class="s">fibra óptica</mark> (FTTx, PON, EFM, otros).</li>
+  </ul>
+  <h3>Inalámbricas</h3>
+  <ul>
+    <li><mark class="s">Bucle inalámbrico</mark>: WiLL (Wireless Local Loop), LMDS, MMDS.</li>
+    <li><mark class="s">Redes MAN/LAN inalámbricas</mark>: WLAN, Wi-Fi, WiMAX, HiperLAN2.</li>
+    <li><mark class="s">Comunicaciones móviles</mark> de 2ª a 5ª generación: CDMA, GSM, UMTS, 3G, 4G, 5G.</li>
+    <li><mark class="s">Óptica por aire</mark>: HAPs, FSO.</li>
+    <li>Redes de acceso por <mark class="s">satélite</mark>.</li>
+    <li><mark class="s">Televisión digital terrestre (TDT)</mark>.</li>
+  </ul>
+
+  <h2 class="sec" id="transp"><span class="n">04</span>Tecnologías de transporte (más allá de la última milla)</h2>
+  <p>Una vez que la señal sale de la última milla, viaja por redes de transporte. <u class="w">Esto se organiza por capa, y es pregunta de quiz</u>:</p>
+  <div class="callout key">
+    <span class="ct">Transporte por capa — memorizar</span>
+    <ul>
+      <li><b>CAPA 1:</b> redes <mark class="p">SDH</mark> · redes ópticas transparentes (<mark class="p">OTH</mark>) · cobre, microondas y otros medios.</li>
+      <li><b>CAPA 2:</b> redes <mark class="p">ATM</mark> · redes <mark class="p">Frame Relay</mark> · redes basadas en <mark class="p">Ethernet</mark>.</li>
+      <li><b>CAPA 3:</b> redes basadas en <mark class="p">IP</mark>, <mark class="p">IP/MPLS</mark>.</li>
+    </ul>
+    En el <b>Quiz 2 real</b> se preguntó exactamente esto: cuál es tecnología de capa 2 → respuesta: <b>ATM y Frame Relay</b> (SDH y OTH son capa 1, IP es capa 3).
+  </div>
+
+  <h2 class="sec" id="cobre"><span class="n">05</span>Redes de acceso por par de cobre: xDSL</h2>
+  <p>Usan la red de acceso tradicional de telefonía (<mark class="s">PSTN</mark>).</p>
+  <ul>
+    <li><b>Antes:</b> se usaba sólo una fracción del ancho de banda disponible (<u class="w">4 KHz, banda vocal</u>).</li>
+    <li><b>Hoy:</b> se ofrecen <b>telefonía</b> y <b>datos</b>. Los datos van sobre dos tecnologías: <mark class="s">módems de banda vocal</mark> y <mark class="s">tecnologías DSL</mark> (Digital Subscriber Line).</li>
+  </ul>
+  <p><mark class="p">DSL</mark> es una tecnología que permite la transmisión de <b>información digital sobre pares de cobre</b>.</p>
+
+  <h3>DSL Asimétrico</h3>
+  <p><b>"Asimétrico"</b> ⇒ más rápido <i>downstream</i> que <i>upstream</i>. Se usa en web-browsing, MP3, descargas, Video on Demand (VoD).</p>
+  <dl class="defs">
+    <dt><mark class="p">ADSL</mark> — Asymmetric DSL</dt>
+    <dd>El primero y más popular; las otras tecnologías DSL asimétricas derivaron de él. Un par de cobre. <i>(ver nota de cifras más abajo)</i></dd>
+    <dt><mark class="s">UDSL</mark> — Universal ADSL, o <b>G.Lite</b> o <b>DSL Lite</b></dt>
+    <dd>Reduce el costo de implementación <b>moviendo el proceso de separación del usuario a la estación base</b>. Al <u class="w">no tener splitter</u>, reduce la velocidad considerablemente.</dd>
+    <dt><mark class="s">RADSL</mark> — Rate-Adaptive DSL</dt>
+    <dd>Detecta la máxima velocidad posible y la ajusta.</dd>
+    <dt><mark class="s">VDSL</mark> — Very High Bit-rate DSL</dt>
+    <dd>Velocidades altas sobre distancias cortas. Usada junto con <b>FTTC</b> (Fiber To The Cabinet). Un par de cobre.</dd>
+  </dl>
+
+  <h2 class="sec" id="adsl"><span class="n">06</span>ADSL: estrategia de diseño</h2>
+  <ul>
+    <li>ADSL transmite datos digitales con una forma eficiente de procesamiento de señal que, junto con la técnica <mark class="p">FDM</mark>, le permite usar <u class="w">1 MHz de ancho de banda del cable UTP</u>.</li>
+    <li>Se reservan los <u class="w">25 KHz inferiores</u> para transmisión analógica de voz (<mark class="s">POTS</mark>: Plain Old Telephone Service).</li>
+    <li>El ancho de banda entre los <u class="w">4 KHz y 25 KHz</u> se destina a <b>evitar la interferencia</b> entre los canales de voz y de datos (banda de guarda).</li>
+    <li><mark class="s">Cancelación de eco</mark>: para otorgar un ancho de banda mayor a los canales ascendente y descendente.</li>
+    <li><b>Uso de FDM</b> en las bandas ascendentes y descendentes: una secuencia de bits dada se divide en varias secuencias paralelas y cada una se transmite en una banda de frecuencia distinta.</li>
+  </ul>
+  <div class="callout diagram">
+    <span class="ct">Qué muestra el diagrama (slide "ADSL: FDM con y sin cancelación de eco")</span>
+    Son <b>dos espectros comparados</b>, ambos de 0 a 1.000 KHz:
+    <ul>
+      <li><b>(a) FDM sin cancelación de eco:</b> POTS ocupa hasta ~20 KHz, después viene el <b>enlace ascendente</b> (de 25 a ~200-250 KHz) y a continuación el <b>enlace descendente</b> (de ~250 KHz a 1.000 KHz). Las bandas están <u class="w">separadas, sin pisarse</u>.</li>
+      <li><b>(b) FDM con cancelación de eco:</b> POTS igual, pero ahora el <b>ascendente y el descendente se solapan</b>: el descendente arranca desde donde termina POTS y el ascendente queda <i>encima</i>, en una zona compartida (marcada como "cancelación de eco"). El límite superior del ascendente es <b>variable</b>.</li>
+    </ul>
+    La idea: la cancelación de eco permite <b>reusar el mismo espectro para los dos sentidos</b>, y por eso da más ancho de banda que la versión sin ella.
+  </div>
+
+  <h2 class="sec" id="dmt"><span class="n">07</span>ADSL: técnica de Multitono Discreto (DMT)</h2>
+  <p>Consiste en usar <b>varias portadoras a diferentes frecuencias</b> (FDM), y enviar la información modulando en <mark class="s">QAM</mark> o en <mark class="s">PSK</mark>, de modo que a partir de un conjunto <b>R de bits de entrada</b> se envía una parte de esos bits por cada canal. El ancho de banda disponible (ascendente o descendente) se divide en <u class="w">subcanales de 4 KHz</u>.</p>
+  <p><b>El procedimiento:</b></p>
+  <ul>
+    <li><b>1.</b> Antes de iniciar la transmisión, el módem DMT envía <mark class="s">señales de test</mark> sobre los subcanales para determinar la <b>relación señal a ruido (S/N)</b> de cada uno.</li>
+    <li><b>2.</b> Hecho el test, el módem asigna <b>más bits</b> a los canales con mejor S/N y <b>menos bits</b> a los de calidad inferior.</li>
+  </ul>
+  <div class="callout key">
+    <span class="ct">Los números de DMT — caen en el escrito</span>
+    <ul>
+      <li>Idealmente (sin ruido ni atenuación): cada subcanal transmite <b>60 kbps sobre 4 KHz</b>.</li>
+      <li>La realidad: al aumentar la frecuencia, <b>aumenta la atenuación</b> y decrece la S/N ⇒ los subcanales de frecuencias superiores transportan <b>menos bits/segundo</b> que los del centro del ancho de banda.</li>
+      <li>Los diseños actuales usan <b>256 subcanales descendentes</b>.</li>
+      <li><b>En teoría:</b> 256 subcanales × 4 KHz × 60 kbps = <u class="w">15,36 Mbps</u>.</li>
+      <li><b>En la práctica:</b> el deterioro de la línea real lo impide. Las implementaciones actuales operan en el rango <u class="w">1,5 a 10 Mbps</u>, según la distancia y la calidad de la línea.</li>
+    </ul>
+  </div>
+  <div class="callout diagram">
+    <span class="ct">Qué muestra el diagrama (slide "DMT: esquema del modulador")</span>
+    Es el <b>diagrama de bloques del transmisor DMT</b>: entra una señal binaria <code>x(t)</code> a <b>R bps</b> por un <b>conversor serie-paralelo</b>, que la reparte en <i>n</i> ramas. Cada rama <code>i</code> lleva una fracción <code>a<sub>i</sub>·R</code> de la tasa total y entra a su propio modulador <b>QAM</b>, multiplicado por su portadora <code>cos 2πf<sub>i</sub>t</code>. Todas las ramas se suman (Σ) y dan la <b>señal de salida DMT</b> <code>y(t)</code>.
+    <br><b>Las referencias del diagrama son la clave:</b> <code>0 &lt; a<sub>i</sub> &lt; 1</code>, <code>Σa<sub>i</sub> = 1</code> (las fracciones reparten el total) y <code>f<sub>i+1</sub> = f<sub>i</sub> + 4 KHz</code> (cada portadora está 4 KHz por encima de la anterior: de ahí los subcanales de 4 KHz).
+  </div>
+
+  <h2 class="sec" id="vdsl"><span class="n">08</span>VDSL: Línea Digital de Abonado de Muy Alta Velocidad</h2>
+  <ul>
+    <li><b>Objetivo:</b> proveer un esquema similar a ADSL a una <b>velocidad muy superior</b>, a costa de <b>disminuir la distancia</b> permitida de la línea.</li>
+    <li><u class="w">VDSL NO utiliza cancelación de eco</u> ⇒ usa <b>bandas separadas</b> para cada servicio. Asignación provisional:</li>
+  </ul>
+  <div class="callout key">
+    <span class="ct">Plan de bandas de VDSL</span>
+    <ul>
+      <li><b>POTS:</b> 0 a 4 KHz</li>
+      <li><b>RDSI:</b> 4 a 80 KHz</li>
+      <li><b>Enlace ascendente:</b> 300 a 700 KHz — <b>1,5 a 2,3 Mbps</b></li>
+      <li><b>Enlace descendente:</b> ≥ 1 MHz — <b>13 a 52 Mbps</b></li>
+      <li><b>Distancia típica usuario-nodo:</b> 1,5 km</li>
+    </ul>
+  </div>
+  <p>VDSL utiliza <mark class="p">cuatro canales</mark> para la transmisión de datos: <b>dos para la descarga y dos para la subida</b>. Así aumenta sustancialmente la potencia de transmisión, gracias a que se usa <mark class="s">FTTC</mark> (Fiber To The Cabinet), <b>un híbrido entre cobre y fibra óptica</b> entre la central y el usuario final.</p>
+
+  <h2 class="sec" id="sim"><span class="n">09</span>DSL Simétrico</h2>
+  <p><b>"Simétrico"</b> ⇒ downstream y upstream <b>iguales</b>. Ideal para aplicaciones que requieren simetría, como <mark class="s">videoconferencia</mark>.</p>
+  <dl class="defs">
+    <dt><mark class="p">HDSL</mark> — Línea Digital de Abonado de Alta Velocidad</dt>
+    <dd>Ofrece transmisión de <b>tramas E1</b> más eficiente que el enlace E1/T1 tradicional, en relación costo/velocidad.
+    <br><b>El problema que resuelve:</b> el E1 tradicional ocupa un ancho de banda de <u class="w">~1,5 MHz</u>; sumado a la atenuación propia de la línea telefónica, limita el uso de E1 a distancias de <u class="w">no más de 1 km entre repetidores</u>, lo que lo hace de alto costo. Usa <b>2 pares</b>.</dd>
+    <dt><mark class="p">SDSL</mark> — Línea Digital de Abonado de Línea Simple</dt>
+    <dd>Se desarrolló para usar <b>sólo 1 par de conductores</b> y suplantar a HDSL (que necesita 2). Beneficioso porque el usuario generalmente dispone de un solo par.</dd>
+    <dt><mark class="p">G.SHDSL</mark> — Single pair High-speed DSL</dt>
+    <dd>Diseñada para transmitir datos <b>simétricamente hasta 2,3 Mbps sobre un par</b> y hasta <b>4,6 Mbps sobre dos pares</b>. Alcanza hasta <b>3,9 km</b>. Una versión opcional llega a <b>4,7 Mbps sobre dos pares</b>.
+    <br>Mejora la performance de SDSL y HDSL en velocidad y alcance. Transmite tramas <b>E1/T1</b>, accesos a <b>ISDN</b> y a <b>ATM</b>.
+    <br><u class="w">Diferencia clave con las otras xDSL:</u> nació como <b>estándar internacional de la ITU-T en febrero de 2001</b>, mejorado en 2003.</dd>
+  </dl>
+
+  <h2 class="sec" id="tabla"><span class="n">10</span>Tabla comparativa de accesos xDSL</h2>
+  <p class="lead">Esta tabla es de la propia cátedra (slide 20) y es <b>la pieza más "exigible" del módulo</b> en un escrito. Vale la pena saberla.</p>
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr><th></th><th>ADSL</th><th>HDSL</th><th>SDSL</th><th>G.SHDSL</th><th>VDSL</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Bits por segundo</td>
+        <td>1,5 a 9 Mbps desc.<br>16 a 640 kbps asc.</td>
+        <td>2,048 ó 1,544 Mbps</td>
+        <td>2,048 ó 1,544 Mbps</td>
+        <td>192 kbps a 2,3 Mbps<br>Op: 4,7 Mbps en 2 pares</td>
+        <td>13 a 52 Mbps desc.<br>1,5 a 2,3 Mbps asc.</td></tr>
+      <tr><td>Modo</td><td>asimétrico</td><td>simétrico</td><td>simétrico</td><td>simétrico</td><td>asimétrico</td></tr>
+      <tr><td>Pares de cobre</td><td>1</td><td>2</td><td>1</td><td>1 o 2</td><td>1</td></tr>
+      <tr><td>Distancia (UTP cal. 24)</td><td>3,7 a 5,5 km</td><td>3,7 km</td><td>3,0 km</td><td>3,9 km</td><td>1,4 km</td></tr>
+      <tr><td>Señalización</td><td>analógica</td><td>digital</td><td>digital</td><td>digital</td><td>analógica</td></tr>
+      <tr><td>Codificación de línea</td><td>CAP/DMT</td><td>2B1Q</td><td>2B1Q</td><td>2B1Q</td><td>DMT</td></tr>
+      <tr><td>Frecuencia</td><td>1 a 5 MHz</td><td>196 KHz</td><td>196 KHz</td><td>196 KHz</td><td>10 MHz</td></tr>
+      <tr><td>Bits por ciclo</td><td>variable</td><td>4</td><td>4</td><td>variable</td><td>variable</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tnote">Truco para memorizar: los <b>simétricos</b> (HDSL, SDSL, G.SHDSL) comparten señalización <b>digital</b>, codificación <b>2B1Q</b> y frecuencia <b>196 KHz</b>. Los <b>asimétricos</b> (ADSL, VDSL) son <b>analógicos</b> y usan <b>DMT</b>.</p>
+
+  <div class="callout warn">
+    <span class="ct">Atención: el material de la cátedra se contradice</span>
+    Las cifras de <b>ADSL y VDSL cambian según la slide</b>. No lo resuelvo por mi cuenta; te muestro las dos versiones para que sepas que existen:
+    <ul>
+      <li><b>ADSL — slide 10:</b> 41,5 kbps a 8 Mbps down / 16 kbps a 1 Mbps up / hasta <b>3 km</b>.<br>
+          <b>ADSL — slide 20 (tabla):</b> 1,5 a 9 Mbps desc. / 16 a 640 kbps asc. / <b>3,7 a 5,5 km</b>.</li>
+      <li><b>VDSL — slide 10:</b> 413 kbps a 52 Mbps down / <b>1,5 a 13 Mbps</b> up / hasta 1,5 km.<br>
+          <b>VDSL — slides 17 y 20:</b> 13 a 52 Mbps desc. / <b>1,5 a 2,3 Mbps</b> asc. / 1,5 km (slide 17) vs <b>1,4 km</b> (tabla).</li>
+    </ul>
+    <b>Cómo lo manejaría en el examen:</b> la <u class="w">tabla comparativa (slide 20) es la fuente más específica y estructurada</u>, así que la usaría como respuesta principal; si te piden ADSL suelto y querés cubrirte, podés mencionar que la cátedra da dos rangos según la slide. Ojo: tu resumen viejo tomaba <b>sólo</b> las cifras de la slide 10.
+  </div>
+
+  <h2 class="sec" id="hw"><span class="n">11</span>Hardware del lado del proveedor</h2>
+  <p><b>Concentradores de acceso para los usuarios digitales:</b> los distintos tipos de acceso de usuario son tomados en la red pública por <mark class="p">concentradores (multiplexores)</mark> cuya tecnología depende del tipo de acceso.</p>
+  <ul>
+    <li>En un acceso de usuario se requieren <u class="w">dos transceptores</u>: uno en el <b>domicilio del usuario</b> y otro en el <b>nodo de la red</b>.</li>
+    <li>El transceptor en el nodo de la telco está <b>integrado a un puerto del concentrador</b> correspondiente.</li>
+    <li>El concentrador de DSL es el <mark class="p">DSLAM</mark> (Digital Subscriber Line Access Multiplexer). El módulo muestra como ejemplo un <b>Huawei DSLAM MA5603</b>, un dispositivo multiservicio de acceso ADSL / VDSL / SHDSL / IP DSLAM.</li>
+  </ul>
+  <div class="callout diagram">
+    <span class="ct">Qué muestra el diagrama (slide "Esquema completo conexión usuario y proveedor")</span>
+    Es el recorrido de punta a punta: en el <b>domicilio</b>, la PC se conecta al <b>módem/router DSL</b>, que pasa por un <b>splitter</b> que separa la voz (al teléfono) de los datos. El par de cobre sale por el <b>bucle local</b> hasta la <b>central</b>, donde otro splitter deriva la voz a la <b>PSTN</b> y los datos al <b>DSLAM</b>. El DSLAM concentra muchos abonados y entrega el tráfico agregado a la <b>red del proveedor / Internet</b>. Es la foto que une todo lo anterior: por qué hacen falta dos transceptores y dónde entra cada equipo.
+  </div>
+
+  <h2 class="sec" id="fibra"><span class="n">12</span>Fibra para el hogar</h2>
+  <ul>
+    <li>Las redes ópticas <b>destraban el cuello de botella del acceso</b>, aumentando ancho de banda y calidad de servicio.</li>
+    <li>Representan un gran incremento del ancho de banda de acceso, <u class="w">hasta cientos de Gbps</u>.</li>
+    <li>Las tecnologías <mark class="p">FTTx</mark> se basan en instalar cable de fibra óptica <b>directo hasta los hogares o edificios</b>.</li>
+    <li>Utilizan fibra con <mark class="s">DWDM</mark> (Dense Wavelength Division Multiplexing).</li>
+    <li>Algunas empresas montan <b>Gigabit Ethernet sobre fibra oscura arrendada</b>.</li>
+  </ul>
+  <p><b>Se clasifican de dos maneras:</b></p>
+  <ul>
+    <li>Por el uso de elementos <b>pasivos y/o activos</b>: redes <mark class="p">AON</mark> y redes <mark class="p">PON</mark>.</li>
+    <li>Por la <b>cercanía del tramo de fibra al domicilio</b> del cliente: <mark class="s">FTTx</mark>, <mark class="s">FTTB</mark>, <mark class="s">FTTC</mark> o <mark class="s">FTTCab</mark>.</li>
+  </ul>
+  <div class="callout diagram">
+    <span class="ct">Qué muestra el diagrama (slides "Arquitectura PON")</span>
+    Es la topología <b>punto a multipunto</b> de una red óptica pasiva. Los elementos:
+    <ul>
+      <li><mark class="p">OLT</mark> (Optical Line Terminal): el equipo en la <b>central del proveedor</b>, donde arranca la fibra.</li>
+      <li><mark class="p">Splitter</mark> (red <b>ODN</b>, Optical Distribution Network): un divisor <b>pasivo</b> (sin electrónica ni alimentación) que reparte la señal de una fibra a muchos abonados. Es lo que hace que la red sea "pasiva".</li>
+      <li><mark class="p">ONT</mark> (Optical Network Terminal): el equipo <b>en el domicilio</b> del cliente.</li>
+      <li><mark class="p">ONU</mark> (Optical Network Unit): la unidad óptica del <b>lado del usuario</b>, cuando termina en un punto intermedio y no en la casa misma.</li>
+    </ul>
+    Idea central: una sola fibra sale de la OLT y, mediante splitters pasivos, <b>alimenta a varios abonados</b> — por eso EPON permite compartir entre abonados los costes de las terminaciones de red.
+  </div>
+  <p><b>Principales estándares de transmisión PON</b> (tabla de la slide 25):</p>
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr><th></th><th>GPON<br>(Gigabit PON)</th><th>XG-PON<br>(10 Gigabit PON)</th><th>XGS-PON<br>(symmetric XG-PON)</th><th>NG-PON2<br>(Next-Gen PON2)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Upstream (nm)</td><td>1260–1360</td><td>1260–1280</td><td>1260–1280</td><td>1524–1544 / 1525–1540 / 1532–1540</td></tr>
+      <tr><td>Downstream (nm)</td><td>1480–1500</td><td>1575–1580</td><td>1575–1580</td><td>1596–1603</td></tr>
+      <tr><td>Video (nm)</td><td>1530–1565</td><td>1530–1565</td><td>—</td><td>—</td></tr>
+      <tr><td>Subida (Gbps)</td><td>1,2</td><td>2,5 / 10</td><td>10</td><td>40</td></tr>
+      <tr><td>Bajada (Gbps)</td><td>2,5</td><td>10</td><td>10</td><td>40</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tnote">Esta tabla la leí de la imagen de la slide (no venía como texto). Los valores son consistentes entre sí — GPON 1,2 ↑ / 2,5 ↓, XGS-PON simétrico 10/10, NG-PON2 40/40 — pero si podés, verificala contra la slide original.</p>
+
+  <h2 class="sec" id="hfc"><span class="n">13</span>Cable módem y redes HFC</h2>
+  <h3>Redes de cable módem</h3>
+  <div class="vs" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 15px">
+      <h4 style="margin:0 0 6px"><mark class="s">Ventajas</mark></h4>
+      <ul style="padding-left:20px">
+        <li>Liberación de la línea telefónica convencional.</li>
+        <li>Mayores velocidades que los sistemas tradicionales ISDN.</li>
+        <li>Conexión permanente a la red HFC (datos, teléfono y TV).</li>
+      </ul>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 15px">
+      <h4 style="margin:0 0 6px"><mark class="s">Desventajas</mark></h4>
+      <ul style="padding-left:20px">
+        <li>Recableado interno y externo muy costoso, lleva tiempo implementar.</li>
+        <li>Trabaja a alta velocidad <b>sólo cuando el número de usuarios es razonablemente bajo</b>.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="tnote">El módulo menciona como ejemplo un router Cisco con especificación <b>DOCSIS 3.0</b>.</p>
+
+  <h3>Redes de Fibra y Coaxial (HFC — Hybrid Fibre Coaxial)</h3>
+  <ul>
+    <li>Típicamente empleadas para <b>distribución de CATV</b>. Son la evolución de las primeras redes de CATV de cable coaxial.</li>
+    <li>Emplean <mark class="p">fibra óptica en la red troncal</mark>, desde la cabecera de generación de señales hasta los <b>nodos ópticos</b>.</li>
+    <li>Los <mark class="s">nodos ópticos</mark> son receptores que hacen la <b>conversión óptico/eléctrica</b> de la señal en las áreas de servicio.</li>
+    <li>A partir de los nodos se extiende la <mark class="p">red de distribución tradicional de cable coaxial</mark>.</li>
+    <li>Además de TV, HFC puede transportar servicios <b>bidireccionales</b>: telefonía y datos. Para eso la red necesita:
+      <ul>
+        <li><u class="w">Canal de retorno habilitado</u></li>
+        <li><u class="w">Diseño adecuado del área de servicio de cada nodo</u></li>
+      </ul>
+    </li>
+  </ul>
+  <div class="callout key">
+    <span class="ct">Características y límites de HFC — números exigibles</span>
+    <ul>
+      <li>Usa un <b>medio compartido</b> (Ethernet) y <b>distribución en bus</b>.</li>
+      <li>Velocidades asimétricas: <b>download 10 Mbit/s compartido</b>, <b>upload 768 kbit/s o 3 Mbit/s compartido</b>. Posibilidad de simetría hasta <b>10 Mbps</b>.</li>
+      <li>Diseñado para <b>usuarios residenciales</b>.</li>
+      <li><b>Límites físicos:</b> <u class="w">no hay límite de distancia</u>. Capacidad de cada bus HFC: <b>50 Mbps</b> (sentido red→usuario) y <b>10 Mbps</b> (sentido usuario→red).</li>
+      <li><b>Equipamiento adicional:</b> splitter TV/Datos.</li>
+      <li><b>Fortalezas:</b> alta velocidad, bajo precio, se vende por contenido.</li>
+      <li><b>Debilidades:</b> medio compartido (<b>pobre seguridad</b>) y diferentes estándares entre EEUU y Europa.</li>
+    </ul>
+  </div>
+  <div class="callout diagram">
+    <span class="ct">Qué muestran los diagramas (Triple Play y distribución de ancho de banda)</span>
+    <b>Triple Play:</b> la red HFC llevando los <b>tres servicios juntos</b> por el mismo cable — video cable, internet y teléfono — desde la cabecera hasta el hogar, donde un splitter los separa hacia el televisor, la PC y el teléfono.
+    <br><b>Distribución del ancho de banda:</b> el espectro del cable repartido en bandas: una porción baja reservada al <b>canal de retorno</b> (usuario→red, el más chico) y el resto del espectro para el sentido <b>descendente</b> (red→usuario), donde conviven los canales de TV y los datos. Es la explicación gráfica de por qué HFC es asimétrico: el retorno tiene mucho menos espectro asignado.
+  </div>
+
+  <h2 class="sec" id="metro"><span class="n">14</span>Metro Ethernet</h2>
+  <h3>Ethernet en la primera milla (EFM)</h3>
+  <p>Sus argumentos de venta:</p>
+  <ul>
+    <li>La <b>ubicuidad</b> de Ethernet.</li>
+    <li>La disponibilidad de <b>grandes anchos de banda</b>.</li>
+    <li><b>Precios reducidos</b>.</li>
+    <li>Facilidad de operación y provisión del servicio.</li>
+    <li><b>Autoconfiguración</b> y asignación flexible de ancho de banda.</li>
+  </ul>
+  <div class="callout warn">
+    <span class="ct">Ojo con este dato</span>
+    EFM ha sido estandarizada por <u class="w">IEEE <b>802.3ah</b></u>. En tu resumen viejo figuraba como "802.3ab" — <b>eso está mal</b>: la <code>802.3ab</code> es Gigabit Ethernet sobre cobre (1000BASE-T). La de EFM es la <code>802.3ah</code>.
+  </div>
+  <p><mark class="s">EPON</mark> (Ethernet Passive Optical Network) permite <b>compartir entre varios abonados los costes de terminaciones de red</b>.</p>
+
+  <h3>Características</h3>
+  <ul>
+    <li>Ethernet se está convirtiendo en una <b>tecnología única para LAN, MAN y WAN</b>.</li>
+    <li>Arquitectura eficiente para redes de paquetes: <b>punto a punto, punto a multipunto y multipunto a multipunto</b>.</li>
+    <li>Interfaz con costo ventajoso y flexibilidad de ancho de banda: <u class="w">10/100/1000/10000 Mbps</u>.</li>
+    <li>Originalmente para LAN, pero hoy ofrece <b>independencia geográfica</b>: Ethernet óptico, sobre IP o MPLS.</li>
+    <li>Metro Ethernet es <mark class="p">otra L2 VPN</mark>: la red del proveedor transporta <b>tramas Ethernet</b> y las <b>direcciones MAC</b> se usan para determinar el encaminamiento. <u class="w">Se puede asimilar una VLAN a un DLCI o un PVC</u>.</li>
+  </ul>
+
+  <h3>Aplicaciones</h3>
+  <ul>
+    <li>Conectividad Internet · Transparent LAN service (punto a punto LAN to LAN) · L2VPN (punto a punto o multipunto a multipunto) · Extranet</li>
+    <li>LAN a Frame Relay/ATM VPN · Conectividad a centro de backup · Storage Area Networks (SANs) · Metro Transport (backhaul) · VoIP</li>
+  </ul>
+
+  <h3>Conectividad Virtual (EVC)</h3>
+  <p>Un <mark class="p">EVC</mark> (Ethernet Virtual Connection) sirve para:</p>
+  <ul>
+    <li><b>Conectar dos o más sitios (UNI's)</b> para la transferencia de tramas Ethernet entre ellos.</li>
+    <li><b>Impedir</b> la transferencia de datos entre usuarios que <b>no son parte del mismo EVC</b>, dando privacidad y seguridad.</li>
+    <li>Ofrece privacidad y seguridad <b>similar a un circuito virtual ATM (PVC ATM)</b>.</li>
+    <li><u class="w">No altera ni modifica la trama Ethernet original</u> que pasa por la red, y <b>nunca se devuelve al origen</b>.</li>
+    <li>Puede usarse para construir <b>VPN de capa 2</b>.</li>
+  </ul>
+  <div class="callout key">
+    <span class="ct">Los 3 tipos de EVC según el MEF — memorizar</span>
+    <ul>
+      <li><mark class="p">E-Line</mark> → <b>Punto a Punto</b></li>
+      <li><mark class="p">E-LAN</mark> → <b>Multipunto</b></li>
+      <li><mark class="p">E-Tree</mark> → <b>Punto a Multipunto</b></li>
+    </ul>
+  </div>
+
+  <h3>E-Line: EPL vs EVPL</h3>
+  <p>Una E-Line puede operar con ancho de banda <b>dedicado</b> o <b>compartido</b>.</p>
+  <dl class="defs">
+    <dt><mark class="p">EPL</mark> — Ethernet Private Line</dt>
+    <dd>Servicio EVC <b>punto a punto con ancho de banda dedicado</b>. El cliente <b>siempre dispone del CIR</b>. Normalmente en canales <b>SDH</b> (en NGN) o en redes <b>MPLS</b>. <u class="w">Es como una línea en TDM, pero con una interfaz Ethernet.</u></dd>
+    <dt><mark class="p">EVPL</mark> — Ethernet Virtual Private Line</dt>
+    <dd>Hay un <b>CIR y un EIR</b> y una métrica para el soporte de <b>SLA's</b>. <u class="w">Es similar al Frame Relay.</u> Se implementa con canales TDM compartidos o con redes de conmutación de paquetes usando switches y/o routers.</dd>
+  </dl>
+
+  <h3>E-LAN: EPLan vs EVPLan</h3>
+  <dl class="defs">
+    <dt><mark class="p">EPLan</mark> — Ethernet Private LAN</dt>
+    <dd>Conectividad <b>multipunto entre dos o más UNI's</b>, con <b>ancho de banda dedicado</b>.</dd>
+    <dt><mark class="p">EVPLan</mark> — Ethernet Virtual Private LAN</dt>
+    <dd>También conocida como <b>VPLS</b> (Virtual Private LAN Service), <b>TLS</b> (Transparent LAN Service) o <b>VPSN</b> (Virtual Private Switched Network).
+    <br>La separación de clientes se hace <b>vía encapsulación</b>: las etiquetas de VLAN del proveedor <u class="w">no son suficientes (4096)</u>.
+    <br><b>Es el servicio más rentable desde el punto de vista del proveedor.</b></dd>
+  </dl>
+
+  <h2 class="sec" id="inal"><span class="n">15</span>Redes de acceso inalámbrico</h2>
+  <ul>
+    <li>Los clientes se conectan usando <b>señales de radio en reemplazo del cobre</b>, en parte o en toda la conexión entre el cliente y la central de conmutación.</li>
+    <li>Muy utilizada en <b>regiones donde las redes están aún en desarrollo</b>, y en países de reciente apertura en competencia, por el <b>rápido despliegue</b>.</li>
+  </ul>
+  <p><b>Clasificación:</b> <mark class="s">WLL</mark> (Wireless Local Loop) · <mark class="s">Broadband Wireless</mark> (WiFi, WiMAX, LMDS, MMDS, FOS) · <mark class="s">Sistemas celulares</mark>.</p>
+
+  <h3>WLL: bucle inalámbrico</h3>
+  <dl class="defs">
+    <dt><mark class="s">WiLL</mark></dt><dd>Wireless Local Loop</dd>
+    <dt><mark class="s">LMDS</mark></dt><dd>Local Multipoint Distribution Service</dd>
+    <dt><mark class="s">MMDS</mark></dt><dd>Multichannel Multipoint Video Distribution System</dd>
+  </dl>
+  <div class="callout key">
+    <span class="ct">Bandas de operación — dato muy exigible</span>
+    <ul>
+      <li><b>1 a 3 GHz:</b> mayoría de sistemas WLL</li>
+      <li><b>3,5 GHz:</b> estándar</li>
+      <li><b>10 GHz:</b> uso muy limitado</li>
+      <li><b>26–28 GHz:</b> <mark class="p">LMDS</mark></li>
+      <li><b>40 GHz:</b> <mark class="p">MMDS</mark> genérico</li>
+    </ul>
+    Los sistemas requieren <u class="w">línea de vista</u> y <u class="w">reutilización de frecuencias</u> del espectro.
+  </div>
+
+  <h3>WLAN, Wi-Fi, HiperLAN2</h3>
+  <ul>
+    <li>Redes locales inalámbricas: <b>WLAN</b> (Wireless Local Area Networks), <b>Wi-Fi</b> (Wireless Fidelity), <b>HiperLAN2</b> (High Performance Radio LAN type 2).</li>
+    <li>Permiten la interconexión de ordenadores en <b>área local (hotspots)</b>.</li>
+    <li>La mayoría trabaja en <b>bandas que no requieren licencia</b>. Varios estándares <b>IEEE 802</b> norman su funcionamiento.</li>
+    <li><u class="w">Tienen limitaciones notables</u> en cuanto a <b>seguridad, calidad de servicio, movilidad e interferencias</b> con otras redes.</li>
+  </ul>
+
+  <h2 class="sec" id="ssh"><span class="n">16</span>SSH y VPN: accesos seguros sobre vínculos públicos</h2>
+  <div class="callout warn">
+    <span class="ct">Esto NO está en las slides, pero SÍ cae en el quiz</span>
+    El <b>Quiz 2 real tuvo 4 preguntas y 3 fueron de SSH port forwarding y VPN</b> — o sea, el 75 % del quiz salió del <b>TP</b>, no de la teoría. Ignorar esta parte sería un error grave.
+  </div>
+  <p>El TP plantea <b>dos opciones para asegurar el tráfico a través de Internet</b>: <mark class="p">ssh port forwarding</mark> y <mark class="p">VPN</mark>. Ambas permiten conectarse por un canal seguro a través de un medio inseguro.</p>
+  <ul>
+    <li><b>SSH:</b> solución <b>simple, rápida y segura</b>, pensada originalmente para dar acceso seguro a una consola shell, pero con múltiples usos más.</li>
+    <li><b>VPN:</b> (ejemplo del TP: una VPN <i>roadwarrior</i> con <b>OpenVPN</b>) es una solución <b>más compleja pero también más potente y quizás más segura</b>.</li>
+  </ul>
+  <dl class="defs">
+    <dt><mark class="s">Local forwarding</mark></dt>
+    <dd>Permite redirigir el tráfico enviado a <b>un puerto local</b> hacia <b>un puerto específico de un host remoto</b>, de manera bidireccional.</dd>
+    <dt><mark class="s">Remote forwarding</mark></dt>
+    <dd>Establece un camino cifrado que permite que el tráfico generado contra <b>un puerto específico de un host remoto</b> sea redirigido hacia <b>un puerto específico de un host local</b>.</dd>
+  </dl>
+  <div class="callout key">
+    <span class="ct">La sintaxis que tomaron en el quiz — sabela de memoria</span>
+    <code>ssh -L &lt;ip_local&gt;:&lt;puerto_local&gt;:&lt;host_destino&gt;:&lt;puerto_destino&gt; user@&lt;servidor_ssh&gt;</code>
+    <br><br>Ejemplo textual del quiz: para llegar a un motor MySQL en <code>172.30.100.15:3306</code> a través del servidor SSH publicado <code>171.25.25.10:22</code>, publicándolo en <code>127.100.0.100:6076</code>:
+    <br><code>ssh -L 127.100.0.100:6076:172.30.100.15:3306 user@171.25.25.10</code>
+    <br><br><b>La distinción que decide las 2 preguntas del quiz:</b>
+    <ul>
+      <li>Con <b>SSH port forwarding</b> el cliente apunta a la <u class="w">IP y puerto LOCALES del túnel</u> → <code>host: 127.100.0.100 port: 6076</code>.</li>
+      <li>Con <b>VPN (OpenVPN)</b> el cliente apunta a la <u class="w">IP y puerto REALES del servidor</u>, porque la VPN te mete dentro de la red → <code>host: 172.30.100.15 port: 3306</code>.</li>
+    </ul>
+    Otros comandos del TP: <code>ssh -D 9999 -C</code> (proxy SOCKS dinámico con compresión) · <code>netstat -ptnauo | grep ssh</code> (ver conexiones) · el archivo <code>usuario.ovpn</code> lleva la configuración del cliente OpenVPN.
+  </div>
+
+  <hr>
+
+  <h2 class="sec" id="datos"><span class="n">17</span>Datos clave para el escrito</h2>
+  <div class="callout key">
+    <span class="ct">Valores que hay que saber de memoria</span>
+    <ul>
+      <li><b>Transporte:</b> capa 1 = SDH, OTH · capa 2 = <b>ATM, Frame Relay, Ethernet</b> · capa 3 = IP, IP/MPLS.</li>
+      <li><b>Banda vocal:</b> 4 KHz. <b>ADSL usa 1 MHz</b> del UTP.</li>
+      <li><b>ADSL:</b> POTS en los <b>25 KHz inferiores</b>; guarda entre <b>4 y 25 KHz</b>.</li>
+      <li><b>DMT:</b> subcanales de <b>4 KHz</b> · <b>60 kbps</b> por subcanal ideal · <b>256 subcanales</b> descendentes · teórico <b>15,36 Mbps</b> · real <b>1,5 a 10 Mbps</b> · <code>f<sub>i+1</sub> = f<sub>i</sub> + 4 KHz</code> · <code>Σa<sub>i</sub> = 1</code>.</li>
+      <li><b>VDSL:</b> no usa cancelación de eco · POTS 0–4 KHz · RDSI 4–80 KHz · asc. 300–700 KHz (1,5–2,3 Mbps) · desc. ≥1 MHz (13–52 Mbps) · <b>4 canales</b> (2 bajada + 2 subida) · FTTC.</li>
+      <li><b>HDSL:</b> 2 pares · E1 tradicional ocupa <b>~1,5 MHz</b> y limita a <b>1 km entre repetidores</b>. <b>SDSL:</b> 1 par. <b>G.SHDSL:</b> 2,3 Mbps (1 par) / 4,6 Mbps (2 pares) / opcional 4,7 Mbps · hasta <b>3,9 km</b> · ITU-T <b>feb. 2001</b>.</li>
+      <li><b>Codificación:</b> simétricos → <b>2B1Q</b> · asimétricos → <b>DMT</b> (ADSL: CAP/DMT).</li>
+      <li><b>HFC:</b> bus <b>50 Mbps</b> red→usuario / <b>10 Mbps</b> usuario→red · download 10 Mbit/s compartido · upload 768 kbit/s o 3 Mbit/s · <u class="w">sin límite de distancia</u> · DOCSIS 3.0.</li>
+      <li><b>PON:</b> OLT (central) → Splitter pasivo (ODN) → ONT/ONU (usuario). GPON 1,2↑/2,5↓ · XGS-PON 10/10 · NG-PON2 40/40.</li>
+      <li><b>EFM = IEEE 802.3ah</b> (¡no 802.3ab!). Metro Ethernet: 10/100/1000/10000 Mbps · VLAN ≈ DLCI ≈ PVC · límite de VLAN <b>4096</b>.</li>
+      <li><b>EVC:</b> E-Line = punto a punto · E-LAN = multipunto · E-Tree = punto a multipunto. EPL → CIR dedicado · EVPL → CIR + EIR + SLA (como FR).</li>
+      <li><b>Bandas WLL:</b> 1–3 GHz (mayoría) · 3,5 GHz (estándar) · 10 GHz (limitado) · <b>26–28 GHz = LMDS</b> · <b>40 GHz = MMDS</b>.</li>
+      <li><b>SSH:</b> <code>ssh -L ip_local:puerto_local:host_destino:puerto_destino user@servidor</code>. SSH → cliente apunta al <b>túnel local</b>; VPN → cliente apunta a la <b>IP real</b>.</li>
+    </ul>
+  </div>
+
+  <h2 class="sec" id="conex"><span class="n">18</span>Conexión con otros módulos</h2>
+  <div class="callout link">
+    <span class="ct">Cómo se enlaza con el resto del programa</span>
+    <ul>
+      <li><b>Intro WAN (M1):</b> acá se profundiza la "infraestructura pública" que el M1 sólo nombraba (DSL, cable, WiFi/WiMAX).</li>
+      <li><b>Multiplexión (M3):</b> FDM y DWDM son la base de ADSL y de la fibra. El "carrier" (portadora) de DMT se explica ahí.</li>
+      <li><b>Frame Relay / ATM / MPLS (M5):</b> las tecnologías de transporte de capa 2, y la analogía <b>VLAN ≈ DLCI ≈ PVC</b> de Metro Ethernet.</li>
+      <li><b>Transporte (M8):</b> los puertos y sockets que aparecen en las preguntas de SSH/VPN.</li>
+      <li><b>Seguridad (M10):</b> VPN, túneles y cifrado se desarrollan a fondo ahí.</li>
+    </ul>
+  </div>
+
+  <div class="callout note">
+    <span class="ct">Nota de fidelidad</span>
+    Todo lo de arriba sale de las slides del Módulo 2, del TP y del Quiz 2. Dos aclaraciones honestas: <b>(1)</b> las cifras de ADSL/VDSL se contradicen entre slides (ver la caja roja de la sección 10) — no elegí por vos, te mostré las dos. <b>(2)</b> La tabla de estándares PON la transcribí leyendo la imagen de la slide, porque no venía como texto; los valores son coherentes, pero conviene que le des un vistazo a la slide original si podés.
+  </div>
+</div>
+
+<script>
+  (function(){
+    var mem={};
+    var s; try{ s=localStorage.getItem("comii-theme"); }catch(e){ s=mem["comii-theme"]; }
+    if(s==="dark" || (!s && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+    document.getElementById("themeBtn").addEventListener("click",function(){
+      document.documentElement.classList.toggle("dark");
+      var v=document.documentElement.classList.contains("dark")?"dark":"light";
+      try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+    });
+  })();
+</script>
+</body>
+</html>

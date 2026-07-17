@@ -87,7 +87,7 @@
 </header>
 
 <main>
-  <p class="intro">20 preguntas estilo cátedra sobre el Módulo 1 (base: Quiz 1 real + TP1 + extras). Respondé y recibí la corrección al toque, con la explicación. Rehacelo cuantas veces quieras — <b>Reiniciar</b> lo deja en blanco y <b>Mezclar</b> cambia el orden.</p>
+  <p class="intro">20 preguntas estilo cátedra sobre el Módulo 1 (base: Quiz 1 real + TP1 + extras). Respondé y recibí la corrección al toque, con la explicación. <b>Las opciones se mezclan solas en cada intento</b>, así que no se puede memorizar la posición. <b>Reiniciar</b> lo deja en blanco (y remezcla) y <b>Mezclar</b> además cambia el orden de las preguntas.</p>
   <div class="result" id="result"></div>
   <div id="quiz"></div>
 </main>
@@ -212,6 +212,7 @@
 
   var order=QUESTIONS.map(function(_,i){return i;});
   var state={}; // id -> {answered, correct}
+  var rendered={}; // id -> array de opciones EN EL ORDEN MOSTRADO (la mezcla vive acá)
   var shuffle=false;
 
   function shuf(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
@@ -220,16 +221,20 @@
   var quiz=document.getElementById("quiz");
 
   function build(){
-    quiz.innerHTML=""; state={};
+    quiz.innerHTML=""; state={}; rendered={};
     document.getElementById("result").className="result";
     order.forEach(function(qi){
       var q=QUESTIONS[qi];
+      // Las opciones se mezclan en CADA render, así la correcta nunca queda fija.
+      // V/F se deja en su orden natural (Verdadero, Falso).
+      var shown = (q.type==="vf") ? q.opts.slice() : shuf(q.opts.slice());
+      rendered[q.id]=shown;
       var card=document.createElement("div"); card.className="card"; card.id="card-"+q.id;
       var tyLabel=q.type==="multi"?"Selección múltiple":(q.type==="vf"?"Verdadero / Falso":"Opción única");
       var head='<div class="qhead"><span class="badge">Q'+q.id+'</span><span class="badge ty">'+tyLabel+'</span></div>';
       card.innerHTML=head+'<div class="qprompt">'+q.prompt+'</div>';
       var opts=document.createElement("div"); opts.className="opts"+(q.type==="vf"?" vf":"");
-      q.opts.forEach(function(o,oi){
+      shown.forEach(function(o,oi){
         var b=document.createElement("button"); b.className="opt"; b.type="button";
         b.innerHTML=(q.type==="vf"?"":'<span class="okey">'+letter(oi)+'</span>')+'<span>'+o.t+'</span>';
         b.addEventListener("click",function(){ onOpt(q,oi,opts,card,b); });
@@ -253,21 +258,23 @@
   }
 
   function lockSingle(q,chosen,opts){
+    var shown=rendered[q.id];
     var kids=opts.querySelectorAll(".opt"); var correct=false;
     kids.forEach(function(k,ki){
       k.classList.add("locked");
-      if(q.opts[ki].ok) k.classList.add("ok");
-      if(ki===chosen && !q.opts[ki].ok) k.classList.add("no");
-      if(ki===chosen && q.opts[ki].ok) correct=true;
+      if(shown[ki].ok) k.classList.add("ok");
+      if(ki===chosen && !shown[ki].ok) k.classList.add("no");
+      if(ki===chosen && shown[ki].ok) correct=true;
     });
     finish(q,opts.parentNode,correct);
   }
 
   function checkMulti(q,opts,card,btn){
     if(state[q.id]) return;
+    var shown=rendered[q.id];
     var kids=opts.querySelectorAll(".opt"); var allCorrect=true;
     kids.forEach(function(k,ki){
-      var sel=k.classList.contains("sel"); var ok=!!q.opts[ki].ok;
+      var sel=k.classList.contains("sel"); var ok=!!shown[ki].ok;
       k.classList.add("locked");
       if(ok && sel) k.classList.add("ok");
       else if(ok && !sel){ k.classList.add("miss"); allCorrect=false; }

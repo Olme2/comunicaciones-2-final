@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 2 · Última milla — Quiz</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --card:#ffffff; --text:#1b2531; --muted:#6a7685; --border:#e4e8ee;
+    --accent:#2e6fb0; --accent-soft:#e9f1f9; --ok:#1f8a4c; --ok-bg:#e9f7ef; --ok-bd:#9fd9b6;
+    --no:#c0392b; --no-bg:#fcebea; --no-bd:#eeb4ae; --warn:#b8860b;
+    --shadow:0 1px 3px rgba(20,30,45,.06),0 1px 2px rgba(20,30,45,.04);
+  }
+  html.dark{
+    --bg:#0f141a; --card:#19212b; --text:#e6ebf1; --muted:#93a1b0; --border:#2a3542;
+    --accent:#5fa8e0; --accent-soft:#1d2c3a; --ok:#54c483; --ok-bg:#142a1e; --ok-bd:#2f6b47;
+    --no:#e06a5f; --no-bg:#2c1a19; --no-bd:#6b332f; --warn:#d6a94a;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;font-size:16px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:var(--accent-soft);color:var(--accent);padding:.05em .35em;border-radius:5px;font-size:.86em;font-family:ui-monospace,Menlo,monospace}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:780px;margin:0 auto}
+  .htop .lbl{font-size:.72rem;color:var(--muted)}
+  .htop h1{font-size:1.02rem;margin:1px 0 0;font-weight:700;letter-spacing:-.01em}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+  #shufBtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+  .stats{max-width:780px;margin:11px auto 0;display:flex;align-items:center;gap:12px}
+  .progress{flex:1;height:9px;background:var(--border);border-radius:99px;overflow:hidden}
+  #bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#5ac8a8));border-radius:99px;transition:width .35s ease}
+  #score{font-size:.8rem;white-space:nowrap}
+  #score b{color:var(--ok)} #score .pct{font-weight:800;color:var(--accent);margin-left:3px}
+
+  main{max-width:780px;margin:0 auto;padding:14px}
+  .intro{font-size:.84rem;color:var(--muted);margin:2px 4px 14px;line-height:1.5}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;margin-bottom:12px;box-shadow:var(--shadow);border-left:4px solid var(--border)}
+  .card.cok{border-left-color:var(--ok)} .card.cno{border-left-color:var(--no)}
+  .qhead{display:flex;gap:8px;align-items:center;margin-bottom:9px;flex-wrap:wrap}
+  .badge{font-size:.66rem;font-weight:700;padding:3px 8px;border-radius:7px;background:var(--accent-soft);color:var(--accent);font-family:ui-monospace,Menlo,monospace}
+  .badge.ty{background:transparent;border:1px solid var(--border);color:var(--muted)}
+  .qprompt{font-size:1rem;line-height:1.5;margin-bottom:12px;font-weight:500}
+
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opt{width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--border);color:var(--text);border-radius:11px;padding:11px 13px;font-size:.94rem;line-height:1.4;cursor:pointer;display:flex;align-items:center;gap:11px;min-height:48px;transition:border-color .12s,background .12s;font-family:inherit}
+  .opts.vf .opt{justify-content:center;font-weight:700}
+  @media(hover:hover){.opt:not(.locked):hover{border-color:var(--accent);background:var(--accent-soft)}}
+  .okey{flex:none;width:25px;height:25px;border-radius:50%;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:var(--muted)}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .okey{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .opt.ok{border-color:var(--ok-bd);background:var(--ok-bg)} .opt.ok .okey{background:var(--ok);color:#fff;border-color:var(--ok)}
+  .opt.no{border-color:var(--no-bd);background:var(--no-bg)} .opt.no .okey{background:var(--no);color:#fff;border-color:var(--no)}
+  .opt.miss{border-color:var(--ok-bd);border-style:dashed}
+  .opt.locked{cursor:default}
+
+  .btn{background:var(--accent);color:#fff;border:none;border-radius:11px;padding:10px 15px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px}
+  .btn:disabled{opacity:.5;cursor:default}
+  .fb{margin-top:11px;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px}
+  .fb.good{color:var(--ok)} .fb.bad{color:var(--no)}
+  .expl{margin-top:9px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;font-size:.88rem;line-height:1.5}
+
+  .result{display:none;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:12px;box-shadow:var(--shadow);text-align:center}
+  .result.show{display:block}
+  .result .big{font-size:3rem;font-weight:800;line-height:1;margin:6px 0}
+  .result p{color:var(--muted);font-size:.9rem;margin:6px 0 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 2 · Quiz</span><h1>Acceso de usuario: la última milla</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <button class="iconbtn" id="shufBtn" title="Mezclar preguntas">⤨ Mezclar</button>
+      <button class="iconbtn" id="resetBtn" title="Reiniciar quiz">↺ Reiniciar</button>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="progress"><div id="bar"></div></div>
+    <span id="score">0/40 · <b>0</b> correctas<span class="pct">0%</span></span>
+  </div>
+</header>
+
+<main>
+  <p class="intro">40 preguntas estilo cátedra sobre el Módulo 2. Las <b>Q1 a Q4 son las preguntas reales del Quiz 2</b> de la cátedra (textuales); el resto cubre el módulo completo. Ojo: el quiz real tuvo <b>3 de 4 preguntas sobre SSH y VPN</b>, así que ese bloque pesa. <b>Las opciones se mezclan solas en cada intento.</b></p>
+  <div class="result" id="result"></div>
+  <div id="quiz"></div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  var QUESTIONS = [
+    {id:1,type:"multi",prompt:"Respecto a las tecnologías de transporte, ¿cuál o cuáles de las siguientes es una tecnología de <b>capa 2</b>? (múltiple)",
+     opts:[{t:"Redes ATM",ok:true},{t:"Redes Frame Relay",ok:true},
+           {t:"Redes IP"},{t:"Redes SDH"},{t:"Redes OTH"}],
+     expl:"Pregunta textual del Quiz 2. Capa 1: SDH y OTH (redes ópticas transparentes). Capa 2: ATM, Frame Relay y Ethernet. Capa 3: IP e IP/MPLS."},
+
+    {id:2,type:"single",prompt:"Usted precisa conectarse a un motor de base de datos en la IP LAN 172.30.100.15 puerto 3306 dentro de la red de su empresa. Le generaron un acceso vía <b>openvpn</b> y le dieron el archivo .ovpn. Tras cargarlo y conectar la VPN, ¿cómo debería configurar su cliente SQL?",
+     opts:[{t:"host: 172.30.100.15 port: 3306",ok:true},
+           {t:"host: 127.0.0.1 port: 3306"},
+           {t:"host: 127.100.1.100 port: 6033"},
+           {t:"host: 127.100.1.100 port: 3306"}],
+     expl:"Pregunta textual del Quiz 2. La VPN te mete DENTRO de la red, así que el cliente apunta a la IP y el puerto REALES del servidor. No hay traducción de puertos como en un túnel SSH."},
+
+    {id:3,type:"single",prompt:"Mismo motor (172.30.100.15:3306), pero ahora el acceso es vía <b>ssh</b> por el servidor publicado 171.25.25.10 puerto 22. Usted hace un port forwarding por túnel SSH publicándolo en el puerto 6076 de su IP 127.100.0.100. ¿Cómo configura su cliente mysql?",
+     opts:[{t:"host: 127.100.0.100 port: 6076",ok:true},
+           {t:"host: 127.100.0.100 port: 3306"},
+           {t:"host: 172.30.100.15 port: 6076"},
+           {t:"host: 172.30.100.15 port: 3306"}],
+     expl:"Pregunta textual del Quiz 2. Con SSH port forwarding el cliente apunta al EXTREMO LOCAL del túnel: la IP y el puerto que vos publicaste (127.100.0.100:6076). El túnel se encarga de llevarlo al destino real."},
+
+    {id:4,type:"single",prompt:"¿Cuál es la sintaxis correcta para realizar ese port forwarding por túnel SSH, publicándolo en el puerto 6076 de la IP 127.100.0.100?",
+     opts:[{t:"ssh -L 127.100.0.100:6076:172.30.100.15:3306 user@171.25.25.10",ok:true},
+           {t:"ssh -l 127.100.0.100:6076:172.30.100.15:3306 user@171.25.25.10"},
+           {t:"ssh -L 6076:172.30.100.15:3306 user@171.25.25.10"},
+           {t:"ssh 172.30.100.15 -p 3306 -L 127.100.0.100:6076 user@171.25.25.10"}],
+     expl:"Pregunta textual del Quiz 2. El patrón es: ssh -L ip_local:puerto_local:host_destino:puerto_destino user@servidor_ssh. Ojo con la -L mayúscula (local forwarding); la -l minúscula sirve para indicar el usuario."},
+
+    {id:5,type:"single",prompt:"¿Cuáles son las dos características de la última milla que explican su alto precio al cliente?",
+     opts:[{t:"Es el elemento de costo más alto de la red, y en zonas rurales la milla intermedia no se comparte eficientemente",ok:true},
+           {t:"Requiere fibra óptica obligatoria y personal especializado"},
+           {t:"Su ancho de banda es siempre simétrico y usa medios compartidos"},
+           {t:"Depende de estándares internacionales y de licencias de espectro"}],
+     expl:"Son las dos que marca la teoría: costos iniciales altos (sobre todo si hay que desarrollar ductos) y pocos usuarios en áreas rurales, lo que impide compartir eficientemente la milla intermedia."},
+
+    {id:6,type:"vf",prompt:"La selección de la tecnología de última milla condiciona el ancho de banda, el monto de inversión y los costos de operación y de venta.",
+     opts:[{t:"Verdadero",ok:true},{t:"Falso"}],
+     expl:"Verdadero. Son exactamente los tres condicionamientos que enumera la teoría, y por eso la elección debe basarse en el modelo de negocio."},
+
+    {id:7,type:"single",prompt:"En el diseño de ADSL, ¿qué ancho de banda del cable UTP se aprovecha y qué se reserva para la voz?",
+     opts:[{t:"Usa 1 MHz del UTP; reserva los 25 KHz inferiores para POTS",ok:true},
+           {t:"Usa 4 KHz del UTP; reserva los 25 KHz superiores para POTS"},
+           {t:"Usa 10 MHz del UTP; reserva 80 KHz para POTS"},
+           {t:"Usa 1 MHz del UTP; reserva los 4 KHz superiores para POTS"}],
+     expl:"ADSL usa FDM para aprovechar 1 MHz del UTP. Los 25 KHz inferiores quedan para la voz analógica (POTS), y entre 4 y 25 KHz va la banda de guarda que evita interferencia entre voz y datos."},
+
+    {id:8,type:"single",prompt:"¿Para qué usa ADSL la cancelación de eco?",
+     opts:[{t:"Para otorgar un ancho de banda mayor a los canales ascendente y descendente",ok:true},
+           {t:"Para eliminar el ruido de la línea telefónica"},
+           {t:"Para separar la voz de los datos en el splitter"},
+           {t:"Para sincronizar los transceptores del usuario y del nodo"}],
+     expl:"La cancelación de eco permite que las bandas ascendente y descendente se solapen, reusando el mismo espectro en ambos sentidos y ganando ancho de banda. VDSL, en cambio, NO la usa."},
+
+    {id:9,type:"single",prompt:"En la técnica DMT, ¿en subcanales de qué ancho se divide la banda disponible?",
+     opts:[{t:"4 KHz",ok:true},{t:"25 KHz"},{t:"60 KHz"},{t:"196 KHz"}],
+     expl:"DMT divide el ancho de banda en subcanales de 4 KHz. En el diagrama del modulador esto aparece como f(i+1) = fi + 4 KHz: cada portadora está 4 KHz por encima de la anterior."},
+
+    {id:10,type:"single",prompt:"¿Cuál es el criterio que usa el módem DMT para repartir los bits entre los subcanales?",
+     opts:[{t:"Envía señales de test, mide la relación señal/ruido y asigna más bits a los subcanales con mejor S/N",ok:true},
+           {t:"Reparte los bits en partes iguales entre todos los subcanales"},
+           {t:"Asigna más bits a los subcanales de frecuencia más alta"},
+           {t:"Usa sólo los subcanales que están libres de tráfico de voz"}],
+     expl:"Antes de transmitir, el módem DMT testea cada subcanal para medir su S/N, y luego asigna más bits a los buenos y menos a los de peor calidad. Como la atenuación crece con la frecuencia, los subcanales altos terminan llevando menos bits."},
+
+    {id:11,type:"single",prompt:"Los diseños actuales de ADSL con DMT usan 256 subcanales descendentes. ¿Qué velocidad teórica da eso, y qué se logra en la práctica?",
+     opts:[{t:"Teórico 15,36 Mbps; en la práctica 1,5 a 10 Mbps",ok:true},
+           {t:"Teórico 15,36 Mbps; en la práctica 13 a 52 Mbps"},
+           {t:"Teórico 60 Mbps; en la práctica 1,5 a 10 Mbps"},
+           {t:"Teórico 2,048 Mbps; en la práctica 1,5 Mbps"}],
+     expl:"256 subcanales de 4 KHz a 60 kbps cada uno = 15,36 Mbps teóricos. El deterioro de la línea real lo impide: las implementaciones operan entre 1,5 y 10 Mbps, según distancia y calidad de línea."},
+
+    {id:12,type:"vf",prompt:"VDSL utiliza cancelación de eco, igual que ADSL.",
+     opts:[{t:"Verdadero"},{t:"Falso",ok:true}],
+     expl:"Falso. VDSL NO usa cancelación de eco: justamente por eso emplea bandas separadas para cada servicio (POTS 0–4 KHz, RDSI 4–80 KHz, ascendente 300–700 KHz, descendente ≥1 MHz)."},
+
+    {id:13,type:"single",prompt:"Según el plan de bandas de VDSL, ¿qué rango de frecuencias se asigna a RDSI?",
+     opts:[{t:"4 a 80 KHz",ok:true},{t:"0 a 4 KHz"},{t:"300 a 700 KHz"},{t:"1 MHz o más"}],
+     expl:"El plan de VDSL es: POTS 0–4 KHz, RDSI 4–80 KHz, enlace ascendente 300–700 KHz (1,5–2,3 Mbps) y enlace descendente ≥1 MHz (13–52 Mbps)."},
+
+    {id:14,type:"single",prompt:"VDSL utiliza cuatro canales para la transmisión de datos. ¿Cómo se reparten y con qué tecnología se apoya?",
+     opts:[{t:"Dos para la descarga y dos para la subida, apoyándose en FTTC (híbrido cobre/fibra)",ok:true},
+           {t:"Tres para la descarga y uno para la subida, apoyándose en FTTH"},
+           {t:"Dos para voz y dos para datos, apoyándose en HFC"},
+           {t:"Cuatro para la descarga, apoyándose en DWDM"}],
+     expl:"VDSL usa 2 canales de bajada y 2 de subida, aumentando sustancialmente la potencia de transmisión gracias a FTTC (Fiber To The Cabinet), un híbrido entre cobre y fibra entre la central y el usuario."},
+
+    {id:15,type:"single",prompt:"¿Qué problema del enlace E1 tradicional viene a resolver HDSL?",
+     opts:[{t:"Que ocupa ~1,5 MHz y, con la atenuación, limita la distancia a no más de 1 km entre repetidores, encareciéndolo",ok:true},
+           {t:"Que sólo admite tráfico asimétrico y no sirve para videoconferencia"},
+           {t:"Que necesita fibra óptica y no puede usar el par de cobre"},
+           {t:"Que no puede transportar tramas T1 ni accesos ISDN"}],
+     expl:"El E1 tradicional ocupa un ancho de banda de alrededor de 1,5 MHz; sumado a la atenuación de la línea telefónica, eso limita su uso a 1 km entre repetidores y lo vuelve caro. HDSL ofrece las tramas E1 con mejor relación costo/velocidad, usando 2 pares."},
+
+    {id:16,type:"single",prompt:"¿Cuál es la diferencia principal entre SDSL y HDSL?",
+     opts:[{t:"SDSL usa 1 solo par de conductores; HDSL necesita 2",ok:true},
+           {t:"SDSL es asimétrico; HDSL es simétrico"},
+           {t:"SDSL usa DMT; HDSL usa 2B1Q"},
+           {t:"SDSL transmite E1 y HDSL sólo T1"}],
+     expl:"SDSL (Línea Digital de Abonado de Línea Simple) se desarrolló para suplantar a HDSL usando un solo par, lo cual beneficia al usuario que generalmente dispone de un único par. Ambos son simétricos."},
+
+    {id:17,type:"multi",prompt:"Respecto a G.SHDSL, ¿cuáles de las siguientes afirmaciones son correctas? (múltiple)",
+     opts:[{t:"Transmite hasta 2,3 Mbps sobre un par y hasta 4,6 Mbps sobre dos pares",ok:true},
+           {t:"Puede alcanzar una distancia de hasta 3,9 km",ok:true},
+           {t:"Nació como estándar internacional de la ITU-T en febrero de 2001",ok:true},
+           {t:"Es una tecnología asimétrica derivada de ADSL"},
+           {t:"No puede transportar tramas E1/T1"}],
+     expl:"G.SHDSL es simétrica (no deriva de ADSL) y sí transmite tramas E1/T1, accesos a ISDN y a ATM. Su versión opcional llega a 4,7 Mbps sobre dos pares. Su diferencia clave con las otras xDSL es haber nacido como estándar ITU-T (feb. 2001, mejorado en 2003)."},
+
+    {id:18,type:"single",prompt:"En la tabla comparativa de accesos xDSL, ¿qué codificación de línea comparten HDSL, SDSL y G.SHDSL?",
+     opts:[{t:"2B1Q",ok:true},{t:"DMT"},{t:"CAP/DMT"},{t:"QAM"}],
+     expl:"Las tres tecnologías simétricas usan 2B1Q, señalización digital y frecuencia de 196 KHz. Las asimétricas (ADSL y VDSL) usan DMT (ADSL figura como CAP/DMT) y señalización analógica."},
+
+    {id:19,type:"single",prompt:"¿Qué hace la tecnología UDSL (también llamada G.Lite o DSL Lite) y qué consecuencia tiene?",
+     opts:[{t:"Mueve la separación del usuario a la estación base; al no tener splitter, reduce la velocidad considerablemente",ok:true},
+           {t:"Detecta la máxima velocidad posible de la línea y la ajusta dinámicamente"},
+           {t:"Duplica los pares de cobre para aumentar el alcance"},
+           {t:"Elimina la banda de POTS para dedicar todo el espectro a datos"}],
+     expl:"UDSL/G.Lite reduce el costo de implementación moviendo el proceso de separación del usuario a la estación base. Al no tener splitter, baja la velocidad. La que detecta y ajusta la velocidad es RADSL."},
+
+    {id:20,type:"single",prompt:"En un acceso de usuario, ¿cuántos transceptores se requieren y dónde están?",
+     opts:[{t:"Dos: uno en el domicilio del usuario y otro en el nodo de la red, integrado a un puerto del concentrador",ok:true},
+           {t:"Uno solo, en el domicilio del usuario"},
+           {t:"Uno solo, en el DSLAM de la central"},
+           {t:"Cuatro: dos en el domicilio y dos en la central"}],
+     expl:"Se requieren dos transceptores: uno en el domicilio y otro en el nodo de la red. El del nodo de la telco está integrado a un puerto del concentrador (para DSL, el DSLAM)."},
+
+    {id:21,type:"single",prompt:"¿Qué equipo concentra las líneas DSL de los abonados del lado del proveedor?",
+     opts:[{t:"El DSLAM (Digital Subscriber Line Access Multiplexer)",ok:true},
+           {t:"El OLT (Optical Line Terminal)"},
+           {t:"El splitter de la red ODN"},
+           {t:"El nodo óptico de la red HFC"}],
+     expl:"El DSLAM es el concentrador/multiplexor de accesos DSL en la central. El OLT es el equivalente en fibra PON, y el nodo óptico es de HFC."},
+
+    {id:22,type:"multi",prompt:"¿Cómo se clasifican las redes de fibra para el hogar? (múltiple)",
+     opts:[{t:"Por el uso de elementos pasivos y/o activos: redes AON y redes PON",ok:true},
+           {t:"Por la cercanía del tramo de fibra al domicilio: FTTx, FTTB, FTTC o FTTCab",ok:true},
+           {t:"Por el tipo de codificación de línea: 2B1Q o DMT"},
+           {t:"Por la cantidad de pares de cobre utilizados"}],
+     expl:"Las dos clasificaciones que da la teoría son por elementos pasivos/activos (AON vs PON) y por cercanía de la fibra al domicilio (FTTx, FTTB, FTTC, FTTCab). Las otras dos opciones corresponden a xDSL, no a fibra."},
+
+    {id:23,type:"single",prompt:"En la arquitectura PON, ¿qué elemento está ubicado en la central del proveedor?",
+     opts:[{t:"El OLT (Optical Line Terminal)",ok:true},
+           {t:"El ONT (Optical Network Terminal)"},
+           {t:"La ONU (Optical Network Unit)"},
+           {t:"El splitter de la red ODN"}],
+     expl:"El OLT está en la central y es donde arranca la fibra. El ONT está en el domicilio del cliente, la ONU es la unidad óptica del lado del usuario en un punto intermedio, y el splitter (red ODN) reparte la señal entre abonados."},
+
+    {id:24,type:"single",prompt:"¿Por qué se dice que una red PON es \"pasiva\"?",
+     opts:[{t:"Porque el splitter que reparte la señal entre abonados no lleva electrónica ni alimentación",ok:true},
+           {t:"Porque no requiere equipos en el domicilio del cliente"},
+           {t:"Porque no permite servicios bidireccionales"},
+           {t:"Porque el OLT no amplifica la señal en la central"}],
+     expl:"Lo que la vuelve pasiva es el splitter de la red ODN: un divisor óptico sin electrónica ni alimentación. Una sola fibra sale del OLT y, mediante splitters pasivos, alimenta a varios abonados. Por eso EPON permite compartir los costes de terminación."},
+
+    {id:25,type:"single",prompt:"En una red HFC, ¿qué función cumplen los nodos ópticos?",
+     opts:[{t:"Son receptores que hacen la conversión óptico/eléctrica de la señal en las áreas de servicio",ok:true},
+           {t:"Concentran las líneas DSL de los abonados"},
+           {t:"Dividen la señal óptica de forma pasiva entre varios abonados"},
+           {t:"Separan la voz de los datos en el domicilio del usuario"}],
+     expl:"HFC usa fibra en la troncal desde la cabecera hasta los nodos ópticos, que convierten de óptico a eléctrico. A partir de ahí se extiende la red de distribución tradicional de cable coaxial."},
+
+    {id:26,type:"multi",prompt:"¿Qué necesita una red HFC para poder transportar servicios bidireccionales (telefonía y datos)? (múltiple)",
+     opts:[{t:"Canal de retorno habilitado",ok:true},
+           {t:"Diseño adecuado del área de servicio de cada nodo",ok:true},
+           {t:"Reemplazar todo el coaxial por fibra hasta el hogar"},
+           {t:"Cancelación de eco en el módem del abonado"}],
+     expl:"Los servicios bidireccionales requieren canal de retorno habilitado y un diseño adecuado del área de servicio de cada nodo. HFC conserva el coaxial en el último tramo por diseño."},
+
+    {id:27,type:"single",prompt:"¿Cuál es la capacidad de cada bus HFC según la teoría?",
+     opts:[{t:"50 Mbps en sentido red→usuario y 10 Mbps en sentido usuario→red",ok:true},
+           {t:"10 Mbps en sentido red→usuario y 50 Mbps en sentido usuario→red"},
+           {t:"50 Mbps simétricos"},
+           {t:"768 kbps en ambos sentidos"}],
+     expl:"Cada bus HFC tiene 50 Mbps de la red al usuario y 10 Mbps del usuario a la red. Ojo: el download de 10 Mbit/s compartido y el upload de 768 kbit/s o 3 Mbit/s son las velocidades del servicio, no la capacidad del bus."},
+
+    {id:28,type:"vf",prompt:"Las redes HFC no tienen límite de distancia.",
+     opts:[{t:"Verdadero",ok:true},{t:"Falso"}],
+     expl:"Verdadero. Entre los límites físicos, la teoría indica explícitamente que HFC no tiene límite de distancia. Su debilidad principal es otra: el medio compartido (pobre seguridad) y los distintos estándares entre EEUU y Europa."},
+
+    {id:29,type:"single",prompt:"¿Cuál es la debilidad principal de una red HFC?",
+     opts:[{t:"Es un medio compartido, con pobre seguridad, y hay estándares distintos entre EEUU y Europa",ok:true},
+           {t:"Su alto precio y su escaso ancho de banda"},
+           {t:"La imposibilidad de transmitir televisión y datos juntos"},
+           {t:"Que requiere línea de vista entre el nodo y el abonado"}],
+     expl:"Sus fortalezas son alta velocidad, bajo precio y que se vende por contenido. Sus debilidades: medio compartido (pobre seguridad) y diferentes estándares entre EEUU y Europa."},
+
+    {id:30,type:"single",prompt:"¿Qué estándar IEEE normaliza EFM (Ethernet en la primera milla)?",
+     opts:[{t:"IEEE 802.3ah",ok:true},{t:"IEEE 802.3ab"},{t:"IEEE 802.16"},{t:"IEEE 802.11"}],
+     expl:"EFM está estandarizada por IEEE 802.3ah. Cuidado con confundirla con 802.3ab, que es Gigabit Ethernet sobre cobre (1000BASE-T). La 802.16 es WiMAX y la 802.11 es WiFi."},
+
+    {id:31,type:"single",prompt:"¿Por qué se dice que Metro Ethernet es \"otra L2 VPN\"?",
+     opts:[{t:"Porque la red del proveedor transporta tramas Ethernet y usa las direcciones MAC para determinar el encaminamiento",ok:true},
+           {t:"Porque cifra todo el tráfico del cliente con IPsec"},
+           {t:"Porque asigna direcciones IP privadas a cada sitio del cliente"},
+           {t:"Porque opera únicamente sobre enlaces punto a punto dedicados"}],
+     expl:"En Metro Ethernet el proveedor transporta las tramas Ethernet del cliente y rutea por MAC, ofreciendo una VPN de capa 2. Por eso se puede asimilar una VLAN a un DLCI o un PVC."},
+
+    {id:32,type:"single",prompt:"Según el MEF, ¿qué tipo de EVC corresponde a un servicio multipunto?",
+     opts:[{t:"E-LAN",ok:true},{t:"E-Line"},{t:"E-Tree"},{t:"EPL"}],
+     expl:"Los tres tipos de EVC según el MEF: E-Line = punto a punto, E-LAN = multipunto, E-Tree = punto a multipunto. EPL es una variante de E-Line con ancho de banda dedicado."},
+
+    {id:33,type:"multi",prompt:"¿Cuáles de las siguientes son características de un EVC? (múltiple)",
+     opts:[{t:"Impide la transferencia de datos entre usuarios que no son parte del mismo EVC",ok:true},
+           {t:"No altera ni modifica la trama Ethernet original que pasa por la red",ok:true},
+           {t:"Ofrece privacidad y seguridad similar a un circuito virtual ATM (PVC ATM)",ok:true},
+           {t:"Devuelve siempre la trama al origen para confirmar la entrega"},
+           {t:"Requiere convertir las tramas Ethernet a celdas de 53 bytes"}],
+     expl:"El EVC conecta dos o más UNIs, aísla a los que no pertenecen al mismo EVC (privacidad similar a un PVC ATM), no altera la trama original y nunca la devuelve al origen. Puede usarse para construir VPN de capa 2."},
+
+    {id:34,type:"single",prompt:"¿Cuál es la diferencia entre EPL y EVPL?",
+     opts:[{t:"EPL tiene ancho de banda dedicado y el cliente siempre dispone del CIR; EVPL tiene CIR y EIR con métrica para SLA",ok:true},
+           {t:"EPL es multipunto y EVPL es punto a punto"},
+           {t:"EPL se implementa sobre HFC y EVPL sobre xDSL"},
+           {t:"EPL usa direcciones MAC y EVPL usa direcciones IP"}],
+     expl:"EPL (Ethernet Private Line) es punto a punto con ancho de banda dedicado, normalmente sobre SDH o MPLS: es como una línea TDM pero con interfaz Ethernet. EVPL tiene CIR y EIR con métrica para SLA y es similar al Frame Relay."},
+
+    {id:35,type:"single",prompt:"EVPLan (Ethernet Virtual Private LAN) también se conoce como VPLS, TLS o VPSN. ¿Por qué necesita separar clientes vía encapsulación?",
+     opts:[{t:"Porque las etiquetas de VLAN del proveedor no son suficientes (4096)",ok:true},
+           {t:"Porque las direcciones MAC se repiten entre clientes"},
+           {t:"Porque el estándar 802.3ah no admite multipunto"},
+           {t:"Porque el CIR no puede garantizarse en modo multipunto"}],
+     expl:"El límite de 4096 etiquetas VLAN del proveedor no alcanza para separar a todos los clientes, así que se recurre a la encapsulación. EVPLan es el servicio más rentable desde el punto de vista del proveedor."},
+
+    {id:36,type:"single",prompt:"En los bucles inalámbricos, ¿en qué banda opera LMDS?",
+     opts:[{t:"26–28 GHz",ok:true},{t:"1–3 GHz"},{t:"3,5 GHz"},{t:"40 GHz"}],
+     expl:"Las bandas son: 1–3 GHz la mayoría de sistemas WLL, 3,5 GHz el estándar, 10 GHz uso muy limitado, 26–28 GHz LMDS y 40 GHz MMDS genérico."},
+
+    {id:37,type:"single",prompt:"¿En qué banda opera MMDS genérico?",
+     opts:[{t:"40 GHz",ok:true},{t:"26–28 GHz"},{t:"10 GHz"},{t:"3,5 GHz"}],
+     expl:"MMDS (Multichannel Multipoint Video Distribution System) opera en 40 GHz. LMDS es la de 26–28 GHz. Ambos sistemas requieren línea de vista y reutilización de frecuencias del espectro."},
+
+    {id:38,type:"vf",prompt:"Los sistemas de bucle inalámbrico (WLL) requieren línea de vista y reutilización de frecuencias del espectro.",
+     opts:[{t:"Verdadero",ok:true},{t:"Falso"}],
+     expl:"Verdadero. Es una condición que marca explícitamente la teoría para los bucles inalámbricos (WiLL, LMDS, MMDS)."},
+
+    {id:39,type:"multi",prompt:"¿Cuáles son limitaciones notables de las WLAN / Wi-Fi / HiperLAN2 según la teoría? (múltiple)",
+     opts:[{t:"Seguridad",ok:true},{t:"Calidad de servicio",ok:true},{t:"Movilidad",ok:true},
+           {t:"Interferencias con otras redes",ok:true},
+           {t:"Necesidad de licencia de espectro en todas las bandas"}],
+     expl:"La teoría enumera cuatro limitaciones: seguridad, calidad de servicio, movilidad e interferencias con otras redes. Justamente lo contrario de la última opción: la mayoría trabaja en bandas que NO requieren licencia."},
+
+    {id:40,type:"single",prompt:"En el TP, ¿qué hace el <i>remote forwarding</i> de SSH?",
+     opts:[{t:"Establece un camino cifrado para que el tráfico contra un puerto de un host remoto se redirija a un puerto de un host local",ok:true},
+           {t:"Redirige el tráfico enviado a un puerto local hacia un puerto de un host remoto"},
+           {t:"Crea un proxy SOCKS dinámico en el puerto indicado"},
+           {t:"Cifra todo el tráfico de la placa de red del cliente"}],
+     expl:"El remote forwarding va del remoto al local. El local forwarding es al revés: redirige lo enviado a un puerto local hacia un puerto de un host remoto, de manera bidireccional. El proxy SOCKS dinámico se hace con ssh -D."}
+  ];
+
+  var order=QUESTIONS.map(function(_,i){return i;});
+  var state={}; // id -> {answered, correct}
+  var rendered={}; // id -> array de opciones EN EL ORDEN MOSTRADO (la mezcla vive acá)
+  var shuffle=false;
+
+  function shuf(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+  function letter(i){ return String.fromCharCode(65+i); }
+
+  var quiz=document.getElementById("quiz");
+
+  function build(){
+    quiz.innerHTML=""; state={}; rendered={};
+    document.getElementById("result").className="result";
+    order.forEach(function(qi){
+      var q=QUESTIONS[qi];
+      // Las opciones se mezclan en CADA render, así la correcta nunca queda fija.
+      // V/F se deja en su orden natural (Verdadero, Falso).
+      var shown = (q.type==="vf") ? q.opts.slice() : shuf(q.opts.slice());
+      rendered[q.id]=shown;
+      var card=document.createElement("div"); card.className="card"; card.id="card-"+q.id;
+      var tyLabel=q.type==="multi"?"Selección múltiple":(q.type==="vf"?"Verdadero / Falso":"Opción única");
+      var head='<div class="qhead"><span class="badge">Q'+q.id+'</span><span class="badge ty">'+tyLabel+'</span></div>';
+      card.innerHTML=head+'<div class="qprompt">'+q.prompt+'</div>';
+      var opts=document.createElement("div"); opts.className="opts"+(q.type==="vf"?" vf":"");
+      shown.forEach(function(o,oi){
+        var b=document.createElement("button"); b.className="opt"; b.type="button";
+        b.innerHTML=(q.type==="vf"?"":'<span class="okey">'+letter(oi)+'</span>')+'<span>'+o.t+'</span>';
+        b.addEventListener("click",function(){ onOpt(q,oi,opts,card,b); });
+        opts.appendChild(b);
+      });
+      card.appendChild(opts);
+      if(q.type==="multi"){
+        var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Comprobar";
+        btn.addEventListener("click",function(){ checkMulti(q,opts,card,btn); });
+        card.appendChild(btn);
+      }
+      quiz.appendChild(card);
+    });
+    updateStats();
+  }
+
+  function onOpt(q,oi,opts,card,btn){
+    if(state[q.id]) return;                 // ya respondida
+    if(q.type==="multi"){ btn.classList.toggle("sel"); return; }  // multi: solo togglear
+    lockSingle(q,oi,opts);                  // single/vf: evaluar al instante
+  }
+
+  function lockSingle(q,chosen,opts){
+    var shown=rendered[q.id];
+    var kids=opts.querySelectorAll(".opt"); var correct=false;
+    kids.forEach(function(k,ki){
+      k.classList.add("locked");
+      if(shown[ki].ok) k.classList.add("ok");
+      if(ki===chosen && !shown[ki].ok) k.classList.add("no");
+      if(ki===chosen && shown[ki].ok) correct=true;
+    });
+    finish(q,opts.parentNode,correct);
+  }
+
+  function checkMulti(q,opts,card,btn){
+    if(state[q.id]) return;
+    var shown=rendered[q.id];
+    var kids=opts.querySelectorAll(".opt"); var allCorrect=true;
+    kids.forEach(function(k,ki){
+      var sel=k.classList.contains("sel"); var ok=!!shown[ki].ok;
+      k.classList.add("locked");
+      if(ok && sel) k.classList.add("ok");
+      else if(ok && !sel){ k.classList.add("miss"); allCorrect=false; }
+      else if(!ok && sel){ k.classList.add("no"); allCorrect=false; }
+    });
+    btn.disabled=true;
+    finish(q,card,allCorrect);
+  }
+
+  function finish(q,card,correct){
+    state[q.id]={answered:true,correct:correct};
+    card.classList.add(correct?"cok":"cno");
+    var fb=document.createElement("div"); fb.className="fb "+(correct?"good":"bad");
+    fb.textContent=correct?"✓ Correcto":"✗ Incorrecto";
+    card.appendChild(fb);
+    var ex=document.createElement("div"); ex.className="expl"; ex.innerHTML="<b>Por qué:</b> "+q.expl;
+    card.appendChild(ex);
+    updateStats();
+  }
+
+  function updateStats(){
+    var ans=0,cor=0;
+    Object.keys(state).forEach(function(k){ ans++; if(state[k].correct)cor++; });
+    var total=QUESTIONS.length;
+    document.getElementById("bar").style.width=Math.round(ans/total*100)+"%";
+    var pct=ans?Math.round(cor/total*100):0;
+    document.getElementById("score").innerHTML=ans+"/"+total+" · <b>"+cor+"</b> correctas<span class='pct'>"+pct+"%</span>";
+    if(ans===total) showResult(cor,total);
+  }
+
+  function showResult(cor,total){
+    var pct=Math.round(cor/total*100);
+    var msg = pct>=90?"Excelente, dominado.":pct>=70?"Bien, repasá los que fallaste.":pct>=50?"Aprobado justo — conviene reforzar.":"A repasar el módulo con el resumen.";
+    var r=document.getElementById("result");
+    r.className="result show";
+    r.innerHTML='<div style="font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Resultado</div>'+
+      '<div class="big" style="color:'+(pct>=70?"var(--ok)":pct>=50?"var(--warn)":"var(--no)")+'">'+pct+'%</div>'+
+      '<div style="font-weight:700">'+cor+' de '+total+' correctas</div><p>'+msg+'</p>';
+    r.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+
+  // controles
+  document.getElementById("resetBtn").addEventListener("click",build);
+  document.getElementById("shufBtn").addEventListener("click",function(){
+    shuffle=!shuffle; this.classList.toggle("on",shuffle);
+    order = shuffle ? shuf(QUESTIONS.map(function(_,i){return i;})) : QUESTIONS.map(function(_,i){return i;});
+    build();
+  });
+  var mem={};
+  var st; try{ st=localStorage.getItem("comii-theme"); }catch(e){ st=mem["comii-theme"]; }
+  if(st==="dark" || (!st && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+  document.getElementById("themeBtn").addEventListener("click",function(){
+    document.documentElement.classList.toggle("dark");
+    var v=document.documentElement.classList.contains("dark")?"dark":"light";
+    try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+  });
+
+  build();
+})();
+</script>
+</body>
+</html>
