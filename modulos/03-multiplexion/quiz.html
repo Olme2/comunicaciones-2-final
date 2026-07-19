@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 3 · Multiplexión — Quiz</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --card:#ffffff; --text:#1b2531; --muted:#6a7685; --border:#e4e8ee;
+    --accent:#2e6fb0; --accent-soft:#e9f1f9; --ok:#1f8a4c; --ok-bg:#e9f7ef; --ok-bd:#9fd9b6;
+    --no:#c0392b; --no-bg:#fcebea; --no-bd:#eeb4ae; --warn:#b8860b;
+    --shadow:0 1px 3px rgba(20,30,45,.06),0 1px 2px rgba(20,30,45,.04);
+  }
+  html.dark{
+    --bg:#0f141a; --card:#19212b; --text:#e6ebf1; --muted:#93a1b0; --border:#2a3542;
+    --accent:#5fa8e0; --accent-soft:#1d2c3a; --ok:#54c483; --ok-bg:#142a1e; --ok-bd:#2f6b47;
+    --no:#e06a5f; --no-bg:#2c1a19; --no-bd:#6b332f; --warn:#d6a94a;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;font-size:16px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:var(--accent-soft);color:var(--accent);padding:.05em .35em;border-radius:5px;font-size:.86em;font-family:ui-monospace,Menlo,monospace}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:780px;margin:0 auto}
+  .htop .lbl{font-size:.72rem;color:var(--muted)}
+  .htop h1{font-size:1.02rem;margin:1px 0 0;font-weight:700;letter-spacing:-.01em}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+  #shufBtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+  .stats{max-width:780px;margin:11px auto 0;display:flex;align-items:center;gap:12px}
+  .progress{flex:1;height:9px;background:var(--border);border-radius:99px;overflow:hidden}
+  #bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#5ac8a8));border-radius:99px;transition:width .35s ease}
+  #score{font-size:.8rem;white-space:nowrap}
+  #score b{color:var(--ok)} #score .pct{font-weight:800;color:var(--accent);margin-left:3px}
+
+  main{max-width:780px;margin:0 auto;padding:14px}
+  .intro{font-size:.84rem;color:var(--muted);margin:2px 4px 14px;line-height:1.5}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;margin-bottom:12px;box-shadow:var(--shadow);border-left:4px solid var(--border)}
+  .card.cok{border-left-color:var(--ok)} .card.cno{border-left-color:var(--no)}
+  .qhead{display:flex;gap:8px;align-items:center;margin-bottom:9px;flex-wrap:wrap}
+  .badge{font-size:.66rem;font-weight:700;padding:3px 8px;border-radius:7px;background:var(--accent-soft);color:var(--accent);font-family:ui-monospace,Menlo,monospace}
+  .badge.ty{background:transparent;border:1px solid var(--border);color:var(--muted)}
+  .qprompt{font-size:1rem;line-height:1.5;margin-bottom:12px;font-weight:500}
+
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opt{width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--border);color:var(--text);border-radius:11px;padding:11px 13px;font-size:.94rem;line-height:1.4;cursor:pointer;display:flex;align-items:center;gap:11px;min-height:48px;transition:border-color .12s,background .12s;font-family:inherit}
+  .opts.vf .opt{justify-content:center;font-weight:700}
+  @media(hover:hover){.opt:not(.locked):hover{border-color:var(--accent);background:var(--accent-soft)}}
+  .okey{flex:none;width:25px;height:25px;border-radius:50%;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:var(--muted)}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .okey{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .opt.ok{border-color:var(--ok-bd);background:var(--ok-bg)} .opt.ok .okey{background:var(--ok);color:#fff;border-color:var(--ok)}
+  .opt.no{border-color:var(--no-bd);background:var(--no-bg)} .opt.no .okey{background:var(--no);color:#fff;border-color:var(--no)}
+  .opt.miss{border-color:var(--ok-bd);border-style:dashed}
+  .opt.locked{cursor:default}
+
+  .btn{background:var(--accent);color:#fff;border:none;border-radius:11px;padding:10px 15px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px}
+  .btn:disabled{opacity:.5;cursor:default}
+  .fb{margin-top:11px;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px}
+  .fb.good{color:var(--ok)} .fb.bad{color:var(--no)}
+  .expl{margin-top:9px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;font-size:.88rem;line-height:1.5}
+
+  .result{display:none;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:12px;box-shadow:var(--shadow);text-align:center}
+  .result.show{display:block}
+  .result .big{font-size:3rem;font-weight:800;line-height:1;margin:6px 0}
+  .result p{color:var(--muted);font-size:.9rem;margin:6px 0 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 3 · Quiz</span><h1>Multiplexión</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <button class="iconbtn" id="shufBtn" title="Mezclar preguntas">⤨ Mezclar</button>
+      <button class="iconbtn" id="resetBtn" title="Reiniciar quiz">↺ Reiniciar</button>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="progress"><div id="bar"></div></div>
+    <span id="score">0/30 · <b>0</b> correctas<span class="pct">0%</span></span>
+  </div>
+</header>
+
+<main>
+  <p class="intro">30 preguntas sobre el Módulo 3, con mucho <b>cálculo</b> (es lo que toma la cátedra). Las <b>Q1 a Q4 son las reales del Quiz 3</b> (textuales, incluida la trampa del E1). Varias piden resolver ejercicios de FDM, TDM, STDM y PCM. Tené a mano lápiz y papel. <b>Las opciones se mezclan solas en cada intento.</b></p>
+  <div class="result" id="result"></div>
+  <div id="quiz"></div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  var QUESTIONS = [
+    {id:1,type:"single",prompt:"Si se usa uno de los enlaces que conforma un E1 para transmitir los datos de un micrófono de 4 KHz, aprovechando todos los bits de datos que admite el E1 por canal por trama, ¿cuál sería el <b>%e</b> (error de digitalización) obtenido?",
+     opts:[{t:"0,4%",ok:true},{t:"0,05%"},{t:"1%"},{t:"10%"},{t:"0,1%"}],
+     expl:"Pregunta real del Quiz 3. Cada canal E1 usa 8 bits por muestra. El error de digitalización con 8 bits es 1/2⁸ = 1/256 = 100/256 ≈ 0,4%."},
+
+    {id:2,type:"single",prompt:"El ancho de banda de un canal E1 es 2,048 Mbps. Esto es porque tiene la capacidad de:",
+     opts:[{t:"Ninguna de las anteriores",ok:true},
+           {t:"Multiplexar 32 canales de voz/datos sobre una trama de 125 μs más 2 canales de control"},
+           {t:"Multiplexar 30 canales de voz/datos sobre una trama de 125 μs"},
+           {t:"Multiplexar 32 canales de voz digital usando FDM"},
+           {t:"Multiplexar 30 canales de voz analógica montadas sobre 30 portadoras"}],
+     expl:"Pregunta real del Quiz 3 (¡trampa!). El E1 tiene 32 canales EN TOTAL (30 de voz/datos + 2 de control), no '32 + 2'. Tampoco usa FDM (usa TDM) ni voz analógica. Por eso la correcta es 'Ninguna de las anteriores'."},
+
+    {id:3,type:"single",prompt:"Un multiplexor combina 8 canales de 100 kbps, utilizando una ranura de 2 bits. Entonces la duración de la trama es:",
+     opts:[{t:"20 microsegundos",ok:true},{t:"32 microsegundos"},{t:"16 microsegundos"},{t:"8 microsegundos"},{t:"Ninguna de las anteriores"}],
+     expl:"Pregunta real del Quiz 3. Cada canal de 100 kbps con ranura de 2 bits genera 100.000/2 = 50.000 muestras/s → una trama cada 1/50.000... En realidad: trama = 8×2 = 16 bits, velocidad de salida = 8×100 kbps = 800 kbps, T_trama = 16 bits / 800.000 bps = 20 μs."},
+
+    {id:4,type:"single",prompt:"¿Cuántos bits de overhead tiene un enlace E1 por trama?",
+     opts:[{t:"16",ok:true},{t:"8"},{t:"4"},{t:"24"}],
+     expl:"Pregunta real del Quiz 3. La trama E1 son 256 bits: 30 canales de voz × 8 = 240 bits de datos, y 2 canales de control × 8 = 16 bits de overhead."},
+
+    {id:5,type:"single",prompt:"¿Cuál es la fórmula de la eficiencia de un enlace?",
+     opts:[{t:"Eficiencia = (cantidad de conexiones de usuario) / costo",ok:true},
+           {t:"Eficiencia = costo / (cantidad de conexiones de usuario)"},
+           {t:"Eficiencia = ancho de banda / número de canales"},
+           {t:"Eficiencia = velocidad de salida / velocidad de entrada"}],
+     expl:"La eficiencia se define como la cantidad de conexiones de usuario dividida por el costo. Para maximizarla se necesitan múltiples conexiones simultáneas y alto tiempo de ocupación del enlace."},
+
+    {id:6,type:"single",prompt:"¿Cuándo se puede usar FDM?",
+     opts:[{t:"Cuando el ancho de banda útil del medio es mayor que la suma de los anchos de banda de las señales a transmitir",ok:true},
+           {t:"Cuando la velocidad del medio es mayor que la suma de las velocidades de las señales"},
+           {t:"Cuando todas las señales son digitales"},
+           {t:"Cuando las fuentes no transmiten todo el tiempo"}],
+     expl:"FDM requiere que el ancho de banda del medio supere la suma de los anchos de banda de las señales, para poder ubicarlas en frecuencias separadas sin solaparse. El criterio de velocidad es el de TDM."},
+
+    {id:7,type:"vf",prompt:"FDM es una técnica analógica: las señales digitales deben convertirse a analógicas antes de ser multiplexadas.",
+     opts:[{t:"Verdadero",ok:true},{t:"Falso"}],
+     expl:"Verdadero. FDM se basa en operaciones analógicas (modulación), así que las señales de entrada y la compuesta son analógicas; una señal digital debe convertirse antes."},
+
+    {id:8,type:"single",prompt:"Se envían por un cable 3 señales de voz de 4 KHz usando FDM, con bandas de guarda de 1 KHz. ¿Cuál es el ancho de banda total mínimo?",
+     opts:[{t:"14 KHz",ok:true},{t:"12 KHz",ok:false},{t:"15 KHz"},{t:"5 KHz"}],
+     expl:"BW_total = n·BW_señal + (n−1)·BW_guarda = 3×4 + 2×1 = 12 + 2 = 14 KHz. Son 3 señales pero sólo 2 bandas de guarda (entre ellas)."},
+
+    {id:9,type:"single",prompt:"¿Cuándo se puede usar TDM?",
+     opts:[{t:"Cuando la velocidad de transmisión del medio es mayor que la suma de las velocidades de las señales digitales",ok:true},
+           {t:"Cuando el ancho de banda del medio supera la suma de los anchos de banda"},
+           {t:"Cuando las señales son analógicas y no pueden digitalizarse"},
+           {t:"Cuando se usa una sola longitud de onda"}],
+     expl:"TDM requiere que la velocidad del medio supere la suma de las velocidades. Ej: 4 entradas de 10 Kbps necesitan al menos 40 Kbps de salida. El criterio de ancho de banda es el de FDM."},
+
+    {id:10,type:"single",prompt:"Complete la frase sobre el concepto de canal: \"En TDM, un canal ocupa ___\".",
+     opts:[{t:"todo el ancho de banda del medio, durante una fracción del tiempo",ok:true},
+           {t:"una fracción del ancho de banda del medio, todo el tiempo"},
+           {t:"una longitud de onda distinta, todo el tiempo"},
+           {t:"todo el ancho de banda del medio, todo el tiempo"}],
+     expl:"TDM: un canal ocupa todo el ancho de banda una fracción del tiempo (su ranura). FDM es al revés: una fracción del ancho de banda todo el tiempo."},
+
+    {id:11,type:"single",prompt:"¿Cuál es la velocidad de un enlace E1 y cómo se compone?",
+     opts:[{t:"2,048 Mbps = 32 canales × 64 Kbps (30 de voz + 2 de control)",ok:true},
+           {t:"1,544 Mbps = 24 canales × 64 Kbps"},
+           {t:"2,048 Mbps = 30 canales × 64 Kbps más 2 portadoras"},
+           {t:"8,448 Mbps = 120 canales × 64 Kbps"}],
+     expl:"E1 = 32 canales de 64 Kbps (30 de voz/datos + 2 de señalización) = 2,048 Mbps. La de 1,544 Mbps con 24 canales es T1, y 8,448 Mbps es E2."},
+
+    {id:12,type:"single",prompt:"¿Cuántos bits tiene la trama E1 y en qué tiempo se transmite?",
+     opts:[{t:"256 bits en 125 μs",ok:true},{t:"193 bits en 125 μs"},{t:"256 bits en 1 ms"},{t:"240 bits en 125 μs"}],
+     expl:"La trama E1 son 8 bits × 32 canales = 256 bits, transmitidos en 125 μs (que es 1/8000 s, el período de muestreo). La de 193 bits es la trama T1."},
+
+    {id:13,type:"single",prompt:"En la digitalización PCM de la voz, ¿cuántas muestras por segundo se toman y por qué?",
+     opts:[{t:"8.000 muestras/s, porque por Nyquist se muestrea al doble del ancho de banda (4 KHz)",ok:true},
+           {t:"4.000 muestras/s, igual al ancho de banda de la voz"},
+           {t:"64.000 muestras/s, igual a la velocidad del canal"},
+           {t:"16.000 muestras/s, al cuádruple del ancho de banda"}],
+     expl:"Por el teorema de Nyquist se muestrea al doble del ancho de banda: 2 × 4 KHz = 8.000 muestras/s. Con 8 bits por muestra da 64 Kbps."},
+
+    {id:14,type:"single",prompt:"Tres fuentes ingresan a un MUX TDM a 1.000 bytes/s cada una, multiplexando 1 byte por canal. ¿Cuál es la velocidad de la línea de salida?",
+     opts:[{t:"24.000 bps",ok:true},{t:"3.000 bps"},{t:"8.000 bps"},{t:"1.000 bps"}],
+     expl:"V_salida = suma de entradas = 3 × 1.000 bytes/s = 3.000 bytes/s = 3.000 × 8 = 24.000 bps."},
+
+    {id:15,type:"single",prompt:"En ese mismo ejercicio (3 fuentes, 1.000 B/s, 1 byte/canal), ¿cuál es la duración de cada trama?",
+     opts:[{t:"1 ms",ok:true},{t:"0,333 ms"},{t:"3 ms"},{t:"0,8 ms"}],
+     expl:"La trama son 24 bits y la salida 24.000 bps: T_trama = 24/24.000 = 1 ms. Equivale a enviar 1.000 tramas/s (una por muestra). La ranura dura 1ms/3 = 0,333 ms."},
+
+    {id:16,type:"vf",prompt:"En TDM, la duración de la trama depende del número de bits que se tomen para las muestras.",
+     opts:[{t:"Verdadero"},{t:"Falso",ok:true}],
+     expl:"Falso. Si se toman muestras más grandes, la velocidad de salida sube en la misma proporción, y la duración de la trama queda igual. La duración de trama = 1/frecuencia de muestreo, independiente del tamaño de la muestra. (Es una pregunta del TP3.)"},
+
+    {id:17,type:"multi",prompt:"¿Cuáles de las siguientes son características de SDH? (múltiple)",
+     opts:[{t:"Está normado por ITU-T G.707, G.708 y G.709",ok:true},
+           {t:"Realiza el entramado byte a byte (no bit a bit)",ok:true},
+           {t:"Permite insertar/extraer canales sin demultiplexar la trama completa",ok:true},
+           {t:"Incluye medios ópticos para superar el límite de 140 Mbps",ok:true},
+           {t:"Sólo acepta señales ópticas, nunca eléctricas"}],
+     expl:"SDH está normado por G.707/708/709, va byte a byte, tiene MUX síncronos que insertan/extraen sin demultiplexar todo, e incluye óptica para superar los 140 Mbps de PDH. La última opción es falsa: SDH acepta óptico Y eléctrico (lo de sólo óptico es WDM)."},
+
+    {id:18,type:"single",prompt:"¿Cuál es la diferencia fundamental entre STDM y TDM sincrónica?",
+     opts:[{t:"STDM hace reserva dinámica bajo demanda (sólo a los buffers con datos); TDM hace reserva estática",ok:true},
+           {t:"STDM usa frecuencias y TDM usa ranuras de tiempo"},
+           {t:"STDM es analógica y TDM es digital"},
+           {t:"STDM usa fibra óptica y TDM usa cobre"}],
+     expl:"STDM (estadística/asincrónica/inteligente) sólo reserva ranuras para los buffers que tienen datos, evitando las ranuras vacías de la reserva estática de TDM. Por eso su salida es menor que la suma de entradas."},
+
+    {id:19,type:"vf",prompt:"En STDM se pierde el significado posicional de las ranuras, por lo que hace falta información de direccionamiento.",
+     opts:[{t:"Verdadero",ok:true},{t:"Falso"}],
+     expl:"Verdadero. Como no se sabe a priori qué fuente usará cada ranura, cada una debe llevar información de direccionamiento para entregar los datos a la salida correcta."},
+
+    {id:20,type:"single",prompt:"En STDM, el parámetro K = M/(I·R). ¿Qué representa y cuál es su cota?",
+     opts:[{t:"Es la medida de compresión del MUX; su cota es α < K < 1",ok:true},
+           {t:"Es la eficiencia del enlace; su cota es 0 < K < 0,5"},
+           {t:"Es el número de ranuras por trama; su cota es K > n"},
+           {t:"Es el retardo del sistema; su cota es K > 1"}],
+     expl:"K mide la compresión alcanzada: si K=0,25 se gestionan 4× más dispositivos que con TDM. Su cota es α < K < 1. K=1 es TDM; K=α el promedio iguala la salida; K<α produce rebalse."},
+
+    {id:21,type:"single",prompt:"A un MUX entran 20 líneas de 1 Mbps con α = 0,35. Si la salida STDM debe ser 20% mayor que el promedio de la entrada, ¿cuál es esa velocidad?",
+     opts:[{t:"8,4 Mbps",ok:true},{t:"20 Mbps"},{t:"7 Mbps"},{t:"24 Mbps"}],
+     expl:"Promedio = α × ΣV = 0,35 × 20 Mbps = 7 Mbps. Con 20% extra por overhead: 7 × 1,20 = 8,4 Mbps. (En TDM serían los 20 Mbps completos.)"},
+
+    {id:22,type:"single",prompt:"En ese ejercicio, ¿cuánto vale K para el caso STDM?",
+     opts:[{t:"0,42",ok:true},{t:"1",ok:false},{t:"0,35"},{t:"0,21"}],
+     expl:"K = M/(I·R) = 8,4 / 20 = 0,42. Cumple la cota α < K < 1 (0,35 < 0,42 < 1). En el caso TDM, K = 20/20 = 1."},
+
+    {id:23,type:"single",prompt:"¿Cuál es la diferencia entre DWDM y CWDM?",
+     opts:[{t:"DWDM usa 16 o más longitudes de onda; CWDM usa 2 o 4",ok:true},
+           {t:"DWDM usa 2 o 4 longitudes de onda; CWDM usa 16 o más"},
+           {t:"DWDM es eléctrica y CWDM es óptica"},
+           {t:"DWDM divide el tiempo y CWDM divide la frecuencia"}],
+     expl:"WDM densa (DWDM) usa 16 o más λ; WDM ligera (CWDM, Coarse) usa 2 o 4 λ. Ambas son ópticas y multiplexan como FDM pero con luz."},
+
+    {id:24,type:"vf",prompt:"WDM sólo acepta señales ópticas, mientras que SDH acepta tanto ópticas como eléctricas.",
+     opts:[{t:"Verdadero",ok:true},{t:"Falso"}],
+     expl:"Verdadero. WDM combina señales ópticas de distintas longitudes de onda y sólo acepta señales ópticas. SDH, en cambio, acepta señales ópticas y eléctricas."},
+
+    {id:25,type:"multi",prompt:"¿Cuáles de las siguientes son ventajas de DWDM? (múltiple)",
+     opts:[{t:"Gran capacidad de transmisión agregada",ok:true},
+           {t:"Actualización sin necesidad de colocar más fibra",ok:true},
+           {t:"Transparencia: independencia de velocidad, formato y protocolos",ok:true},
+           {t:"Flexibilidad con OADM y OXC",ok:true},
+           {t:"No requiere amplificadores ópticos"}],
+     expl:"DWDM ofrece gran capacidad agregada, actualización sin más fibra, transparencia y flexibilidad (OADM: add/drop óptico; OXC: conexión cruzada óptica). Sí requiere amplificadores ópticos (OA), así que la última es falsa."},
+
+    {id:26,type:"single",prompt:"La técnica PCM digitaliza la voz. ¿Cuál es el orden correcto de sus etapas?",
+     opts:[{t:"Señal analógica → pulsos PAM (muestreo) → pulsos PCM (cuantización) → salida NRZ-L (binario)",ok:true},
+           {t:"Señal analógica → salida NRZ-L → pulsos PCM → pulsos PAM"},
+           {t:"Pulsos PAM → señal analógica → pulsos PCM → salida NRZ-L"},
+           {t:"Señal analógica → pulsos PCM → pulsos PAM → salida NRZ-L"}],
+     expl:"El orden es: señal original → muestreo (PAM) → cuantización a niveles (PCM) → codificación binaria de línea (NRZ-L). Es la cadena analógico → muestreo → cuantización → binario."},
+
+    {id:27,type:"single",prompt:"¿Qué velocidades puede tomar un E1 fraccional?",
+     opts:[{t:"1024, 512, 256, 128, 64, 32, 19.2 y 9.6 Kbps",ok:true},
+           {t:"Sólo 2,048 Mbps o 1,544 Mbps"},
+           {t:"64, 128, 256 Kbps únicamente"},
+           {t:"Cualquier múltiplo de 2,048 Mbps"}],
+     expl:"El E1 fraccional es un submúltiplo de E1 y puede valer 1024, 512, 256, 128, 64, 32, 19.2 y 9.6 Kbps, para conexiones que no requieren el ancho de banda completo."},
+
+    {id:28,type:"single",prompt:"Un dispositivo requiere digitalizar una señal de hasta 2 KHz con un error de digitalización de 0,1%. ¿A qué velocidad genera datos?",
+     opts:[{t:"40 Kbps",ok:true},{t:"20 Kbps"},{t:"32 Kbps"},{t:"16 Kbps"}],
+     expl:"Error 0,1% ⇒ 1/2ⁿ ≤ 0,001 ⇒ 2ⁿ ≥ 1000 ⇒ n = 10 bits. Muestreo = 2 × 2 KHz = 4.000 muestras/s. Velocidad = 4.000 × 10 = 40 Kbps. (Es del ejercicio del parcial.)"},
+
+    {id:29,type:"single",prompt:"¿Qué fue la primera técnica de multiplexión implementada, y en qué contexto?",
+     opts:[{t:"FDM, en enlaces entre centrales telefónicas por coaxil o radio",ok:true},
+           {t:"TDM, en la voz digitalizada de las centrales"},
+           {t:"WDM, en las primeras redes de fibra óptica"},
+           {t:"STDM, en la conexión de terminales a un computador central"}],
+     expl:"FDM fue la primera técnica implementada, en los enlaces entre centrales telefónicas a través de coaxil o radio. Hoy se usa en xDSL, TV por cable/aire y radio."},
+
+    {id:30,type:"single",prompt:"¿Cuál es la velocidad del nivel E3 en la jerarquía PDH?",
+     opts:[{t:"34,368 Mbps (E3 = 16·E1)",ok:true},{t:"8,448 Mbps (E3 = 4·E1)"},{t:"139,264 Mbps"},{t:"44,736 Mbps"}],
+     expl:"E3 = 16·E1 = 480 canales de voz = 34,368 Mbps. E2=4·E1=8,448 Mbps, E4=64·E1=139,264 Mbps. La de 44,736 Mbps es la norteamericana T4/DS-3."}
+  ];
+
+  var order=QUESTIONS.map(function(_,i){return i;});
+  var state={}; // id -> {answered, correct}
+  var rendered={}; // id -> array de opciones EN EL ORDEN MOSTRADO (la mezcla vive acá)
+  var shuffle=false;
+
+  function shuf(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+  function letter(i){ return String.fromCharCode(65+i); }
+
+  var quiz=document.getElementById("quiz");
+
+  function build(){
+    quiz.innerHTML=""; state={}; rendered={};
+    document.getElementById("result").className="result";
+    order.forEach(function(qi){
+      var q=QUESTIONS[qi];
+      // Las opciones se mezclan en CADA render, así la correcta nunca queda fija.
+      // V/F se deja en su orden natural (Verdadero, Falso).
+      var shown = (q.type==="vf") ? q.opts.slice() : shuf(q.opts.slice());
+      rendered[q.id]=shown;
+      var card=document.createElement("div"); card.className="card"; card.id="card-"+q.id;
+      var tyLabel=q.type==="multi"?"Selección múltiple":(q.type==="vf"?"Verdadero / Falso":"Opción única");
+      var head='<div class="qhead"><span class="badge">Q'+q.id+'</span><span class="badge ty">'+tyLabel+'</span></div>';
+      card.innerHTML=head+'<div class="qprompt">'+q.prompt+'</div>';
+      var opts=document.createElement("div"); opts.className="opts"+(q.type==="vf"?" vf":"");
+      shown.forEach(function(o,oi){
+        var b=document.createElement("button"); b.className="opt"; b.type="button";
+        b.innerHTML=(q.type==="vf"?"":'<span class="okey">'+letter(oi)+'</span>')+'<span>'+o.t+'</span>';
+        b.addEventListener("click",function(){ onOpt(q,oi,opts,card,b); });
+        opts.appendChild(b);
+      });
+      card.appendChild(opts);
+      if(q.type==="multi"){
+        var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Comprobar";
+        btn.addEventListener("click",function(){ checkMulti(q,opts,card,btn); });
+        card.appendChild(btn);
+      }
+      quiz.appendChild(card);
+    });
+    updateStats();
+  }
+
+  function onOpt(q,oi,opts,card,btn){
+    if(state[q.id]) return;                 // ya respondida
+    if(q.type==="multi"){ btn.classList.toggle("sel"); return; }  // multi: solo togglear
+    lockSingle(q,oi,opts);                  // single/vf: evaluar al instante
+  }
+
+  function lockSingle(q,chosen,opts){
+    var shown=rendered[q.id];
+    var kids=opts.querySelectorAll(".opt"); var correct=false;
+    kids.forEach(function(k,ki){
+      k.classList.add("locked");
+      if(shown[ki].ok) k.classList.add("ok");
+      if(ki===chosen && !shown[ki].ok) k.classList.add("no");
+      if(ki===chosen && shown[ki].ok) correct=true;
+    });
+    finish(q,opts.parentNode,correct);
+  }
+
+  function checkMulti(q,opts,card,btn){
+    if(state[q.id]) return;
+    var shown=rendered[q.id];
+    var kids=opts.querySelectorAll(".opt"); var allCorrect=true;
+    kids.forEach(function(k,ki){
+      var sel=k.classList.contains("sel"); var ok=!!shown[ki].ok;
+      k.classList.add("locked");
+      if(ok && sel) k.classList.add("ok");
+      else if(ok && !sel){ k.classList.add("miss"); allCorrect=false; }
+      else if(!ok && sel){ k.classList.add("no"); allCorrect=false; }
+    });
+    btn.disabled=true;
+    finish(q,card,allCorrect);
+  }
+
+  function finish(q,card,correct){
+    state[q.id]={answered:true,correct:correct};
+    card.classList.add(correct?"cok":"cno");
+    var fb=document.createElement("div"); fb.className="fb "+(correct?"good":"bad");
+    fb.textContent=correct?"✓ Correcto":"✗ Incorrecto";
+    card.appendChild(fb);
+    var ex=document.createElement("div"); ex.className="expl"; ex.innerHTML="<b>Por qué:</b> "+q.expl;
+    card.appendChild(ex);
+    updateStats();
+  }
+
+  function updateStats(){
+    var ans=0,cor=0;
+    Object.keys(state).forEach(function(k){ ans++; if(state[k].correct)cor++; });
+    var total=QUESTIONS.length;
+    document.getElementById("bar").style.width=Math.round(ans/total*100)+"%";
+    var pct=ans?Math.round(cor/total*100):0;
+    document.getElementById("score").innerHTML=ans+"/"+total+" · <b>"+cor+"</b> correctas<span class='pct'>"+pct+"%</span>";
+    if(ans===total) showResult(cor,total);
+  }
+
+  function showResult(cor,total){
+    var pct=Math.round(cor/total*100);
+    var msg = pct>=90?"Excelente, dominado.":pct>=70?"Bien, repasá los que fallaste.":pct>=50?"Aprobado justo — conviene reforzar.":"A repasar el módulo con el resumen.";
+    var r=document.getElementById("result");
+    r.className="result show";
+    r.innerHTML='<div style="font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Resultado</div>'+
+      '<div class="big" style="color:'+(pct>=70?"var(--ok)":pct>=50?"var(--warn)":"var(--no)")+'">'+pct+'%</div>'+
+      '<div style="font-weight:700">'+cor+' de '+total+' correctas</div><p>'+msg+'</p>';
+    r.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+
+  // controles
+  document.getElementById("resetBtn").addEventListener("click",build);
+  document.getElementById("shufBtn").addEventListener("click",function(){
+    shuffle=!shuffle; this.classList.toggle("on",shuffle);
+    order = shuffle ? shuf(QUESTIONS.map(function(_,i){return i;})) : QUESTIONS.map(function(_,i){return i;});
+    build();
+  });
+  var mem={};
+  var st; try{ st=localStorage.getItem("comii-theme"); }catch(e){ st=mem["comii-theme"]; }
+  if(st==="dark" || (!st && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+  document.getElementById("themeBtn").addEventListener("click",function(){
+    document.documentElement.classList.toggle("dark");
+    var v=document.documentElement.classList.contains("dark")?"dark":"light";
+    try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+  });
+
+  build();
+})();
+</script>
+</body>
+</html>

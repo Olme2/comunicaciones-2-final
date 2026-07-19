@@ -209,6 +209,37 @@
       {sig:"SSH", exp:"Secure Shell", d:"Acceso seguro a consola remota; permite port forwarding. ssh -L ip_local:puerto:host:puerto user@servidor."},
       {sig:"OpenVPN", exp:"—", d:"Implementación de VPN usada en el TP (modo roadwarrior). Config del cliente en el archivo .ovpn."},
       {sig:"SOCKS", exp:"Socket Secure", d:"Proxy dinámico; se levanta con ssh -D 9999 -C."}
+    ]},
+    { n:3, slug:"03-multiplexion", nav:"Multiplexión", title:"Multiplexión", terms:[
+      {sig:"MUX / DEMUX", exp:"Multiplexor / Demultiplexor", d:"El MUX combina n señales en un enlace; el DEMUX las separa en el otro extremo."},
+      {sig:"FDM", exp:"Frequency Division Multiplexing", d:"División de frecuencia: cada canal ocupa una banda distinta, todo el tiempo. Analógica. Base de ADSL."},
+      {sig:"TDM", exp:"Time Division Multiplexing", d:"División de tiempo: cada canal ocupa todo el ancho de banda en su ranura. Digital. Base de E1/T1."},
+      {sig:"STDM", exp:"Statistical TDM", d:"TDM estadística/asincrónica/inteligente: reserva dinámica bajo demanda, sólo a los buffers con datos."},
+      {sig:"WDM", exp:"Wavelength Division Multiplexing", d:"División de longitud de onda: varias λ (colores) por una fibra. Multiplexa como FDM pero óptico."},
+      {sig:"DWDM", exp:"Dense WDM", d:"WDM densa: 16 o más longitudes de onda. Requiere amplificadores ópticos."},
+      {sig:"CWDM", exp:"Coarse WDM", d:"WDM ligera: 2 o 4 longitudes de onda."},
+      {sig:"PDH", exp:"Plesiochronous Digital Hierarchy", d:"Jerarquía Digital Plesiócrona: el sistema de portadora digital basado en E1/T1."},
+      {sig:"E1", exp:"Enlace europeo (UIT-T)", d:"32 canales de 64 Kbps (30 voz + 2 control) = 2,048 Mbps. 256 bits/trama en 125 μs, overhead 16 bits."},
+      {sig:"T1 / DS-1", exp:"Enlace norteamericano", d:"24 canales = 1,544 Mbps. 193 bits/trama (24×8 + 1)."},
+      {sig:"E2–E5", exp:"Niveles PDH europeos", d:"E2=4E1 (8,448 Mbps), E3=16E1 (34,368), E4=64E1 (139,264), E5=256E1 (565,148)."},
+      {sig:"DS-1..DS-4", exp:"Niveles PDH norteamericanos", d:"T1/DS-1 (1,544), T2/DS-1C (3,152), T3/DS-2 (6,312), T4/DS-3 (44,736), T5/DS-4 (274,176)."},
+      {sig:"PCM", exp:"Pulse Code Modulation", d:"Digitaliza la voz: muestreo 8000/s × 8 bits = 64 Kbps. Etapas: analógica → PAM → PCM → NRZ-L."},
+      {sig:"PAM", exp:"Pulse Amplitude Modulation", d:"Segunda etapa de PCM: muestreo de la señal (pulsos con la amplitud de cada muestra)."},
+      {sig:"NRZ-L", exp:"Non-Return to Zero - Level", d:"Codificación de línea de la salida PCM (cada nivel cuantizado a binario)."},
+      {sig:"SDH", exp:"Synchronous Digital Hierarchy", d:"Jerarquía Digital Sincrónica. ITU-T G.707/708/709. Byte a byte, óptica y eléctrica, supera 140 Mbps."},
+      {sig:"OTN", exp:"Optical Transport Network", d:"Red de Transporte Óptico: jerarquía para altísima velocidad sobre fibra."},
+      {sig:"OTH", exp:"Optical Transport Hierarchy", d:"Jerarquía de Transporte Óptico; tecnología de transporte de capa 1."},
+      {sig:"OADM", exp:"Optical Add-Drop Multiplexer", d:"Multiplexor óptico de adición/eliminación; da flexibilidad a DWDM."},
+      {sig:"OXC", exp:"Optical Cross-Connect", d:"Conexión cruzada óptica; conmuta longitudes de onda entre fibras en DWDM."},
+      {sig:"OA", exp:"Optical Amplifier", d:"Amplificador óptico; necesario en los enlaces DWDM de larga distancia."},
+      {sig:"OTU4", exp:"Optical Transport Unit 4", d:"Contenedor OTN de 100 Gbit/s por canal (ejemplo del Huawei OSN 6800)."},
+      {sig:"Nyquist", exp:"Teorema de muestreo", d:"Se muestrea al doble del ancho de banda: f_muestreo = 2 × BW. Para voz de 4 KHz → 8000 muestras/s."},
+      {sig:"UIT-T / ITU-T", exp:"Unión Internacional de Telecomunicaciones", d:"Organismo que normaliza E1, SDH (G.707/708/709), WDM (G.694), etc."},
+      {sig:"Buffer", exp:"Memoria temporal", d:"Almacena brevemente cada muestra en el MUX; en STDM absorbe los picos de tráfico."},
+      {sig:"K (STDM)", exp:"Factor de compresión", d:"K = M/(I·R). Mide la compresión del MUX STDM. Cota: α < K < 1 (K=1 es TDM)."},
+      {sig:"α (alfa)", exp:"Fracción media de transmisión", d:"Fracción media de tiempo que transmite el conjunto de fuentes en STDM (0 < α < 1)."},
+      {sig:"E1 fraccional", exp:"Fractional E1", d:"Submúltiplo de E1: 1024, 512, 256, 128, 64, 32, 19.2 y 9.6 Kbps."},
+      {sig:"PLC (multiplex.)", exp:"—", d:"En el TP3 aparecen también PDM y SDM como técnicas a describir junto a FDM/TDM/STDM/WDM."}
     ]}
   ];
 

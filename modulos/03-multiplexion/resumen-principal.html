@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 3 · Multiplexión — Resumen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f6f1; --card:#ffffff; --ink:#2b2b2b; --muted:#6d6a60; --border:#e7e2d5;
+    --accent:#2e6fb0;
+    --hl-pink:#ffc6cd; --hl-green:#c6ecca; --hl-yellow:#ffe6a3;
+    --diag:#6f56b0; --diag-bg:#efeaf8; --diag-bd:#d6c9ee;
+    --key:#c78a00; --key-bg:#fff4d4; --key-bd:#ecd58c;
+    --calc:#0e7c86; --calc-bg:#e2f6f7; --calc-bd:#a5dde1;
+    --link:#1f8a4c; --link-bg:#e6f6ec; --link-bd:#a9dcbb;
+    --note:#b8860b; --note-bg:#fbf2df; --note-bd:#e6d3a0;
+    --warn:#b03030; --warn-bg:#fbe9e7; --warn-bd:#eab8b0;
+    --shadow:0 1px 3px rgba(40,35,20,.06),0 1px 2px rgba(40,35,20,.04);
+    --font:"Comic Sans MS","Comic Neue","Chalkboard SE","Segoe Print",cursive;
+  }
+  html.dark{
+    --bg:#13151a; --card:#1b1f27; --ink:#e9e5d9; --muted:#9b988c; --border:#2c303a;
+    --accent:#5fa8e0;
+    --diag:#b7a3ec; --diag-bg:#211b33; --diag-bd:#3a2f57;
+    --key:#e6bd52; --key-bg:#2b2410; --key-bd:#4a3d1c;
+    --calc:#4fc9d4; --calc-bg:#0f2a2d; --calc-bd:#245055;
+    --link:#54c483; --link-bg:#142a1e; --link-bd:#2f6b47;
+    --note:#d6a94a; --note-bg:#2b2410; --note-bd:#4a3d1c;
+    --warn:#e08a7f; --warn-bg:#2e1a18; --warn-bd:#5e332e;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.72;font-size:17px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:#eef1f5;color:#245a92;padding:.04em .34em;border-radius:5px;font-size:.84em;font-family:ui-monospace,Menlo,monospace;word-break:break-word}
+  html.dark code{background:#20262f;color:#7fb6e6}
+
+  mark{color:#2b2b2b;padding:.02em .16em;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  mark.p{background:var(--hl-pink)}
+  mark.s{background:var(--hl-green)}
+  mark.y{background:var(--hl-yellow)}
+  u.w{text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:780px;margin:0 auto}
+  .htop .lbl{font-size:.74rem;color:var(--muted)}
+  .htop h1{font-size:1.04rem;margin:1px 0 0;font-weight:700}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--ink);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;font-family:var(--font)}
+
+  .wrap{max-width:780px;margin:0 auto;padding:18px 18px 44px}
+  .meta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+  .tag{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--muted)}
+  .tag.freq{color:var(--warn);border-color:var(--warn-bd);background:var(--warn-bg)}
+
+  nav.toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 17px;margin-bottom:24px;box-shadow:var(--shadow)}
+  nav.toc h2{margin:0 0 8px;font-size:.9rem;color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
+  nav.toc ol{margin:0;padding-left:22px;columns:2;column-gap:26px;font-size:.9rem}
+  nav.toc li{margin:3px 0;break-inside:avoid}
+  nav.toc a{color:var(--ink);text-decoration:none}
+  nav.toc a:hover{color:var(--accent);text-decoration:underline}
+  @media(max-width:560px){nav.toc ol{columns:1}}
+
+  h2.sec{font-size:1.26rem;margin:34px 0 6px;scroll-margin-top:74px;display:inline-block;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:5px}
+  h2.sec .n{color:var(--accent);font-size:.95rem;margin-right:8px}
+  h3{font-size:1.06rem;margin:20px 0 4px}
+  p{margin:9px 0}
+  .lead{color:var(--muted);font-size:1rem}
+  ul{margin:9px 0;padding-left:26px;list-style:none}
+  ul>li{position:relative}
+  ul>li::before{content:"–";position:absolute;left:-20px;color:var(--accent);font-weight:700}
+  ul ul>li::before{content:"○";font-size:.7em;left:-18px}
+  li{margin:6px 0}
+  hr{border:none;border-top:1px dashed var(--border);margin:30px 0}
+  b,strong{font-weight:700}
+
+  .callout{border-radius:12px;padding:13px 16px;margin:16px 0;font-size:.96rem;border:1px solid var(--border);border-left-width:5px}
+  .callout .ct{font-size:.78rem;font-weight:700;margin-bottom:5px;display:block;text-decoration:underline;text-underline-offset:3px}
+  .callout ul{margin:6px 0 0}
+  .diagram{background:var(--diag-bg);border-color:var(--diag-bd);border-left-color:var(--diag)}
+  .diagram .ct{color:var(--diag)}
+  .key{background:var(--key-bg);border-color:var(--key-bd);border-left-color:var(--key)}
+  .key .ct{color:var(--key)}
+  .link{background:var(--link-bg);border-color:var(--link-bd);border-left-color:var(--link)}
+  .link .ct{color:var(--link)}
+  .note{background:var(--note-bg);border-color:var(--note-bd);border-left-color:var(--note)}
+  .note .ct{color:var(--note)}
+  .warn{background:var(--warn-bg);border-color:var(--warn-bd);border-left-color:var(--warn)}
+  .warn .ct{color:var(--warn)}
+
+  /* Cajas de cálculo / ejercicio resuelto */
+  .calc{background:var(--calc-bg);border:1px solid var(--calc-bd);border-left:5px solid var(--calc);border-radius:12px;padding:14px 16px;margin:16px 0}
+  .calc .ct{font-size:.78rem;font-weight:700;color:var(--calc);margin-bottom:6px;display:block;text-decoration:underline;text-underline-offset:3px}
+  .calc .step{font-family:ui-monospace,Menlo,monospace;font-size:.85rem;background:var(--card);border:1px solid var(--calc-bd);border-radius:8px;padding:8px 11px;margin:7px 0;line-height:1.6;overflow-x:auto}
+  html.dark .calc .step{background:#12181d}
+  .calc .res{font-weight:700;color:var(--calc)}
+  .formula{font-family:ui-monospace,Menlo,monospace;font-size:.9em;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:.1em .4em;display:inline-block;margin:2px 0}
+  html.dark .formula{background:#12181d}
+
+  dl.defs{margin:10px 0}
+  dl.defs dt{margin-top:9px}
+  dl.defs dt mark{font-weight:700}
+  dl.defs dd{margin:2px 0 0 4px;font-size:.96rem}
+
+  .tablewrap{overflow-x:auto;margin:14px 0;border:1px solid var(--border);border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;font-size:.85rem;min-width:520px}
+  th,td{padding:8px 11px;text-align:left;border-bottom:1px solid var(--border)}
+  th{background:var(--accent);color:#fff;font-weight:700;font-size:.82rem}
+  td:first-child{font-weight:700;color:var(--accent);white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  tbody tr:nth-child(even){background:rgba(0,0,0,.02)}
+  html.dark tbody tr:nth-child(even){background:rgba(255,255,255,.03)}
+  .tnote{font-size:.78rem;color:var(--muted);margin:4px 2px 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 3 · Resumen</span><h1>Multiplexión</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <a class="iconbtn" href="../../glosario.html">Glosario</a>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="meta">
+    <span class="tag freq">Frecuencia: alta</span>
+    <span class="tag">Fuentes: Módulo 3 · TP3 · Quiz 3 · 1er parcial</span>
+  </div>
+
+  <nav class="toc">
+    <h2>Contenido</h2>
+    <ol>
+      <li><a href="#porque">Por qué importa</a></li>
+      <li><a href="#efic">Eficiencia y concepto</a></li>
+      <li><a href="#fdm">FDM</a></li>
+      <li><a href="#ej-fdm">Ejercicio FDM resuelto</a></li>
+      <li><a href="#tdm">TDM</a></li>
+      <li><a href="#canal">FDM vs TDM: el canal</a></li>
+      <li><a href="#pdh">PDH: E1 y T1</a></li>
+      <li><a href="#pcm">PCM: voz digitalizada</a></li>
+      <li><a href="#ej-tdm">Ejercicio TDM resuelto</a></li>
+      <li><a href="#sdh">SDH</a></li>
+      <li><a href="#stdm">STDM (estadística)</a></li>
+      <li><a href="#ej-stdm">Ejercicio STDM resuelto</a></li>
+      <li><a href="#wdm">WDM y DWDM</a></li>
+      <li><a href="#otn">OTN</a></li>
+      <li><a href="#parcial">Ejercicio del 1er parcial</a></li>
+      <li><a href="#datos">Fórmulas y datos clave</a></li>
+      <li><a href="#conex">Conexión con otros módulos</a></li>
+    </ol>
+  </nav>
+
+  <p class="lead"><b>Este es el primer módulo pesado en cuentas.</b> El Quiz 3 fue 100% cálculo (%e, trama E1, duración de trama, overhead) y el 1er parcial tuvo un ejercicio de multiplexión completo. Por eso este resumen tiene <b>fórmulas destacadas y ejercicios resueltos paso a paso</b>, no solo teoría.</p>
+
+  <h2 class="sec" id="porque"><span class="n">01</span>Por qué importa</h2>
+  <p>Una WAN cubre grandes extensiones y da servicio a muchísimos dispositivos, lo que exige <b>alta inversión</b> en equipos, enlaces, operación y mantenimiento. Para que eso rinda, hay que <u class="w">optimizar el uso de los enlaces entre nodos</u>. La <mark class="p">multiplexión</mark> es la técnica central para lograrlo: mete muchas conexiones en un solo enlace físico.</p>
+
+  <h2 class="sec" id="efic"><span class="n">02</span>Eficiencia y concepto de multiplexión</h2>
+  <div class="calc">
+    <span class="ct">Fórmula base — eficiencia de un enlace</span>
+    <div class="step"><span class="res">Eficiencia = (cantidad de conexiones de usuario) / costo</span></div>
+    Para lograr alta eficiencia se necesitan dos cosas: <b>(1)</b> capacidad de transportar <b>múltiples conexiones simultáneas</b> por el enlace, y <b>(2)</b> <b>alto tiempo de ocupación efectiva</b> del enlace. La técnica más usada para el punto (1) es la multiplexión.
+  </div>
+  <p>La técnica permite comunicar pares de dispositivos <code>(Ai, Bi)</code> ubicados en distintos puntos geográficos usando <b>un único enlace físico</b>. Condición para aplicarla: cada par debe usar <u class="w">sólo una fracción de la capacidad total del enlace</u>.</p>
+  <div class="callout diagram">
+    <span class="ct">Qué muestra el diagrama (slide "Conceptos de multiplexión")</span>
+    Un <b>MUX</b> a la izquierda con <b>n entradas</b>, un <b>enlace de n canales</b> en el medio y un <b>DEMUX</b> a la derecha con <b>n salidas</b>. Cada canal transporta, de izquierda a derecha, la señal de una conexión entre un par de dispositivos extremos. Es la idea de toda la unidad: concentrar n señales en un solo medio y volverlas a separar del otro lado.
+  </div>
+
+  <h2 class="sec" id="fdm"><span class="n">03</span>FDM — División de Frecuencias</h2>
+  <p>Fue la <b>primera</b> técnica implementada (entre centrales telefónicas por coaxil o radio). Uso actual: <mark class="s">xDSL</mark>, TV por cable y aire, radio (broadcasting).</p>
+  <div class="callout key">
+    <span class="ct">Lo esencial de FDM</span>
+    <ul>
+      <li><b>¿Cuándo se usa?</b> Cuando el ancho de banda útil del medio es <u class="w">mayor que la suma de los anchos de banda de las señales</u> a transmitir.</li>
+      <li>Modula cada señal con una <b>frecuencia portadora (subportadora) diferente</b>, lo suficientemente separadas para que <b>no se solapen ni interfieran</b>.</li>
+      <li>Es una <mark class="p">técnica analógica</mark> (se basa en la modulación). Las señales digitales <b>deben convertirse a analógicas</b> antes de multiplexarse.</li>
+      <li><b>Ejemplos:</b> radiofonía, TV por aire, TV por cable analógica, ADSL.</li>
+    </ul>
+  </div>
+  <p><b>Funcionamiento (3 pasos):</b> (1º) cada señal <code>mi</code> modula una subportadora <code>fi</code> distinta para desplazar su espectro; (2º) las señales moduladas se <b>suman</b> y forman la <mark class="s">señal FDM en banda base</mark> <code>mb(t)</code>; (3º) a partir de ella se genera la <b>señal FDM modulada</b> (con la portadora <code>fc</code>). En el receptor: <b>filtros pasabanda</b> (con su frecuencia de corte) separan cada señal y luego se demodulan.</p>
+
+  <h2 class="sec" id="ej-fdm"><span class="n">04</span>Ejercicio FDM resuelto (del módulo)</h2>
+  <div class="calc">
+    <span class="ct">Enunciado</span>
+    Enviar por un único cable <b>3 señales de voz de 4 KHz</b> cada una usando FDM, dejando <b>1 KHz</b> entre los límites de los espectros. El cable tiene entre 100 y 200 KHz, modulación AM.
+    <span class="ct" style="margin-top:10px">Resolución</span>
+    <div class="step">Ancho de cada canal con guarda:  <span class="res">BW_canal = 4 + 1 = 5 KHz</span></div>
+    <div class="step">Ancho total (n señales + (n−1) guardas):
+<br>BW_total = 3 × 4 + 2 × 1 = 12 + 2 = <span class="res">14 KHz</span></div>
+    <div class="step">14 KHz &lt; 100 KHz  →  <span class="res">el cable alcanza sobradamente ✓</span></div>
+    <b>Dispositivos:</b> 3 moduladores AM (con subportadoras f1, f2, f3) + un sumador → transmisor. En recepción: 3 filtros pasabanda (centrados en cada subportadora) + 3 demoduladores.
+  </div>
+  <div class="callout key">
+    <span class="ct">Fórmula general de FDM</span>
+    <div class="formula">BW_total = n × BW_señal + (n − 1) × BW_guarda</div>
+  </div>
+
+  <h2 class="sec" id="tdm"><span class="n">05</span>TDM — División de Tiempo</h2>
+  <p>También llamada <b>TDM sincrónica</b>. Uso actual: voz digitalizada, datos, TV digital.</p>
+  <div class="callout key">
+    <span class="ct">Lo esencial de TDM</span>
+    <ul>
+      <li><b>¿Cuándo se usa?</b> Cuando la velocidad del medio es <u class="w">mayor que la suma de las velocidades de las señales digitales</u>. Ejemplo: 4 entradas de 10 Kbps → línea de salida de al menos 40 Kbps.</li>
+      <li>Transmite varias señales digitales por una única ruta <b>mezclando temporalmente porciones</b> (muestras) de cada señal. Una <mark class="s">muestra</mark> puede ser un bit, un byte o un bloque.</li>
+      <li>Las señales a multiplexar <b>deben ser digitales</b> (las analógicas se digitalizan antes).</li>
+      <li><b>MUX:</b> lee secuencialmente las muestras de cada entrada (guardadas en un <b>buffer</b>) y las ubica ordenadas en el medio. <b>DEMUX:</b> sincronizado, toma cada muestra y la manda a la salida correspondiente.</li>
+    </ul>
+  </div>
+  <div class="callout diagram">
+    <span class="ct">Qué muestra el diagrama (slide "Tramas TDM")</span>
+    La secuencia de salida dividida en <b>tramas</b>, y cada trama en <mark class="p">ranuras temporales</mark> numeradas 1, 2, …, n (una por fuente de entrada). Cada ranura <b>puede estar vacía u ocupada</b>. Es la representación de que, en TDM sincrónico, cada fuente tiene <b>su lugar fijo</b> en cada trama, la use o no (por eso puede haber ranuras vacías → desperdicio, que STDM viene a resolver).
+  </div>
+  <div class="callout key">
+    <span class="ct">Requisitos para no perder datos (conclusión del módulo)</span>
+    <ul>
+      <li>La lectura de los buffers de entrada debe hacerse en un tiempo <b>despreciable</b> frente al tiempo de bit de la muestra (para no sobrescribir).</li>
+      <li>La transmisión por la salida debe ir a una velocidad <b>≥ suma de las velocidades de entrada</b>.</li>
+      <li><u class="w">El tiempo de trama debe ser ≤ el tiempo de muestra.</u> (O sea: la suma de todas las ranuras de una trama ≤ tiempo de muestra.)</li>
+    </ul>
+  </div>
+
+  <h2 class="sec" id="canal"><span class="n">06</span>FDM vs TDM: el concepto de canal</h2>
+  <div class="callout key">
+    <span class="ct">La frase que hay que saber de memoria</span>
+    <ul>
+      <li><mark class="p">FDM:</mark> un canal ocupa <b>una fracción del ancho de banda</b> del medio, <u class="w">todo el tiempo</u>.</li>
+      <li><mark class="p">TDM:</mark> un canal ocupa <b>todo el ancho de banda</b> del medio, <u class="w">una fracción del tiempo</u>.</li>
+    </ul>
+    FDM divide el <b>espectro</b>; TDM divide el <b>tiempo</b>.
+  </div>
+
+  <h2 class="sec" id="pdh"><span class="n">07</span>PDH: los estándares E1 y T1</h2>
+  <p>El estándar internacional de TDM es el <mark class="p">Sistema de Portadora Digital (PDH</mark>, Jerarquía Digital Plesiócrona).</p>
+  <div class="callout key">
+    <span class="ct">E1 vs T1 — el corazón numérico del módulo</span>
+    <ul>
+      <li><b>E1 (UIT-T, todo el mundo menos EEUU/Japón/Canadá):</b> trama de <mark class="p">32 canales</mark> TDM, cada uno a 64 Kbps. <u class="w">Velocidad E1 = 32 × 64 Kbps = 2,048 Mbps</u>.</li>
+      <li><b>T1 (EEUU, Japón, Canadá):</b> trama de <mark class="p">24 canales</mark>. <u class="w">Velocidad T1 = 1,544 Mbps</u>.</li>
+      <li>Los dispositivos comerciales suelen traer <b>los dos</b> estándares.</li>
+    </ul>
+  </div>
+  <p><b>Jerarquía completa (tabla del módulo):</b></p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Nivel</th><th>Enlace (UIT-T)</th><th>Canales voz</th><th>Mbps</th><th>Enlace (USA)</th><th>Canales</th><th>Mbps</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>E1</td><td>30</td><td>2,048</td><td>DS-1 / T1</td><td>24</td><td>1,544</td></tr>
+      <tr><td>2</td><td>E2 = 4·E1</td><td>120</td><td>8,448</td><td>DS-1C / T2 = 2·T1</td><td>48</td><td>3,152</td></tr>
+      <tr><td>3</td><td>E3 = 16·E1</td><td>480</td><td>34,368</td><td>DS-2 / T3 = 4·T1</td><td>86</td><td>6,312</td></tr>
+      <tr><td>4</td><td>E4 = 64·E1</td><td>1.920</td><td>139,264</td><td>DS-3 / T4 = 28·T1</td><td>672</td><td>44,736</td></tr>
+      <tr><td>5</td><td>E5 = 256·E1</td><td>7.680</td><td>565,148</td><td>DS-4 / T5 = 168·T1</td><td>4.032</td><td>274,176</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout warn">
+    <span class="ct">La confusión clásica del E1 (¡pregunta de Quiz 3!)</span>
+    En la tabla, la columna "canales de voz" del E1 dice <b>30</b>. Pero el E1 tiene <mark class="p">32 canales en total</mark>: <b>30 de voz/datos + 2 de señalización de control</b>. Por eso la velocidad es 32 × 64 = 2,048 Mbps y NO 30 × 64.
+    <br><br>En el Quiz 3, la pregunta "el E1 puede multiplexar…" tenía como <b>respuesta correcta "Ninguna de las anteriores"</b>, porque la opción de "32 canales de voz/datos + 2 de control" en realidad son <u class="w">32 en total (30 + 2)</u>, no "32 + 2". Es una pregunta diseñada para cazar justo esta confusión.
+  </div>
+
+  <h2 class="sec" id="pcm"><span class="n">08</span>PCM: cómo se digitaliza la voz</h2>
+  <div class="calc">
+    <span class="ct">Los 3 números de PCM (memorizar)</span>
+    <div class="step">Ancho de banda de la voz analógica:  <span class="res">4 KHz</span></div>
+    <div class="step">Frecuencia de muestreo (Nyquist = 2 × BW):  <span class="res">8.000 muestras/seg</span></div>
+    <div class="step">Bits por muestra:  8 bits  (precisión = 100/256 = <span class="res">0,4 %</span>)</div>
+    <div class="step">Velocidad de 1 canal de voz:
+<br>V = 8 bits/muestra × 8.000 muestras/seg = <span class="res">64 Kbps</span></div>
+  </div>
+  <div class="calc">
+    <span class="ct">Composición de las tramas E1 y T1</span>
+    <b>E1:</b> 30 canales de voz + 2 de señalización = 32 canales de 64 Kbps.
+    <div class="step">V_E1 = 32 × 64 Kbps = <span class="res">2,048 Mbps</span>
+<br>Bits por trama = 8 bits × 32 canales = <span class="res">256 bits en 125 μs</span></div>
+    <b>T1:</b> 24 canales, cada uno con 7 bits de muestra + 1 de control.
+    <div class="step">Bits por trama = 24 × 8 + 1 (bit de trama) = <span class="res">193 bits</span>
+<br>V_T1 = 193 bits × 8.000 muestras/seg = <span class="res">1,544 Mbps</span></div>
+  </div>
+  <div class="callout key">
+    <span class="ct">Overhead del E1 — otra pregunta del Quiz 3</span>
+    De los 256 bits de la trama E1, los <b>datos útiles</b> son 30 canales × 8 bits = 240 bits. El resto son los <b>2 canales de control</b> × 8 bits = <mark class="p">16 bits de overhead</mark> por trama. (En el quiz, "cuántos bits de overhead tiene un E1 por trama" → respuesta: <b>16</b>.)
+  </div>
+  <div class="callout diagram">
+    <span class="ct">Qué muestra el diagrama (slide "Técnica PCM")</span>
+    Las <b>cuatro etapas de la digitalización</b>, una debajo de la otra: <b>(a)</b> la señal analógica original; <b>(b)</b> los <b>pulsos PAM</b> (muestreo: se toma el valor de la señal cada Ts); <b>(c)</b> los <b>pulsos PCM</b> (cada muestra cuantizada a un nivel, ej. 1, 11, 4, 5…); <b>(d)</b> la <b>salida PCM codificada en NRZ-L</b> (cada nivel convertido a su binario, ej. 0001, 1011, 0100…). Es la cadena analógico → muestreo → cuantización → binario.
+  </div>
+  <p>Sobre <b>datos</b> (no voz): el <mark class="s">E1 fraccional</mark> es un submúltiplo de E1 y puede valer <u class="w">1.024, 512, 256, 128, 64, 32, 19.2 y 9.6 Kbps</u>. Los bits de la primera ranura (TS0) se usan para <b>sincronismo y delimitación de trama</b>.</p>
+
+  <h2 class="sec" id="ej-tdm"><span class="n">09</span>Ejercicio TDM resuelto (del módulo)</h2>
+  <div class="calc">
+    <span class="ct">Enunciado</span>
+    3 fuentes ingresan a un MUX TDM. Cada línea de entrada va a <b>1.000 bytes/segundo</b> y se multiplexa <b>1 byte por canal</b>. Calcular trama, velocidad de salida, duración de trama y de ranura.
+    <span class="ct" style="margin-top:10px">Resolución</span>
+    <div class="step">1) <b>Trama:</b> 3 ranuras de 1 byte = 3 bytes = <span class="res">24 bits</span></div>
+    <div class="step">2) <b>Velocidad de salida</b> = suma de entradas:
+<br>V = 3 × 1.000 bytes/s = 3.000 bytes/s = 3.000 × 8 = <span class="res">24.000 bps</span></div>
+    <div class="step">3) <b>Duración de trama</b> = bits de trama / velocidad:
+<br>T_trama = 24 bits / 24.000 bps = <span class="res">1 ms</span>
+<br>(o bien: se envían 1.000 tramas/seg, una por cada muestra → 1/1.000 = 1 ms)</div>
+    <div class="step">4) <b>Duración de ranura</b> = T_trama / n° ranuras:
+<br>T_ranura = 1 ms / 3 = <span class="res">0,333 ms</span></div>
+  </div>
+  <div class="callout key">
+    <span class="ct">Fórmulas de TDM</span>
+    <div class="formula">V_salida = Σ V_entradas</div> &nbsp;
+    <div class="formula">T_trama = N_ranuras × T_bit_salida = 1 / f_muestreo</div> &nbsp;
+    <div class="formula">T_bit = 1 / V</div>
+    <br><b>Ojo:</b> la duración de la trama <b>no depende</b> del tamaño de la muestra en bits — si tomás muestras más grandes, la velocidad de salida sube en la misma proporción y la duración de la trama queda igual (esto es literalmente una pregunta del TP3).
+  </div>
+
+  <h2 class="sec" id="sdh"><span class="n">10</span>SDH: hacia mayores velocidades</h2>
+  <div class="callout key">
+    <span class="ct">SDH (Jerarquía Digital Sincrónica)</span>
+    <ul>
+      <li>Estándar <b>ITU-T G.707, G.708 y G.709</b>.</li>
+      <li><b>Unifica</b> los valores de transmisión de USA y Europa e incluye <b>medios ópticos</b> (para superar el límite de 140 Mbps de PDH).</li>
+      <li>MUX <b>completamente síncronos</b>: permiten <u class="w">insertar/extraer canales sin demultiplexar la trama completa</u>.</li>
+      <li>Entramado <b>byte a byte</b> (no bit a bit, como PDH).</li>
+      <li>Aparece el concepto de <mark class="p">"redes de transporte"</mark> como evolución de "redes de transmisión". Ofrece hasta <b>10 Gbps y más</b>.</li>
+    </ul>
+  </div>
+
+  <h2 class="sec" id="stdm"><span class="n">11</span>STDM: TDM estadística</h2>
+  <p>También llamada <b>TDM asincrónica</b> o <b>TDM inteligente</b>. Su objetivo: <u class="w">evitar el desperdicio de ranuras vacías</u> que sufre TDM.</p>
+  <div class="callout key">
+    <span class="ct">La idea central</span>
+    <ul>
+      <li>TDM hace <b>reserva estática</b>: cada fuente tiene su ranura fija, la use o no. En la práctica, la mayoría del tiempo las líneas están vacías (ej: terminales conectados a un computador central).</li>
+      <li>STDM hace <mark class="p">reserva dinámica bajo demanda</mark>: sólo reserva ranuras para los buffers que <b>tienen datos</b>. No hay ranuras vacías.</li>
+      <li><b>Diferencia estructural:</b> hay <b>n líneas</b> de entrada pero sólo <b>k ranuras</b> por trama, con <u class="w">k &lt; n</u> (en TDM sincrónico, k = n).</li>
+      <li>Como no todos transmiten siempre, <b>la velocidad de salida es MENOR que la suma de las velocidades de entrada</b>.</li>
+      <li><b>Consecuencia importante:</b> se <u class="w">pierde el significado posicional</u> de las ranuras (no se sabe a priori qué fuente usa cada una), así que hace falta <b>información de direccionamiento</b> en cada ranura.</li>
+      <li>Para los <b>picos</b> (cuando la entrada supera la salida) se agrega un <b>buffer</b> que almacena el exceso. Esto genera un compromiso: menos velocidad de salida ⇒ más buffer ⇒ más retardo.</li>
+    </ul>
+  </div>
+  <div class="calc">
+    <span class="ct">Parámetros de STDM (memorizar)</span>
+    <div class="step">I = número de fuentes de entrada
+<br>R = velocidad de cada fuente (bps)
+<br>M = capacidad efectiva de la línea de salida (bps)
+<br>α = fracción media de tiempo que transmite el conjunto de fuentes  (0 &lt; α &lt; 1)
+<br><span class="res">K = M / (I·R)</span>  = proporción entre capacidad de salida y entrada máxima total</div>
+    <b>K es la medida de compresión del MUX STDM.</b> Ej: si K = 0,25, se gestionan <b>4 veces más</b> dispositivos que con TDM.
+    <div class="step">Cota de K:  <span class="res">α &lt; K &lt; 1</span>
+<br>K = 1  → caso TDM (todos emiten todo el tiempo)
+<br>K = α  → el promedio de entrada iguala la salida (buffer finito alcanza)
+<br>K &lt; α → la entrada excede al MUX: <b>rebalse</b> (ni un buffer infinito alcanza)</div>
+  </div>
+
+  <h2 class="sec" id="ej-stdm"><span class="n">12</span>Ejercicio STDM resuelto (del módulo)</h2>
+  <div class="calc">
+    <span class="ct">Enunciado</span>
+    A un MUX entran <b>20 líneas de 1 Mbps</b> cada una. El promedio de transmisión es <b>α = 0,35</b>. Calcular la velocidad de salida en TDM y en STDM (con salida 20% mayor que el promedio por bits suplementarios), y el K de cada caso.
+    <span class="ct" style="margin-top:10px">Resolución</span>
+    <div class="step">Entrada máxima total:  I·R = 20 × 1 Mbps = <span class="res">20 Mbps</span></div>
+    <div class="step">1) <b>TDM:</b> la salida = suma de entradas = <span class="res">20 Mbps</span></div>
+    <div class="step">2) <b>STDM:</b> promedio real = α × I·R = 0,35 × 20 = 7 Mbps.
+<br>Con 20% extra por overhead:  M = 7 × 1,20 = <span class="res">8,4 Mbps</span></div>
+    <div class="step">3) <b>K en cada caso:</b>
+<br>TDM:  K = 20 / 20 = <span class="res">1</span>
+<br>STDM: K = 8,4 / 20 = <span class="res">0,42</span>  (cumple α=0,35 &lt; 0,42 &lt; 1 ✓)</div>
+  </div>
+  <div class="callout key">
+    <span class="ct">Fórmula de STDM</span>
+    <div class="formula">V_STDM = α × (Σ V_entradas) × (1 + %overhead)</div>
+  </div>
+
+  <h2 class="sec" id="wdm"><span class="n">13</span>WDM y DWDM</h2>
+  <p><mark class="p">WDM</mark> (Wavelength Division Multiplexing): envía varias señales a <b>diferentes longitudes de onda (λ)</b> por una misma fibra — luz de varios "colores".</p>
+  <div class="callout key">
+    <span class="ct">WDM: lo exigible</span>
+    <ul>
+      <li><b>Densa (DWDM):</b> se usan <mark class="p">16 o más λ</mark>.</li>
+      <li><b>Ligera (CWDM, Coarse):</b> se usan <mark class="p">2 o 4 λ</mark>.</li>
+      <li>WDM <b>multiplexa como FDM</b> (pero con luz), puede transportar múltiples protocolos sin un formato de señal común.</li>
+      <li><u class="w">Sólo acepta señales ópticas</u> (a diferencia de SDH, que acepta ópticas y eléctricas).</li>
+    </ul>
+  </div>
+  <p><b>Ventajas de DWDM:</b> gran capacidad agregada · actualización sin colocar más fibra · flexibilidad con <mark class="s">OADM</mark> (multiplexación óptica add/drop) y <mark class="s">OXC</mark> (conexión cruzada óptica) · escalabilidad · <b>transparencia</b> (independencia de velocidad, formato y protocolos). Requiere <b>amplificadores ópticos (OA)</b>.</p>
+
+  <h2 class="sec" id="otn"><span class="n">14</span>OTN — Redes de Transporte Óptico</h2>
+  <p><mark class="p">OTN</mark> (Optical Transport Network) / <mark class="p">OTH</mark> (Optical Transport Hierarchy) es la jerarquía para "más y más velocidad". El módulo muestra como ejemplo un <b>Huawei OptiX OSN 6800</b> con estos datos: hasta <b>80 canales DWDM</b> (8 en CWDM), banda C (1529–1560 nm), <b>hasta 100 Gbit/s por canal (OTU4)</b>, y soporte de SDH, SONET, Ethernet, SAN, OTN y Video.</p>
+  <p class="tnote">Estos números son de la ficha técnica del equipo (slide 62). Sirven de contexto; lo evaluable son los conceptos de WDM/DWDM/OTN, no memorizar la spec del Huawei.</p>
+
+  <h2 class="sec" id="parcial"><span class="n">15</span>Ejercicio del 1er parcial (reconstruido)</h2>
+  <div class="calc">
+    <span class="ct">Enunciado (de las fotos del parcial)</span>
+    Multiplexar usando <b>TDM con PCM</b> tres clases de dispositivos, con <b>error relativo máximo 0,1 %</b> en todos los casos:
+    <ul>
+      <li><b>Clase A:</b> frecuencias entre 200 Hz y 1 KHz · <b>20 dispositivos</b></li>
+      <li><b>Clase B:</b> frecuencias entre 500 Hz y 1,5 KHz · <b>5 dispositivos</b></li>
+      <li><b>Clase C:</b> frecuencias entre 1 KHz y 2 KHz · <b>10 dispositivos</b></li>
+    </ul>
+    Se pide: (a) velocidad mínima del enlace optimizando la eficiencia; (b) cuántas ranuras se asignan a cada tipo; (c) longitud en bits de la ranura y de la trama.
+    <span class="ct" style="margin-top:10px">Cómo encararlo</span>
+    <div class="step">Paso 1 — bits por muestra según el error:
+<br>error ≤ 0,1 % ⇒ 1/2ⁿ ≤ 0,001 ⇒ 2ⁿ ≥ 1000 ⇒ <span class="res">n = 10 bits</span>  (2¹⁰ = 1024)</div>
+    <div class="step">Paso 2 — frecuencia de muestreo de cada clase (Nyquist = 2 × f_máx):
+<br>Clase A: f_máx = 1 KHz   → 2.000 muestras/s
+<br>Clase B: f_máx = 1,5 KHz → 3.000 muestras/s
+<br>Clase C: f_máx = 2 KHz   → 4.000 muestras/s</div>
+    <div class="step">Paso 3 — velocidad de cada dispositivo (muestras/s × 10 bits):
+<br>A: 2.000 × 10 = 20 Kbps   ·   B: 3.000 × 10 = 30 Kbps   ·   C: 4.000 × 10 = 40 Kbps</div>
+    <div class="step">Paso 4 — velocidad total del enlace (suma de todos):
+<br>20 disp × 20 K + 5 disp × 30 K + 10 disp × 40 K
+<br>= 400 + 150 + 400 = <span class="res">950 Kbps</span></div>
+    <b>Ranuras (b):</b> la idea de "optimizar la eficiencia" es que las clases más rápidas ocupen <b>más ranuras por trama</b> proporcionalmente a su velocidad (una fuente que va al doble de velocidad necesita el doble de ranuras en el mismo tiempo de trama). El detalle fino de cuántas ranuras y la longitud dependen de cómo la cátedra define la trama base; con estos pasos tenés el método y los números de entrada.
+  </div>
+  <div class="callout warn">
+    <span class="ct">Aviso honesto sobre este ejercicio</span>
+    El enunciado lo <b>reconstruí de las fotos del parcial</b> (están manuscritas y algo borrosas). Los datos de entrada (frecuencias, cantidades, error 0,1 %) y el método de resolución son sólidos, pero <b>los valores exactos de las frecuencias de cada clase conviene que los confirmes contra tu foto original</b>, porque un dígito mal cambia todas las cuentas. La parte (b) y (c) las dejo como método porque dependen de una convención de trama que no está 100% explícita en la foto. Si me pasás el enunciado en limpio, te lo resuelvo completo y sin ambigüedad.
+  </div>
+
+  <hr>
+
+  <h2 class="sec" id="datos"><span class="n">16</span>Fórmulas y datos clave para el escrito</h2>
+  <div class="callout key">
+    <span class="ct">Fórmulas — todas juntas</span>
+    <ul>
+      <li>Eficiencia = conexiones de usuario / costo</li>
+      <li><b>PCM:</b> f_muestreo = 2 × BW (Nyquist) · bits/muestra n tal que 1/2ⁿ ≤ error · V_canal = n × f_muestreo</li>
+      <li><b>Voz:</b> BW 4 KHz → 8.000 muestras/s × 8 bits = 64 Kbps (error 0,4 %)</li>
+      <li><b>FDM:</b> BW_total = n × BW_señal + (n−1) × BW_guarda</li>
+      <li><b>TDM:</b> V_salida = Σ V_entradas · T_trama = N_ranuras × T_bit = 1/f_muestreo · T_bit = 1/V</li>
+      <li><b>STDM:</b> V_STDM = α × (Σ V_entradas) × (1 + %overhead) · K = M/(I·R) · cota α &lt; K &lt; 1</li>
+    </ul>
+    <span class="ct" style="margin-top:10px">Números que caen</span>
+    <ul>
+      <li><b>E1</b> = 2,048 Mbps = 32 canales × 64 Kbps (30 voz + 2 control) · <b>256 bits/trama en 125 μs</b> · overhead <b>16 bits</b>.</li>
+      <li><b>T1</b> = 1,544 Mbps = 24 canales · <b>193 bits/trama</b> (24×8 + 1).</li>
+      <li>Precisión PCM = 100/256 = <b>0,4 %</b> (8 bits). Error 0,1 % ⇒ <b>10 bits</b>.</li>
+      <li>E1 fraccional: 1024, 512, 256, 128, 64, 32, 19.2, 9.6 Kbps.</li>
+      <li><b>DWDM ≥ 16 λ · CWDM 2 o 4 λ.</b> WDM sólo óptico; SDH óptico y eléctrico.</li>
+      <li>SDH: ITU-T G.707/708/709 · byte a byte · supera los 140 Mbps de PDH.</li>
+    </ul>
+  </div>
+
+  <h2 class="sec" id="conex"><span class="n">17</span>Conexión con otros módulos</h2>
+  <div class="callout link">
+    <span class="ct">Cómo se enlaza con el resto del programa</span>
+    <ul>
+      <li><b>Intro WAN (M1):</b> la portadora (carrier), E1/T1 y DWDM que el M1 sólo nombraba se explican acá con sus cuentas.</li>
+      <li><b>Última milla (M2):</b> FDM es la base de ADSL; DWDM es la base de la fibra (FTTx/PON). SDH aparecía en EPL de Metro Ethernet.</li>
+      <li><b>Conmutación (M4):</b> la próxima unidad también es de cálculo (tiempos de transmisión). Mismo estilo de ejercicios.</li>
+      <li><b>Transporte (M8):</b> el concepto de eficiencia y overhead reaparece en las tramas TCP.</li>
+    </ul>
+  </div>
+
+  <div class="callout note">
+    <span class="ct">Nota de fidelidad</span>
+    Todo sale de las slides del M3, el TP3, el Quiz 3 y las fotos del 1er parcial. Aproveché tu <b>resumen práctico M3</b> (que ya traía las fórmulas resueltas) como base de las cajas de cálculo. Dos avisos: <b>(1)</b> el ejercicio del parcial está reconstruido de fotos manuscritas — confirmá las frecuencias exactas (ver caja roja de la sección 15). <b>(2)</b> Tu resumen viejo tenía la autonota "se usa el ITU-T si no me equivoco": confirmado, es <b>UIT-T / ITU-T</b>, tranquilo.
+  </div>
+</div>
+
+<script>
+  (function(){
+    var mem={};
+    var s; try{ s=localStorage.getItem("comii-theme"); }catch(e){ s=mem["comii-theme"]; }
+    if(s==="dark" || (!s && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+    document.getElementById("themeBtn").addEventListener("click",function(){
+      document.documentElement.classList.toggle("dark");
+      var v=document.documentElement.classList.contains("dark")?"dark":"light";
+      try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+    });
+  })();
+</script>
+</body>
+</html>
