@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 4 · Conmutación — Resumen acortado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f6f1; --card:#ffffff; --ink:#2b2b2b; --muted:#6d6a60; --border:#e7e2d5;
+    --accent:#2e6fb0;
+    --hl-pink:#ffc6cd; --hl-green:#c6ecca;
+    --key:#c78a00; --key-bg:#fff4d4; --key-bd:#ecd58c;
+    --calc:#0e7c86; --calc-bg:#e2f6f7; --calc-bd:#a5dde1;
+    --shadow:0 1px 3px rgba(40,35,20,.06),0 1px 2px rgba(40,35,20,.04);
+    --font:"Comic Sans MS","Comic Neue","Chalkboard SE","Segoe Print",cursive;
+  }
+  html.dark{
+    --bg:#13151a; --card:#1b1f27; --ink:#e9e5d9; --muted:#9b988c; --border:#2c303a;
+    --accent:#5fa8e0;
+    --key:#e6bd52; --key-bg:#2b2410; --key-bd:#4a3d1c;
+    --calc:#4fc9d4; --calc-bg:#0f2a2d; --calc-bd:#245055;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.72;font-size:17px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:#eef1f5;color:#245a92;padding:.04em .34em;border-radius:5px;font-size:.82em;font-family:ui-monospace,Menlo,monospace}
+  html.dark code{background:#20262f;color:#7fb6e6}
+  mark{color:#2b2b2b;padding:.02em .16em;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  mark.p{background:var(--hl-pink)}
+  mark.s{background:var(--hl-green)}
+  u.w{text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:820px;margin:0 auto}
+  .htop .lbl{font-size:.74rem;color:var(--muted)}
+  .htop h1{font-size:1.02rem;margin:1px 0 0;font-weight:700}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--ink);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;font-family:var(--font)}
+
+  .wrap{max-width:820px;margin:0 auto;padding:18px 18px 44px}
+  .meta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+  .tag{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--muted)}
+  .tag.freq{color:var(--key);border-color:var(--key-bd);background:var(--key-bg)}
+
+  .lead{color:var(--muted);font-size:1rem;margin:2px 0 18px}
+  .lead b{color:var(--ink)}
+
+  h2.sec{font-size:1.22rem;margin:26px 0 6px;display:inline-block;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:5px}
+  p{margin:8px 0}
+  .idea{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;margin:10px 0 4px;box-shadow:var(--shadow)}
+
+  .fbox{background:var(--calc-bg);border:1px solid var(--calc-bd);border-left:5px solid var(--calc);border-radius:12px;padding:12px 15px;margin:16px 0}
+  .fbox .ct{font-size:.78rem;font-weight:700;color:var(--calc);margin-bottom:6px;display:block;text-decoration:underline;text-underline-offset:3px}
+  .fbox .f{font-family:ui-monospace,Menlo,monospace;font-size:.84rem;background:var(--card);border:1px solid var(--calc-bd);border-radius:7px;padding:7px 10px;margin:6px 0;line-height:1.6;overflow-x:auto}
+  html.dark .fbox .f{background:#12181d}
+
+  .warnbox{background:var(--key-bg);border:1px solid var(--key-bd);border-left:5px solid var(--key);border-radius:12px;padding:12px 15px;margin:16px 0;font-size:.94rem}
+  .warnbox b{color:var(--key)}
+
+  h2.big{font-size:1rem;color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px;margin:34px 0 4px}
+  .subt{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+
+  .punteros{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:620px){.punteros{grid-template-columns:1fr}}
+  details.punt{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:11px;padding:11px 14px;box-shadow:var(--shadow)}
+  details.punt summary{font-weight:700;cursor:pointer;list-style:none;outline:none;display:flex;align-items:flex-start;gap:7px}
+  details.punt summary::-webkit-details-marker{display:none}
+  details.punt summary::before{content:"▸";color:var(--accent);flex:none}
+  details.punt[open] summary::before{content:"▾"}
+  details.punt summary:focus-visible{text-decoration:underline}
+  details.punt .exp{margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);font-size:.92rem;color:var(--ink);line-height:1.6}
+  details.punt .exp code{background:#eef1f5;color:#245a92;padding:.03em .3em;border-radius:4px;font-size:.86em;font-family:ui-monospace,Menlo,monospace}
+  html.dark details.punt .exp code{background:#20262f;color:#7fb6e6}
+  .hint{font-size:.82rem;color:var(--muted);margin:8px 2px 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 4 · Resumen acortado</span><h1>Conmutación de circuitos y paquetes</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <a class="iconbtn" href="resumen-principal.html">Principal</a>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="meta">
+    <span class="tag freq">Frecuencia: alta</span>
+    <span class="tag">Para leer y absorber · + oral</span>
+  </div>
+
+  <p class="lead">Versión corta para <b>entender los conceptos</b> y sus conexiones. Como este módulo también es de cuentas, dejé un <b>bloque con todas las fórmulas juntas</b>. Los ejercicios resueltos paso a paso están en el principal.</p>
+
+  <h2 class="sec">La idea en seis trazos</h2>
+
+  <div class="idea"><b>1. El problema.</b> <mark class="p">Conmutar</mark> es elegir, entre varios enlaces, por cuál mandar el mensaje hacia el destino. Hay tres formas de resolverlo, y todo el módulo compara esas tres: <b>circuitos</b>, <b>datagrama</b> y <b>circuito virtual</b>.</div>
+
+  <div class="idea"><b>2. Circuitos: reservar el camino.</b> Se arma un <mark class="p">canal dedicado y exclusivo</mark> extremo a extremo, en <u class="w">tres fases</u>: establecimiento → transferencia → desconexión. Los nodos son <b>vía de paso</b> (no almacenan nada), así que la velocidad es constante. Su talón de Aquiles: el canal queda reservado <b>aunque no se transmita</b> ⇒ mediana eficiencia para voz, <b>baja para datos</b>.</div>
+
+  <div class="idea"><b>3. Por qué nacen los paquetes.</b> Los datos entre computadoras viajan <mark class="s">en ráfagas</mark>: la línea tiene datos <u class="w">menos del 20 % del tiempo</u>. Reservarle un canal exclusivo es un desperdicio. La conmutación de paquetes fracciona el mensaje (50–1500 bytes por paquete, con cabecera) y comparte dinámicamente el enlace.</div>
+
+  <div class="idea"><b>4. Las dos técnicas de paquetes.</b> <mark class="p">Datagrama</mark>: cada paquete se rutea <b>independiente</b> → pueden llegar desordenados o perderse, y el <b>destino</b> debe arreglarlo. <mark class="p">Circuito virtual</mark>: se establece una ruta antes (Call Request → Call Accept), todos los paquetes van por ahí y llegan <b>en orden</b>; la cabecera lleva el <b>ID de CV</b>. Ojo: es una ruta fija, <u class="w">pero NO un canal dedicado</u>.</div>
+
+  <div class="idea"><b>5. Cuál conviene.</b> No hay ganador absoluto — <b>depende del largo del mensaje</b>. <mark class="s">Mensaje corto</mark> → gana <b>datagrama</b> (se ahorra el establecimiento). <mark class="s">Mensaje largo</mark> → gana <b>circuito virtual</b> (amortiza el establecimiento y ahorra el ruteo de cada paquete en cada nodo). Ese es el corazón del módulo.</div>
+
+  <div class="idea"><b>6. La clave de las cuentas.</b> En circuitos el mensaje se transmite <u class="w">una sola vez</u> (<code>L/B</code>). En paquetes se <b>retransmite en cada salto</b> (store-and-forward), pero los paquetes van <b>solapados</b>: por eso no se multiplica por N sino que se suma <code>(Np + N − 1)</code>. Ese término es el que más se falla.</div>
+
+  <div class="fbox">
+    <span class="ct">Todas las fórmulas juntas (para el escrito)</span>
+    <div class="f">N (saltos) = nodos + 1        Np = L / (datos por paquete)</div>
+    <div class="f">Tp = (P + H) / B              Overhead = cabecera / paquete total</div>
+    <div class="f">CC:  T = S + L/B + N·D + liberación</div>
+    <div class="f">CV:  T = S + (Np+N−1)·Tp + N·D + proc.CV + liberación</div>
+    <div class="f">DG:  T = (Np+N−1)·Tp + N·D + proc.ruteo</div>
+    <div class="f">Bus TDM: half = 1 ranura/par · full = 2 ranuras/par</div>
+    <div class="f">         bloqueante aplica el % de uso · NO bloqueante NO lo aplica</div>
+  </div>
+
+  <div class="warnbox">
+    <b>Tres correcciones sobre tu material:</b> (1) el caso 3 del fraccionamiento son <b>5 paquetes</b>, no 4. (2) Lo que rotulaste como "análisis de retardos de Circuito Virtual" es en realidad el de <b>Conmutación de Circuitos</b> (en CV <b>sí</b> hay procesamiento en la aceptación de llamada). (3) La fórmula de datagrama del resumen práctico <b>omite el (N−1)</b> del store-and-forward. Todo explicado en el principal.
+  </div>
+
+  <h2 class="big">Punteros para rendir</h2>
+  <p class="subt">Leé el gatillo → explicalo en voz alta → abrí para verificar. Si no te sale completo, volvé al resumen principal.</p>
+
+  <div class="punteros">
+    <details class="punt"><summary>Conmutar: definición y ámbitos</summary><div class="exp">Ante un pedido de conexión de un usuario a un conmutador, éste debe elegir un enlace de entre varios para enviar el mensaje hacia el destino final. Conmutador = switch (PBX, central pública, switch de LAN). Ámbitos: un conmutador como central telefónica de empresa, o una red de conmutadores para regiones/países.</div></details>
+
+    <details class="punt"><summary>CC: características</summary><div class="exp">Camino o canal dedicado exclusivo entre los dos extremos. Con un conmutador único se conectan dos internos; entre ciudades se usa una Red de Conmutación de Circuitos que crea y mantiene canales dedicados extremo a extremo para cada llamada. Conexiones permanentes (línea alquilada) o transitorias (llamada).</div></details>
+
+    <details class="punt"><summary>Las 3 fases de CC</summary><div class="exp">1) Establecimiento del circuito: conexión extremo a extremo antes de transmitir nada. 2) Transferencia de datos: analógicos o digitales según la red; normalmente full duplex. 3) Desconexión: la pide cualquiera de los dos extremos y las señales se propagan a los nodos para que liberen los recursos.</div></details>
+
+    <details class="punt"><summary>Análisis CC: los 3 puntos</summary><div class="exp">1) Inteligencia de los nodos: debe haber disponibilidad en cada enlace, cada nodo hace la conmutación interna y debe tener la inteligencia para reservar y establecer la ruta. 2) Eficiencia: el canal queda dedicado aunque no se transfiera nada — mediana para voz, baja para datos. 3) Prestaciones: hay retardo previo por el establecimiento, pero después es transparente; velocidad fija, sólo con retardo de propagación, siendo despreciable el de los nodos.</div></details>
+
+    <details class="punt"><summary>Red telefónica: los 4 componentes</summary><div class="exp">1) Abonados: los dispositivos de usuario (mayormente teléfonos). 2) Lazo local o línea de abonado: acceso usuario-red, típicamente 5 km de UTP; si llega a decenas de km hacen falta amplificadores, radioenlaces o fibra. 3) Centrales de conmutación: central final (miles de abonados de un área) y nodos de conmutación intermedios (conectan varias finales, formando jerarquía). 4) Línea troncal: enlace entre centrales públicas, decenas o centenas de miles de canales por TDM sincrónica o DWDM sobre fibra.</div></details>
+
+    <details class="punt"><summary>Conmutador digital: el bus TDM</summary><div class="exp">Los conmutadores modernos usan TDM: parten la cadena de bits de menor velocidad en fragmentos que comparten una cadena de mayor velocidad; la lógica de control los encamina de entrada a salida. Con 2n líneas se manejan n pares. Half duplex: 1 ranura por par (trama de n muestras). Full duplex: 2 ranuras por par (trama de 2n muestras).</div></details>
+
+    <details class="punt"><summary>Tipos de conmutador: bloqueante vs no bloqueante</summary><div class="exp">No bloqueante: atiende todas las líneas simultáneamente, se dimensiona al 100%. Bloqueante: no soporta todas a la vez, se dimensiona al uso real esperado (por eso ahí se aplica el % de actividad). También existe el conmutador con retardo en el bus. Error típico: aplicarle el porcentaje de uso al no bloqueante.</div></details>
+
+    <details class="punt"><summary>Ejercicio bus TDM (5000 líneas, 15%)</summary><div class="exp">5000 líneas = 2500 pares, canal de voz 64 kbps. Bloqueante half: 2500 × 0,15 = 375 pares × 64k = 24 Mbps. Bloqueante full: ×2 = 48 Mbps. No bloqueante half: 2500 × 64k = 160 Mbps. No bloqueante full: ×2 = 320 Mbps.</div></details>
+
+    <details class="punt"><summary>Por qué nace la conmutación de paquetes</summary><div class="exp">Objetivo: hacer más eficiente el servicio de CC. Limitación de CC: ineficiencia de línea. Los datos entre dispositivos digitales viajan en ráfagas de corta duración; la presencia de datos es menor al 20% del tiempo, así que la línea está desocupada la mayor parte del tiempo, y CC compromete muchos recursos para un canal dedicado.</div></details>
+
+    <details class="punt"><summary>Funcionamiento de CP + store-and-forward</summary><div class="exp">Los datos se fraccionan en paquetes de 50 a 1500 bytes (según la tecnología). Cada paquete = porción de datos + cabecera de control. El dispositivo los manda al nodo conmutador; el nodo almacena el paquete, inspecciona la cabecera, decide el próximo tramo y lo encola para enviarlo cuando el enlace esté libre.</div></details>
+
+    <details class="punt"><summary>Las 4 ventajas de paquetes sobre circuitos</summary><div class="exp">1) Mayor eficiencia de línea: el enlace es un canal único compartido dinámicamente (en CC hay canales TDM asignados que pueden quedar ociosos). 2) Conversión de velocidad: estaciones de distinta velocidad pueden intercambiar paquetes. 3) Aceptación en condiciones adversas: en CC se bloquean llamadas, en CP se aceptan igual a costa de más retardo. 4) Uso de prioridades: el nodo puede enviar primero los paquetes de mayor prioridad (QoS).</div></details>
+
+    <details class="punt"><summary>La falacia del TP4 punto 1</summary><div class="exp">El razonamiento falso dice que como CP agrega cabeceras y CC no, CC usa mejor la línea. El punto débil: confunde overhead por paquete con eficiencia de uso del canal. En CC el canal queda reservado y ocioso la mayor parte del tiempo (datos presentes menos del 20%), desperdicio muchísimo mayor que las cabeceras.</div></details>
+
+    <details class="punt"><summary>Datagrama: qué es y sus 2 consecuencias</summary><div class="exp">Cada paquete es tratado por los nodos de forma independiente; el nodo decide el ruteo de cada uno según colas y congestión. Consecuencias: (1) los paquetes pueden llegar en distinto orden y el destino debe reordenarlos; (2) un paquete puede destruirse (si cae el nodo que lo tiene) y el destino debe detectar la pérdida y recuperarlo.</div></details>
+
+    <details class="punt"><summary>Circuito virtual: la secuencia completa</summary><div class="exp">A manda un Call Request Packet pidiendo conexión lógica con E; los nodos lo rutean hasta E; si E acepta manda un Call Accept Packet que vuelve por los mismos nodos hasta A. Queda establecida la conexión lógica y recién ahí se intercambian datos por esa ruta fija. Cada paquete lleva un Identificador de Circuito Virtual. Al final se manda un Clear Request Packet. Puede ser transitoria o permanente.</div></details>
+
+    <details class="punt"><summary>Por qué se llama "virtual"</summary><div class="exp">Porque todos los paquetes de una conexión siguen la misma ruta (la del circuito virtual), pero eso NO implica que esa ruta sea un canal dedicado como en la conmutación de circuitos: el enlace se sigue compartiendo con paquetes de otros circuitos virtuales.</div></details>
+
+    <details class="punt"><summary>CV vs CC: las 4 diferencias</summary><div class="exp">Similitudes: misma ruta y hace falta establecer conexión. Diferencias: TIPO (CC física por señales, CV lógica por protocolos); DISPONIBILIDAD (CC total y exclusiva, CV comparte el enlace); CANTIDAD (CC una única conexión, CV varios circuitos simultáneos); ALMACENAMIENTO (CC no almacena, el nodo es vía de paso; CV sí almacena y encola).</div></details>
+
+    <details class="punt"><summary>Ventajas del CV sobre datagrama</summary><div class="exp">Se ven cuando el intercambio es prolongado. a) Provisión de servicios de red: control de secuenciamiento (llegan en orden) y control de error y pérdidas (más sencillo; un nodo puede pedir retransmisión al anterior del mismo CV). b) Tránsito veloz: no hay que decidir ruteo en cada nodo para cada paquete.</div></details>
+
+    <details class="punt"><summary>Ventajas del datagrama sobre CV</summary><div class="exp">a) Evita la fase de establecimiento (ventajoso para pocos paquetes). b) Más flexible por ser más primitivo: ante congestión, los datagramas se rutean por otro lado; al CV le cuesta más adaptarse. c) Mayor confiabilidad: si cae un nodo o enlace, en CV se caen todos los circuitos que pasan por ahí, mientras que en datagrama los paquetes siguientes buscan ruta alternativa.</div></details>
+
+    <details class="punt"><summary>Tamaño del paquete: los 4 casos</summary><div class="exp">Mensaje de 40 bytes, cabecera 3, ruta X→a→b→Y. 1 paquete (43B): 43×3 = 129 tiempo-byte. 2 paquetes (23B): 23×4 = 92. 5 paquetes (11B): 11×7 = 77. 10 paquetes (7B): 7×12 = 84 — vuelve a subir porque la cabecera es de longitud fija y más paquetes = más overhead.</div></details>
+
+    <details class="punt"><summary>Overhead y el óptimo del fraccionamiento</summary><div class="exp">Overhead = tamaño de cabecera / tamaño total del paquete. Lo óptimo: tamaño mínimo de paquete (más fraccionamiento = menor tiempo), pero con tamaño mínimo de cabecera (si no, neutraliza el beneficio) y mínima información en ella (para reducir el procesamiento por paquete). Además, más paquetes = más retardo de colas y procesamiento en los nodos.</div></details>
+
+    <details class="punt"><summary>Retardos: cómo se compone cada técnica</summary><div class="exp">CC: establecimiento (petición con procesamiento en nodo + aceptación SIN procesamiento) + envío (transmisión + propagación, sin retardo en nodos) + desconexión. CV: establecimiento (petición con procesamiento + aceptación TAMBIÉN con procesamiento: testeo del nº de CV y colas) + envío fraccionado con menos retardo en nodos que datagrama + desconexión. Datagrama: sin establecimiento ni desconexión; el envío incluye transmisión + propagación + retardo en nodos (colas de entrada y salida + procesamiento por ruteo).</div></details>
+
+    <details class="punt"><summary>Los 3 retardos en el gráfico de tiempos</summary><div class="exp">Segmento vertical grueso = transmisión (poner los bits en el enlace, depende de L/B). Segmento diagonal = propagación (viaje por el medio, depende de distancia/velocidad). Escaloncito horizontal dentro del nodo = procesamiento (ruteo y colas). Esto es lo que pide la pregunta de arrastrar del Quiz 4.</div></details>
+
+    <details class="punt"><summary>El término (Np + N − 1): por qué</summary><div class="exp">En paquetes hay store-and-forward: cada nodo recibe el paquete entero antes de reenviarlo. El último paquete espera que salgan los (Np−1) anteriores por el primer enlace y después hace su propio recorrido de N saltos; los demás van solapados detrás. Por eso el pipeline es (Np + N − 1)·Tp y no Np·N·Tp.</div></details>
+
+    <details class="punt"><summary>Ejercicio del módulo (mensaje corto)</summary><div class="exp">L=1280, B=64k, P=256, H=10, 3 nodos (N=4), S=0,1, D=0,002, F=0,001, G=0,005. Np=5, Tp=266/64000=4,156ms, pipeline=8×4,156=33,25ms. CC=0,1+0,02+0,008=128ms. CV=0,1+0,03325+0,008+0,015=156ms. DG=0,03325+0,008+0,075=116ms. Gana DATAGRAMA por ser mensaje corto.</div></details>
+
+    <details class="punt"><summary>Ejercicio del parcial (mensaje largo)</summary><div class="exp">1200 B = 9600 bits, paquete 256 bits (incluye 16 de cabecera → 240 datos), Np=40. 4 nodos → N=5. Tp=2,56ms. Pipeline=44×2,56=112,64ms. Datagrama: +40×4×0,01 = 1,6ms → 114,245ms. CV: +1ms establecimiento +0,05 liberación → 113,695ms. Gana CIRCUITO VIRTUAL por ser mensaje largo.</div></details>
+
+    <details class="punt"><summary>Trampa del quiz: menor procesamiento en nodos</summary><div class="exp">"¿Qué técnica presenta menores tiempos de procesamiento de PAQUETES en nodos intermedios?" → Circuito Virtual, NO conmutación de circuitos. Motivo: CC no procesa paquetes en absoluto (no hay paquetes), así que la comparación es entre las técnicas de paquetes, y CV tiene menos procesamiento que datagrama porque no decide ruteo por paquete.</div></details>
+
+    <details class="punt"><summary>Los dos V/F del quiz</summary><div class="exp">"El tiempo de transmisión total es independiente del número de nodos intermedios, es sólo L/velocidad" → FALSO (en paquetes cada nodo retransmite; sólo en CC vale L/B). "Datagrama presenta menores tiempos que CV siempre sin importar la longitud" → FALSO (para mensajes largos gana CV). Y: para mensajes digitales cortos, la más eficiente es datagrama.</div></details>
+
+    <details class="punt"><summary>Aprendizaje hacia atrás (TP4 punto 5)</summary><div class="exp">Cada paquete lleva dirección origen, destino y un contador de saltos que se incrementa en cada nodo. El nodo mira de qué vecino vino el paquete y cuántos saltos lleva: si es menor que lo que tiene en tabla para ese origen, actualiza la entrada apuntando a ese vecino. Ventajas: se adapta a la topología real, no necesita tablas iniciales. Desventajas: puede congestionar, información redundante y retrasos iniciales mientras aprende.</div></details>
+  </div>
+
+  <p class="hint">Cuando puedas expandir los 27 punteros y resolver los dos ejercicios de tiempos sin mirar, tenés el Módulo 4 listo. Acá lo que decide es saber cuándo gana cada técnica y por qué.</p>
+</div>
+
+<script>
+  (function(){
+    var mem={};
+    var s; try{ s=localStorage.getItem("comii-theme"); }catch(e){ s=mem["comii-theme"]; }
+    if(s==="dark" || (!s && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+    document.getElementById("themeBtn").addEventListener("click",function(){
+      document.documentElement.classList.toggle("dark");
+      var v=document.documentElement.classList.contains("dark")?"dark":"light";
+      try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+    });
+  })();
+</script>
+</body>
+</html>

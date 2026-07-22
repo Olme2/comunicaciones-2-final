@@ -240,12 +240,40 @@
       {sig:"α (alfa)", exp:"Fracción media de transmisión", d:"Fracción media de tiempo que transmite el conjunto de fuentes en STDM (0 < α < 1)."},
       {sig:"E1 fraccional", exp:"Fractional E1", d:"Submúltiplo de E1: 1024, 512, 256, 128, 64, 32, 19.2 y 9.6 Kbps."},
       {sig:"PLC (multiplex.)", exp:"—", d:"En el TP3 aparecen también PDM y SDM como técnicas a describir junto a FDM/TDM/STDM/WDM."}
+    ]},
+    { n:4, slug:"04-conmutacion", nav:"Conmutación", title:"Conmutación de circuitos y paquetes", terms:[
+      {sig:"CC", exp:"Conmutación de Circuitos", d:"Camino dedicado y exclusivo extremo a extremo. Tres fases: establecimiento, transferencia, desconexión."},
+      {sig:"CP", exp:"Conmutación de Paquetes", d:"El mensaje se fracciona en paquetes que comparten dinámicamente los enlaces. Dos técnicas: datagrama y CV."},
+      {sig:"CV", exp:"Circuito Virtual", d:"Ruta lógica predefinida: todos los paquetes la siguen. NO es un canal dedicado; el enlace se comparte."},
+      {sig:"Datagrama", exp:"—", d:"Cada paquete se rutea de forma independiente. Pueden llegar desordenados o perderse; el destino lo resuelve."},
+      {sig:"SVC", exp:"Switched Virtual Circuit", d:"Circuito virtual conmutado (transitorio): se establece y se libera por llamada."},
+      {sig:"PVC", exp:"Permanent Virtual Circuit", d:"Circuito virtual permanente: queda establecido de forma fija, sin fase de llamada."},
+      {sig:"Call Request", exp:"Paquete de Pedido de Llamada", d:"Paquete de control con el que una estación solicita una conexión lógica en CV."},
+      {sig:"Call Accept", exp:"Paquete de Aceptación de Conexión", d:"Respuesta del destino que confirma el circuito virtual y lo deja establecido."},
+      {sig:"Clear Request", exp:"Paquete de Finalización de Pedido", d:"Paquete con el que una estación cierra el circuito virtual."},
+      {sig:"Store-and-forward", exp:"Almacenar y reenviar", d:"El nodo recibe el paquete entero, lo almacena, decide la ruta y lo encola. Por eso el nº de saltos afecta el tiempo total."},
+      {sig:"PBX", exp:"Private Branch Exchange", d:"Central telefónica privada; ejemplo de conmutador en el ámbito de una empresa."},
+      {sig:"Lazo local", exp:"Línea de abonado", d:"Acceso entre el usuario y la red telefónica. Longitud típica 5 km con cable UTP."},
+      {sig:"Central final", exp:"—", d:"Central de conmutación que conecta miles de abonados de un área geográfica. Puede haber miles en un país."},
+      {sig:"Nodo intermedio", exp:"Nodo de conmutación intermedio", d:"Conecta varias centrales finales; varios de estos forman la estructura jerárquica de la red telefónica."},
+      {sig:"Línea troncal", exp:"—", d:"Enlace entre centrales públicas. Miles de canales de voz por TDM sincrónica o DWDM sobre fibra."},
+      {sig:"Bus TDM", exp:"—", d:"Implementación del conmutador digital: con 2n líneas maneja n pares. Half duplex 1 ranura/par, full duplex 2 ranuras/par."},
+      {sig:"No bloqueante", exp:"Conmutador no bloqueante", d:"Atiende todas las líneas simultáneamente; se dimensiona al 100% (NO se le aplica el % de uso)."},
+      {sig:"Bloqueante", exp:"Conmutador bloqueante", d:"No soporta todas las líneas a la vez; se dimensiona según el uso real esperado. Puede bloquear llamadas."},
+      {sig:"Overhead (paquete)", exp:"—", d:"Overhead = tamaño de cabecera / tamaño total del paquete. Más fraccionamiento = más cabeceras = más overhead."},
+      {sig:"Tiempo-byte", exp:"—", d:"Unidad del ejemplo del módulo: tiempo de transmisión de un byte. 1 paq=129, 2=92, 5=77, 10=84."},
+      {sig:"L / B", exp:"Longitud del mensaje / Velocidad", d:"Parámetros estándar de los ejercicios. L en bits, B en bps. En CC el tiempo de transmisión es L/B."},
+      {sig:"N (saltos)", exp:"Número de saltos", d:"Enlaces entre las dos estaciones. Regla: N = nodos + 1."},
+      {sig:"P / H", exp:"Tamaño de paquete / Cabecera", d:"P = tamaño fijo del paquete, H = bits suplementarios de cabecera. Ojo: la convención de si P incluye H cambia entre enunciados."},
+      {sig:"S / D", exp:"Establecimiento / Propagación", d:"S = tiempo de establecimiento de la llamada; D = retardo de propagación por salto."},
+      {sig:"F / G", exp:"Retardo en nodo (CV / datagrama)", d:"F = determinación de nº de CV y cola (CV). G = ruteo y cola (datagrama). Siempre F < G."},
+      {sig:"Pipeline", exp:"(Np + N − 1)·Tp", d:"Tiempo de transmisión del mensaje en paquetes: los paquetes van solapados, por eso se suma y no se multiplica por N."},
+      {sig:"Aprendizaje hacia atrás", exp:"Backward learning", d:"Encaminamiento adaptable: cada paquete lleva un contador de saltos y el nodo arma su tabla según de qué vecino vino."},
+      {sig:"Full / Half duplex", exp:"—", d:"Full duplex: transmisión simultánea en ambos sentidos (2 ranuras por par en el bus TDM). Half: un sentido por vez (1 ranura)."}
     ]}
   ];
 
   var TODOS = [
-    {n:3,  title:"Multiplexión"},
-    {n:4,  title:"Conmutación de circuitos y paquetes"},
     {n:5,  title:"Frame Relay · ATM · MPLS"},
     {n:6,  title:"Protocolos de red · Direccionamiento IP"},
     {n:7,  title:"Protocolos de ruteo"},

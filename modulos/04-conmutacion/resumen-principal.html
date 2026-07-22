@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 4 · Conmutación de circuitos y paquetes — Resumen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f6f1; --card:#ffffff; --ink:#2b2b2b; --muted:#6d6a60; --border:#e7e2d5;
+    --accent:#2e6fb0;
+    --hl-pink:#ffc6cd; --hl-green:#c6ecca; --hl-yellow:#ffe6a3;
+    --diag:#6f56b0; --diag-bg:#efeaf8; --diag-bd:#d6c9ee;
+    --key:#c78a00; --key-bg:#fff4d4; --key-bd:#ecd58c;
+    --calc:#0e7c86; --calc-bg:#e2f6f7; --calc-bd:#a5dde1;
+    --link:#1f8a4c; --link-bg:#e6f6ec; --link-bd:#a9dcbb;
+    --note:#b8860b; --note-bg:#fbf2df; --note-bd:#e6d3a0;
+    --warn:#b03030; --warn-bg:#fbe9e7; --warn-bd:#eab8b0;
+    --shadow:0 1px 3px rgba(40,35,20,.06),0 1px 2px rgba(40,35,20,.04);
+    --font:"Comic Sans MS","Comic Neue","Chalkboard SE","Segoe Print",cursive;
+  }
+  html.dark{
+    --bg:#13151a; --card:#1b1f27; --ink:#e9e5d9; --muted:#9b988c; --border:#2c303a;
+    --accent:#5fa8e0;
+    --diag:#b7a3ec; --diag-bg:#211b33; --diag-bd:#3a2f57;
+    --key:#e6bd52; --key-bg:#2b2410; --key-bd:#4a3d1c;
+    --calc:#4fc9d4; --calc-bg:#0f2a2d; --calc-bd:#245055;
+    --link:#54c483; --link-bg:#142a1e; --link-bd:#2f6b47;
+    --note:#d6a94a; --note-bg:#2b2410; --note-bd:#4a3d1c;
+    --warn:#e08a7f; --warn-bg:#2e1a18; --warn-bd:#5e332e;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.72;font-size:17px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:#eef1f5;color:#245a92;padding:.04em .34em;border-radius:5px;font-size:.84em;font-family:ui-monospace,Menlo,monospace;word-break:break-word}
+  html.dark code{background:#20262f;color:#7fb6e6}
+
+  mark{color:#2b2b2b;padding:.02em .16em;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  mark.p{background:var(--hl-pink)}
+  mark.s{background:var(--hl-green)}
+  mark.y{background:var(--hl-yellow)}
+  u.w{text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:800px;margin:0 auto}
+  .htop .lbl{font-size:.74rem;color:var(--muted)}
+  .htop h1{font-size:1.02rem;margin:1px 0 0;font-weight:700}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--ink);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;font-family:var(--font)}
+
+  .wrap{max-width:800px;margin:0 auto;padding:18px 18px 44px}
+  .meta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+  .tag{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--muted)}
+  .tag.freq{color:var(--warn);border-color:var(--warn-bd);background:var(--warn-bg)}
+
+  nav.toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 17px;margin-bottom:24px;box-shadow:var(--shadow)}
+  nav.toc h2{margin:0 0 8px;font-size:.9rem;color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
+  nav.toc ol{margin:0;padding-left:22px;columns:2;column-gap:26px;font-size:.9rem}
+  nav.toc li{margin:3px 0;break-inside:avoid}
+  nav.toc a{color:var(--ink);text-decoration:none}
+  nav.toc a:hover{color:var(--accent);text-decoration:underline}
+  @media(max-width:560px){nav.toc ol{columns:1}}
+
+  h2.sec{font-size:1.24rem;margin:34px 0 6px;scroll-margin-top:74px;display:inline-block;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:5px}
+  h2.sec .n{color:var(--accent);font-size:.95rem;margin-right:8px}
+  h3{font-size:1.06rem;margin:20px 0 4px}
+  p{margin:9px 0}
+  .lead{color:var(--muted);font-size:1rem}
+  ul{margin:9px 0;padding-left:26px;list-style:none}
+  ul>li{position:relative}
+  ul>li::before{content:"–";position:absolute;left:-20px;color:var(--accent);font-weight:700}
+  ul ul>li::before{content:"○";font-size:.7em;left:-18px}
+  li{margin:6px 0}
+  hr{border:none;border-top:1px dashed var(--border);margin:30px 0}
+  b,strong{font-weight:700}
+
+  .callout{border-radius:12px;padding:13px 16px;margin:16px 0;font-size:.96rem;border:1px solid var(--border);border-left-width:5px}
+  .callout .ct{font-size:.78rem;font-weight:700;margin-bottom:5px;display:block;text-decoration:underline;text-underline-offset:3px}
+  .callout ul{margin:6px 0 0}
+  .diagram{background:var(--diag-bg);border-color:var(--diag-bd);border-left-color:var(--diag)}
+  .diagram .ct{color:var(--diag)}
+  .key{background:var(--key-bg);border-color:var(--key-bd);border-left-color:var(--key)}
+  .key .ct{color:var(--key)}
+  .link{background:var(--link-bg);border-color:var(--link-bd);border-left-color:var(--link)}
+  .link .ct{color:var(--link)}
+  .note{background:var(--note-bg);border-color:var(--note-bd);border-left-color:var(--note)}
+  .note .ct{color:var(--note)}
+  .warn{background:var(--warn-bg);border-color:var(--warn-bd);border-left-color:var(--warn)}
+  .warn .ct{color:var(--warn)}
+
+  .calc{background:var(--calc-bg);border:1px solid var(--calc-bd);border-left:5px solid var(--calc);border-radius:12px;padding:14px 16px;margin:16px 0}
+  .calc .ct{font-size:.78rem;font-weight:700;color:var(--calc);margin-bottom:6px;display:block;text-decoration:underline;text-underline-offset:3px}
+  .calc .step{font-family:ui-monospace,Menlo,monospace;font-size:.85rem;background:var(--card);border:1px solid var(--calc-bd);border-radius:8px;padding:8px 11px;margin:7px 0;line-height:1.6;overflow-x:auto}
+  html.dark .calc .step{background:#12181d}
+  .calc .res{font-weight:700;color:var(--calc)}
+  .formula{font-family:ui-monospace,Menlo,monospace;font-size:.9em;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:.1em .4em;display:inline-block;margin:2px 0}
+  html.dark .formula{background:#12181d}
+
+  dl.defs{margin:10px 0}
+  dl.defs dt{margin-top:9px}
+  dl.defs dt mark{font-weight:700}
+  dl.defs dd{margin:2px 0 0 4px;font-size:.96rem}
+
+  .tablewrap{overflow-x:auto;margin:14px 0;border:1px solid var(--border);border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;font-size:.85rem;min-width:520px}
+  th,td{padding:8px 11px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:var(--accent);color:#fff;font-weight:700;font-size:.82rem}
+  td:first-child{font-weight:700;color:var(--accent);white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  tbody tr:nth-child(even){background:rgba(0,0,0,.02)}
+  html.dark tbody tr:nth-child(even){background:rgba(255,255,255,.03)}
+  .tnote{font-size:.78rem;color:var(--muted);margin:4px 2px 0}
+
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+  @media(max-width:560px){.vs{grid-template-columns:1fr}}
+  .vs .col{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 15px}
+  .vs .col h4{margin:0 0 6px;font-size:1rem}
+  .vs .col h4 mark{font-weight:700}
+  .vs .col ul{padding-left:20px;font-size:.92rem}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 4 · Resumen</span><h1>Conmutación de circuitos y paquetes</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <a class="iconbtn" href="../../glosario.html">Glosario</a>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="meta">
+    <span class="tag freq">Frecuencia: alta</span>
+    <span class="tag">Fuentes: Módulo 4 · TP4 · Quiz 4 · 1er parcial</span>
+  </div>
+
+  <nav class="toc">
+    <h2>Contenido</h2>
+    <ol>
+      <li><a href="#porque">Por qué importa</a></li>
+      <li><a href="#cc">Conmutación de circuitos</a></li>
+      <li><a href="#fases">Las 3 fases</a></li>
+      <li><a href="#analisis">Análisis de la red CC</a></li>
+      <li><a href="#telef">Red telefónica pública</a></li>
+      <li><a href="#bus">El conmutador digital: bus TDM</a></li>
+      <li><a href="#ej-bus">Ejercicio bus TDM resuelto</a></li>
+      <li><a href="#ej-cc">Ejercicio CC resuelto</a></li>
+      <li><a href="#cp">Conmutación de paquetes</a></li>
+      <li><a href="#ventajas">Ventajas sobre circuitos</a></li>
+      <li><a href="#datagrama">Datagrama</a></li>
+      <li><a href="#cv">Circuito virtual</a></li>
+      <li><a href="#cv-cc">CV vs CC</a></li>
+      <li><a href="#cv-dg">CV vs Datagrama</a></li>
+      <li><a href="#tamano">Tamaño del paquete y overhead</a></li>
+      <li><a href="#retardos">Análisis de retardos</a></li>
+      <li><a href="#ej-mod">Ejercicio del módulo resuelto</a></li>
+      <li><a href="#ej-parcial">Ejercicio del 1er parcial</a></li>
+      <li><a href="#trampas">Las trampas del Quiz 4</a></li>
+      <li><a href="#datos">Fórmulas y datos clave</a></li>
+      <li><a href="#conex">Conexión con otros módulos</a></li>
+    </ol>
+  </nav>
+
+  <p class="lead">Este módulo responde una sola pregunta con tres respuestas posibles: <b>¿cómo se lleva un mensaje de A a B a través de una red de nodos?</b> Con un camino dedicado (circuitos), con paquetes sueltos (datagrama) o con paquetes por una ruta fija (circuito virtual). Y después: <b>¿cuál tarda menos?</b> — que es la parte de cuentas, y es la que cae.</p>
+
+  <h2 class="sec" id="porque"><span class="n">01</span>Por qué importa</h2>
+  <p><mark class="p">Conmutar</mark> es: ante un pedido de conexión de un usuario a un conmutador, éste debe <b>elegir un enlace, de entre varios</b>, a través del cual se enviará el mensaje del usuario en dirección al destino final.</p>
+  <p>Ejemplos de conmutador (<mark class="s">conmutador = switch</mark>): una central telefónica privada (<b>PBX</b>), una central pública, un switch de LAN.</p>
+  <p><b>Ámbitos donde ocurre la conmutación:</b></p>
+  <ul>
+    <li>Un conmutador cumpliendo funciones de <b>central telefónica</b> en una empresa.</li>
+    <li>Una <b>red de conmutadores</b> conectados para brindar servicios de comunicación a grandes regiones o países.</li>
+  </ul>
+
+  <h2 class="sec" id="cc"><span class="n">02</span>Conmutación de circuitos: características</h2>
+  <p>La comunicación entre dos usuarios finales:</p>
+  <ul>
+    <li>Se realiza mediante un <mark class="p">camino o canal dedicado</mark> a comunicar <b>exclusivamente</b> a los dos extremos.</li>
+    <li>Con un <b>conmutador único</b> (central telefónica): se conectan dos internos en una llamada.</li>
+    <li>Con usuarios en <b>ciudades distintas</b>: se usa una <b>Red de Conmutación de Circuitos</b>, que provee conexión a múltiples dispositivos a través de conmutadores que establecen un canal dedicado <b>extremo a extremo para cada llamada</b>.</li>
+    <li>La red tiene la función de <b>crear y mantener</b> los canales dedicados de múltiples pares de dispositivos.</li>
+    <li>Las conexiones pueden ser <mark class="s">Permanentes</mark> (línea alquilada) o <mark class="s">Transitorias</mark> (comunicación telefónica).</li>
+  </ul>
+
+  <h2 class="sec" id="fases"><span class="n">03</span>Las tres fases</h2>
+  <div class="callout key">
+    <span class="ct">Memorizar en orden</span>
+    <ul>
+      <li><b>1ª fase — Establecimiento del circuito:</b> antes de transmitir mensaje alguno, debe establecerse un circuito o conexión <u class="w">extremo a extremo, punto a punto</u>, entre los dos dispositivos de los extremos.</li>
+      <li><b>2ª fase — Transferencia de datos:</b> una vez establecido el circuito se transmite la información. Los datos pueden ir en señales <b>analógicas o digitales</b> según la naturaleza de la red. Normalmente la conexión es <mark class="p">full duplex</mark>.</li>
+      <li><b>3ª fase — Desconexión del circuito:</b> la conexión se finaliza por orden de <b>alguno de los dos dispositivos</b>. Si la pide A, las señales de desconexión se propagan a los nodos intermedios para que <b>liberen los recursos</b> dedicados. Si la pide E, se sigue la secuencia inversa.</li>
+    </ul>
+  </div>
+  <p>La <b>ruta del ejemplo del módulo</b> (A hasta E pasando por los nodos 4, 5 y 3) está constituida por: enlace A-4, conmutación interna en 4, canal 4-5, conmutación interna en 5, canal 5-3, conmutación interna en 3 y enlace 3-E. Fijate que hay <u class="w">conmutación interna en cada nodo</u>: eso es lo que "arma" el circuito.</p>
+
+  <h2 class="sec" id="analisis"><span class="n">04</span>Análisis de una red de conmutación de circuitos</h2>
+  <h3>1. Inteligencia de los nodos conmutadores</h3>
+  <ul>
+    <li>En cada enlace, a lo largo del camino, debe haber <b>disponibilidad</b> para las conexiones solicitadas (cada conexión necesita un <b>espacio propio</b> en el enlace).</li>
+    <li>Cada nodo debe poder realizar la <b>conmutación interna</b> para establecer la conexión.</li>
+    <li>En definitiva, los nodos deben tener la <b>inteligencia</b> para hacer estas reservas y establecer una ruta a través de la red.</li>
+  </ul>
+
+  <h3>2. Eficiencia en el uso del canal</h3>
+  <div class="callout key">
+    <span class="ct">El punto débil de CC — cae seguro</span>
+    Como la capacidad del canal se dedica de forma <b>permanente y exclusiva</b> a la conexión mientras dura, <u class="w">aún cuando no se transfieran datos</u>, CC puede llegar a ser <b>bastante ineficiente</b>.
+    <ul>
+      <li><mark class="s">Mediana eficiencia para voz:</mark> no se alcanza el 100 %, pero el grado de utilización es de mediano a alto.</li>
+      <li><mark class="s">Baja eficiencia para datos:</mark> en transmisiones entre computadores, es posible que el canal esté <b>libre la mayor parte del tiempo</b> que dura la conexión.</li>
+    </ul>
+  </div>
+
+  <h3>3. Prestaciones</h3>
+  <ul>
+    <li><b>Retardo previo:</b> existe un retardo por el tiempo de <b>establecimiento</b> de la conexión. Pero una vez establecido el circuito, la conexión es <mark class="p">transparente</mark> para los usuarios.</li>
+    <li><b>Transmisión de la información:</b> se realiza a <b>velocidad fija</b>, sin otro retardo que el de <b>propagación</b> por los enlaces, siendo <u class="w">despreciable el retardo introducido por cada nodo</u> de la ruta.</li>
+  </ul>
+
+  <h2 class="sec" id="telef"><span class="n">05</span>Red de telefonía pública: estructura jerárquica</h2>
+  <dl class="defs">
+    <dt><mark class="p">1. Abonados</mark></dt>
+    <dd>Los dispositivos de usuario que se conectan a la red. La mayoría siguen siendo los <b>teléfonos</b>.</dd>
+    <dt><mark class="p">2. Lazo local</mark> (línea de abonado)</dt>
+    <dd>El acceso entre el usuario y la red. Longitud típica de <u class="w">5 km</u>, usando <b>cable de par trenzado (UTP)</b> en casi todas las conexiones. A veces alcanza varias decenas de km, y ahí se requieren <b>amplificadores, radioenlaces o fibra óptica</b>.</dd>
+    <dt><mark class="p">3. Centrales de conmutación</mark></dt>
+    <dd>Switches telefónicos que conmutan los pedidos de conexión. Dos categorías:
+      <ul>
+        <li><b>Central final:</b> conecta a miles de abonados en un área geográfica (un barrio, una población pequeña). En un país puede haber <b>miles</b> de centrales finales; es imposible tender un enlace directo entre cada par.</li>
+        <li><b>Nodo de conmutación intermedio:</b> conecta a varias centrales finales; a su vez, varios de estos nodos se conectan a uno de mayor jerarquía, conformando la <b>estructura jerárquica</b>.</li>
+      </ul>
+    </dd>
+    <dt><mark class="p">4. Línea troncal</mark></dt>
+    <dd>El <b>enlace entre centrales públicas</b>. Puede transportar hasta <b>decenas o centenas de miles de canales de voz</b> mediante <mark class="s">TDM sincrónica</mark> o <mark class="s">DWDM</mark> por fibra óptica. Su capacidad responde a las <b>jerarquías digitales</b> del módulo anterior (E1–E5). El transporte lo realiza el sistema de transmisión público por su <b>backbone de fibra óptica</b>.</dd>
+  </dl>
+  <div class="callout link">
+    <span class="ct">Conexión directa con el Módulo 3</span>
+    Acá se ve para qué servía todo el módulo de multiplexión: las <b>líneas troncales</b> entre centrales usan TDM sincrónica (E1/E2/…) y DWDM. La jerarquía PDH que calculaste en M3 es literalmente la capacidad de estas troncales.
+  </div>
+
+  <h2 class="sec" id="bus"><span class="n">06</span>Implementación: el conmutador digital y el bus TDM</h2>
+  <ul>
+    <li>La mayoría de los conmutadores de circuitos modernos usan <mark class="p">multiplexión por división en el tiempo</mark> para establecer y mantener los circuitos.</li>
+    <li>Implica <b>partir la cadena de bits de menor velocidad en fragmentos</b> que compartirán una cadena de mayor velocidad con otras líneas de entrada.</li>
+    <li>Los fragmentos se manipulan por la <b>lógica de control</b> para encaminar los datos desde la entrada a la salida.</li>
+  </ul>
+  <div class="callout diagram">
+    <span class="ct">Qué muestra el diagrama (slide "Conmutador Digital, el bus TDM")</span>
+    Tiene tres partes:
+    <ul>
+      <li><b>(a)</b> La equivalencia entre un <b>conmutador de bus TDM</b> y un <b>MUX + DEMUX TDM</b> que mantienen <u class="w">n pares de conexiones dedicadas entre 2n líneas</u>. O sea: si el conmutador tiene 2n líneas, en realidad está manejando n pares conectados entre sí.</li>
+      <li><b>(b) Trama en transmisión en un solo sentido (half duplex):</b> la trama está formada por <b>n muestras</b> — <u class="w">1 ranura temporal por cada par</u> de líneas conectadas.</li>
+      <li><b>(c) Trama en transmisión full duplex:</b> la trama está formada por <b>2n muestras</b> — <u class="w">2 ranuras temporales por cada par</u> (una para cada sentido).</li>
+    </ul>
+    <b>De acá salen las cuentas del ejercicio:</b> half duplex ⇒ 1 ranura por par; full duplex ⇒ 2 ranuras por par.
+  </div>
+  <div class="callout key">
+    <span class="ct">Los tres tipos de conmutador (memorizar)</span>
+    <ul>
+      <li><mark class="p">No bloqueante:</mark> puede atender <b>todas las líneas simultáneamente</b>. El bus se dimensiona para el 100 % de las conexiones posibles.</li>
+      <li><mark class="p">Bloqueante:</mark> <b>no</b> soporta todas a la vez; se dimensiona según el <b>uso real esperado</b>. Si se supera, hay llamadas bloqueadas.</li>
+      <li><mark class="p">Con retardo en el bus:</mark> variante que introduce retardo (el módulo la muestra en modo full dúplex).</li>
+    </ul>
+  </div>
+
+  <h2 class="sec" id="ej-bus"><span class="n">07</span>Ejercicio del bus TDM resuelto (del módulo)</h2>
+  <div class="calc">
+    <span class="ct">Enunciado</span>
+    Una central telefónica sencilla tiene <b>5.000 líneas telefónicas digitales</b> que transmiten un <b>15 % del tiempo</b>. Calcular la velocidad mínima del bus TDM para: (1) bloqueante half dúplex, (2) bloqueante full dúplex, (3) no bloqueante half dúplex, (4) no bloqueante full dúplex.
+    <span class="ct" style="margin-top:10px">Paso previo: pasar de líneas a pares</span>
+    <div class="step">Cada canal de voz digital = <span class="res">64 kbps</span> (PCM, del módulo 3)
+<br>2n líneas ⇒ n pares  →  5.000 líneas = <span class="res">2.500 pares</span></div>
+    <span class="ct">Bloqueante (se dimensiona al uso real: 15 %)</span>
+    <div class="step">1) <b>half dúplex</b> (1 ranura por par):
+<br>2.500 pares × 0,15 = 375 pares activos
+<br>375 × 64 kbps = <span class="res">24 Mbps</span></div>
+    <div class="step">2) <b>full dúplex</b> (2 ranuras por par):
+<br>375 × 2 × 64 kbps = <span class="res">48 Mbps</span></div>
+    <span class="ct">No bloqueante (soporta TODAS a la vez ⇒ NO se aplica el 15 %)</span>
+    <div class="step">3) <b>half dúplex</b>: 2.500 × 64 kbps = <span class="res">160 Mbps</span></div>
+    <div class="step">4) <b>full dúplex</b>: 2.500 × 2 × 64 kbps = <span class="res">320 Mbps</span></div>
+  </div>
+  <div class="callout warn">
+    <span class="ct">El error fácil en este ejercicio</span>
+    Aplicarle el <b>15 % al caso no bloqueante</b>. No corresponde: "no bloqueante" significa justamente que <u class="w">puede atender todas las líneas al mismo tiempo</u>, así que se dimensiona al 100 %. El 15 % es <b>solo</b> para el bloqueante, que apuesta a que no hablan todos juntos.
+  </div>
+
+  <h2 class="sec" id="ej-cc"><span class="n">08</span>Ejercicio de conmutación de circuitos resuelto</h2>
+  <div class="calc">
+    <span class="ct">Enunciado (del módulo)</span>
+    Transmitir un fichero de <b>30 MBytes</b> por una red de conmutación de circuitos. Atraviesa <b>4 conmutadores</b> intermedios. Establecimiento = <b>0,5 s</b>, liberación = <b>0,5 s</b>, enlaces de <b>3 Mbps</b>, procesamiento despreciable, cada enlace mide 1 km y el retardo de propagación por salto es <b>5 µs</b>.
+    <span class="ct" style="margin-top:10px">Resolución</span>
+    <div class="step">Saltos: 4 conmutadores ⇒ <span class="res">5 enlaces (saltos)</span>
+<br>(regla: saltos = nodos + 1)</div>
+    <div class="step">Tiempo de transmisión:
+<br>L = 30 MB = 30 × 10⁶ × 8 = 240.000.000 bits
+<br>T_tx = L / B = 240.000.000 / 3.000.000 = <span class="res">80 s</span></div>
+    <div class="step">Propagación: 5 saltos × 5 µs = 25 µs  →  <span class="res">despreciable</span></div>
+    <div class="step">TOTAL = establecimiento + transmisión + propagación + liberación
+<br>= 0,5 + 80 + 0,000025 + 0,5 ≈ <span class="res">81 s</span></div>
+  </div>
+  <div class="callout key">
+    <span class="ct">Lo importante de este ejercicio</span>
+    En CC, el mensaje <b>NO se fracciona</b> y <u class="w">se transmite una sola vez de punta a punta</u>: el circuito ya está armado, los nodos son "vía de paso". Por eso <b>T_tx = L/B</b> y no se multiplica por la cantidad de saltos. Los nodos <b>no almacenan</b> el mensaje.
+  </div>
+  <p class="tnote">Nota: usé 1 MB = 10⁶ bytes, que es lo que da el número redondo (80 s). Si tu cátedra usa 1 MB = 2²⁰ bytes, daría 83,89 s de transmisión y 84,89 s en total. El TP4 tiene el mismo ejercicio con 10 MB, 100 Mbps y 2 conmutadores: T_tx = 0,8 s + 1 s de establecimiento/liberación ≈ <b>1,80 s</b>.</p>
+
+  <hr>
+
+  <h2 class="sec" id="cp"><span class="n">09</span>Conmutación de paquetes: objetivo y funcionamiento</h2>
+  <p><b>Objetivo:</b> hacer más eficiente el servicio que provee la conmutación de circuitos.</p>
+  <div class="callout key">
+    <span class="ct">La limitación de CC que CP viene a resolver: ineficiencia de línea</span>
+    La transmisión de datos entre computadores y dispositivos digitales es <mark class="p">en forma de ráfagas</mark>, de relativa corta duración:
+    <ul>
+      <li>La presencia de datos en la línea es normalmente <u class="w">menor que el 20 % del tiempo total</u>; la línea permanece la mayor parte del tiempo desocupada.</li>
+      <li>CC debe comprometer <b>alta cantidad de recursos</b> para proveer un canal dedicado.</li>
+    </ul>
+  </div>
+  <p><b>Cómo funciona el envío:</b></p>
+  <ul>
+    <li>Los datos se fraccionan en varios <mark class="p">paquetes</mark>. Longitud típica: <u class="w">entre 50 y 1.500 bytes</u> (depende de la tecnología de red).</li>
+    <li><b>Composición del paquete:</b> una porción de los datos de usuario + una <b>cabecera</b> con información de control necesaria para el envío por la red.</li>
+    <li>Los paquetes son enviados por el dispositivo de usuario al nodo conmutador al que está conectado.</li>
+    <li>El nodo <b>inspecciona la cabecera</b> de cada paquete y, en base a ese dato y a la información que el propio nodo contiene, lo <b>reenvía (rutea)</b> al nodo siguiente en dirección al destino final.</li>
+    <li>Cada nodo <b>almacena</b> el paquete, determina el próximo tramo y lo <b>encola</b> para enviarlo cuando el enlace esté disponible (esto se llama <mark class="s">store-and-forward</mark>).</li>
+  </ul>
+
+  <h2 class="sec" id="ventajas"><span class="n">10</span>Las 4 ventajas de paquetes sobre circuitos</h2>
+  <div class="callout key">
+    <span class="ct">Las cuatro, en orden (pregunta típica de oral)</span>
+    <ul>
+      <li><b>1. Mayor eficiencia de línea.</b> En CP el enlace nodo-nodo es un único canal <u class="w">dinámicamente compartido</u> por paquetes de distintas fuentes, que se encolan y transmiten lo más rápido posible. En CC el enlace consta de varios canales TDM, cada uno asignado a una conexión específica — y pueden quedar <b>canales desocupados</b> asignados a conexiones que no los usan.</li>
+      <li><b>2. Conversión de velocidad de transmisión.</b> Estaciones de <b>diferentes velocidades</b> pueden intercambiar paquetes, porque cada estación establece con el nodo de la red una velocidad apropiada para ambos.</li>
+      <li><b>3. Aceptación de paquetes en condiciones adversas.</b> En CC, con alto tráfico la red <b>rehúsa</b> nuevos pedidos de conexión (llamadas bloqueadas). En CP los paquetes <b>se aceptan igual</b>, a costa de más retardo; el bloqueo sólo ocurre en condiciones muy extremas (p. ej. caída del nodo al que está conectada la estación).</li>
+      <li><b>4. Uso de prioridades.</b> Un nodo con paquetes en cola puede decidir enviar <b>primero los de mayor prioridad</b>, que tendrán menos retardo. Esto permite manejar diversidad de <mark class="s">QoS</mark>.</li>
+    </ul>
+  </div>
+  <div class="callout note">
+    <span class="ct">La pregunta capciosa del TP4 (punto 1)</span>
+    El TP plantea este razonamiento falso: <i>"la conmutación de paquetes agrega bits de control y dirección a cada paquete, lo que es un coste adicional; en circuitos no hacen falta bits suplementarios; por lo tanto en circuitos la utilización de la línea es más eficiente."</i>
+    <br><br><b>Dónde está el punto débil:</b> confunde <u class="w">overhead por paquete</u> con <u class="w">eficiencia de uso de la línea</u>. Es cierto que CP agrega cabeceras, pero en CC el canal queda <b>reservado y ocioso</b> la mayor parte del tiempo (recordá: los datos están presentes menos del 20 % del tiempo). Ese desperdicio es muchísimo mayor que el de las cabeceras. La eficiencia se mide sobre <b>el tiempo total que el canal está ocupado</b>, no sobre los bits de una trama.
+  </div>
+
+  <h2 class="sec" id="datagrama"><span class="n">11</span>Técnica 1: Datagrama</h2>
+  <p><b>Característica principal:</b> cada paquete es tratado por los nodos <mark class="p">en forma independiente</mark> del resto.</p>
+  <p><b>El ejemplo del módulo:</b> A envía 3 paquetes al datacenter, todos al nodo 4. Para cada paquete el nodo 4 <b>toma una decisión de ruteo</b>. Los paquetes 1 y 2 salen hacia el nodo 5 (cola menor / enlace menos congestionado); cuando llega el turno del paquete 3, la cola hacia el nodo 1 es ahora la menor, así que lo manda por ahí.</p>
+  <div class="callout key">
+    <span class="ct">Las dos consecuencias que hay que saber</span>
+    <ul>
+      <li><b>Los paquetes no siguen la misma ruta</b> y pueden llegar <u class="w">en distinto orden</u> del que fueron enviados ⇒ el <b>destino debe reordenarlos</b>.</li>
+      <li><b>Un paquete puede destruirse</b> en la red (p. ej. si se cae el nodo que lo tiene, se pierden todos los paquetes de sus colas). Al levantarse, ese nodo <b>no tiene forma de saber</b> que el paquete se perdió ⇒ el <b>destino debe detectar la pérdida y recuperarlo</b> por algún medio.</li>
+    </ul>
+  </div>
+
+  <h2 class="sec" id="cv"><span class="n">12</span>Técnica 2: Circuito Virtual</h2>
+  <p><b>Característica principal:</b> establecer una <mark class="p">ruta predefinida</mark> antes de enviar los paquetes del mensaje.</p>
+  <p><b>La secuencia completa (para el oral):</b></p>
+  <ul>
+    <li>A envía al nodo 4 un paquete especial de control: el <mark class="s">Paquete de Pedido de Llamada</mark> (<i>Call Request Packet</i>), solicitando conexión lógica con E.</li>
+    <li>El nodo 4 rutea el pedido al nodo 5; éste al nodo 3; y éste finalmente a E.</li>
+    <li>Si E acepta, envía un <mark class="s">Paquete de Aceptación de la Conexión</mark> (<i>Call Accept Packet</i>) al nodo 3, que se pasa hacia 5, 4 y A.</li>
+    <li>Desde ese momento queda establecida la <b>conexión lógica</b>. Recién ahora A y E intercambian datos por esa ruta, que queda <b>fija mientras dure la conexión</b>: eso es el <b>circuito virtual</b>.</li>
+    <li>La cabecera de cada paquete contiene un <mark class="p">Identificador de Circuito Virtual</mark>, entre otros parámetros.</li>
+    <li>Al final, una de las estaciones cierra enviando un <mark class="s">Paquete de Finalización de Pedido</mark> (<i>Clear Request Packet</i>). La conexión puede ser <b>transitoria o permanente</b>.</li>
+  </ul>
+  <div class="callout key">
+    <span class="ct">La conclusión clave</span>
+    En la ruta preestablecida, <u class="w">cada nodo ya tiene decidido por dónde dirigir los paquetes</u>: no necesita tomar decisiones de ruteo para cada paquete. Todos los paquetes de A a E atravesarán indefectiblemente los nodos 4, 5 y 3.
+    <br><br>Se llama <b>"virtual"</b> porque todos los paquetes siguen la misma ruta, <b>pero esto NO implica que sea un canal dedicado</b> como en la conmutación de circuitos.
+  </div>
+
+  <h2 class="sec" id="cv-cc"><span class="n">13</span>Circuito Virtual vs Conmutación de Circuitos</h2>
+  <p><b>Similitudes:</b> los datos siguen la misma ruta por la red, y antes de enviar el mensaje debe establecerse una conexión.</p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Diferencia</th><th>Conmutación de Circuitos</th><th>Circuito Virtual</th></tr></thead>
+    <tbody>
+      <tr><td>Tipo de conexión</td><td><b>Física</b> (señales)</td><td><b>Lógica</b> (mediante protocolos)</td></tr>
+      <tr><td>Disponibilidad</td><td>Total y <b>exclusiva</b> para un canal</td><td>Se <b>comparte</b> todo el enlace con paquetes de distintos CV</td></tr>
+      <tr><td>Cantidad</td><td>Una <b>única</b> conexión entre 2 dispositivos extremos</td><td>Una estación puede tener <b>varios CV</b> a la vez, con una o varias estaciones</td></tr>
+      <tr><td>Almacenamiento en nodos</td><td><b>NO hay.</b> El nodo es una vía de paso (conexión física entrada-salida)</td><td><b>SÍ hay.</b> El nodo inspecciona la cabecera y encola el paquete según el CV</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 class="sec" id="cv-dg"><span class="n">14</span>Circuito Virtual vs Datagrama</h2>
+  <p><b>La diferencia de fondo:</b> en CV los nodos <b>no</b> deciden ruteo por paquete (la ruta ya está fijada; la decisión se toma <u class="w">una sola vez</u>). En datagrama, los nodos <b>deben</b> decidir el ruteo <b>de cada paquete</b>.</p>
+  <div class="vs">
+    <div class="col">
+      <h4><mark class="p">Ventajas del CV</mark></h4>
+      <ul>
+        <li><b>Provisión de servicios de red:</b>
+          <ul>
+            <li><b>Control de secuenciamiento:</b> al seguir la misma ruta, los paquetes llegan <b>en el mismo orden</b> de partida.</li>
+            <li><b>Control de error y de pérdidas:</b> asegura que todos lleguen correctamente; el control de pérdidas es más sencillo (un nodo puede pedirle la retransmisión al anterior del mismo CV).</li>
+          </ul>
+        </li>
+        <li><b>Tránsito veloz:</b> una vez establecida la conexión, los paquetes transitan <b>más rápido</b> que en datagrama, al no demorar en decidir el ruteo en cada nodo.</li>
+      </ul>
+      <p class="tnote">Se ponen de manifiesto cuando dos estaciones intercambian datos por un <b>tiempo prolongado</b>.</p>
+    </div>
+    <div class="col">
+      <h4><mark class="p">Ventajas del Datagrama</mark></h4>
+      <ul>
+        <li><b>Evita la fase de establecimiento de llamada.</b> Ventajoso cuando se envían <b>pocos paquetes</b> (comunicación de corta duración).</li>
+        <li><b>Más flexible</b> (por ser una técnica más primitiva): si aparece congestión en un sector, los datagramas no enviados pueden rutearse por otro lugar. Con CV, a la red le es <b>más difícil adaptarse</b> a la congestión.</li>
+        <li><b>Mayor confiabilidad</b> ante caídas: si se cae un nodo o enlace, <b>en CV se caen todos los circuitos virtuales</b> que pasan por ahí; <b>en datagrama</b> los paquetes siguientes encuentran una <b>ruta alternativa</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 class="sec" id="tamano"><span class="n">15</span>Influencia del tamaño del paquete + overhead</h2>
+  <p>El módulo analiza un mensaje de <b>40 bytes</b> que va de la estación X al nodo a, luego a b, y de ahí a Y (<b>3 transmisiones</b> si va entero). La cabecera es de <b>3 bytes</b> por paquete.</p>
+  <div class="calc">
+    <span class="ct">Los cuatro casos (en "tiempo-byte" = tiempo de transmitir un byte)</span>
+    <div class="step"><b>Caso 1 — 1 paquete</b> de 40 datos + 3 cabecera = 43 bytes:
+<br>Cada nodo debe recibirlo <b>entero</b> antes de retransmitir.
+<br>43 × 3 transmisiones = <span class="res">129 tiempo-byte</span></div>
+    <div class="step"><b>Caso 2 — 2 paquetes</b> de 20 datos + 3 = 23 bytes c/u:
+<br>El nodo "a" empieza a transmitir el paquete 1 <b>ni bien le llega</b>, sin esperar al 2 (¡solapamiento!).
+<br>23 × 4 transmisiones = <span class="res">92 tiempo-byte</span> ✔ mejora</div>
+    <div class="step"><b>Caso 3 — 5 paquetes</b> de 8 datos + 3 = 11 bytes c/u:
+<br>11 × 7 transmisiones = <span class="res">77 tiempo-byte</span> ✔ mejora más</div>
+    <div class="step"><b>Caso 4 — 10 paquetes</b> de 4 datos + 3 = 7 bytes c/u:
+<br>7 × 12 transmisiones = <span class="res">84 tiempo-byte</span> ✘ <b>EMPEORA</b>
+<br>porque la cabecera es de <b>longitud fija</b>: más paquetes ⇒ más cabeceras ⇒ más overhead</div>
+  </div>
+  <div class="callout key">
+    <span class="ct">La conclusión y la fórmula</span>
+    <div class="formula">Overhead = (tamaño de cabecera) / (tamaño total del paquete)</div>
+    <br>Lo óptimo es <b>tamaño mínimo de paquete</b> (más fraccionamiento ⇒ menor tiempo de envío), <u class="w">pero</u> teniendo en cuenta:
+    <ul>
+      <li><b>Tamaño mínimo de cabecera:</b> con mucho fraccionamiento, la cabecera puede <b>neutralizar el beneficio</b>.</li>
+      <li><b>Mínima información en cabecera:</b> para reducir el tiempo de procesamiento por paquete y así el retardo.</li>
+    </ul>
+    Además: este ejemplo <b>no</b> considera los retardos de procesamiento y colas en los nodos, que son <b>mayores cuantos más paquetes</b> haya. O sea, en la realidad el caso 4 es todavía peor.
+  </div>
+  <div class="callout warn">
+    <span class="ct">Corrección a tu resumen</span>
+    En tu <code>Resumen_Módulo_IV</code> figura <i>"Caso 3: si se fracciona el mensaje en <b>4</b> paquetes el tiempo total es de 77 tiempo-byte"</i>. Son <u class="w"><b>5</b> paquetes</u>, no 4: la cuenta es 11 bytes × 7 transmisiones = 77, y eso sale de 40/5 = 8 bytes de datos + 3 de cabecera = 11. La slide del módulo rotula el gráfico como "(3) Mensaje de <b>5</b> paquetes".
+  </div>
+  <div class="callout diagram">
+    <span class="ct">Qué muestra el diagrama (slide "Influencia del tamaño del paquete")</span>
+    Son <b>cuatro diagramas de tiempo en paralelo</b>, todos con las mismas cuatro columnas verticales: <b>X → a → b → Y</b> (estación origen, dos nodos, estación destino). El tiempo corre hacia abajo. En cada uno se ven los bloques "Cabecera + Dato" bajando en escalera de una columna a la siguiente. Rotulados: <b>(1) Mensaje de 1 paquete</b>, <b>(2) Mensaje de 2 paquetes</b>, <b>(3) Mensaje de 5 paquetes</b>, <b>(4) Mensaje de 10 paquetes</b>. Lo que se ve a simple vista es cómo, al fraccionar, las escaleras <b>se solapan</b> (el nodo a ya está mandando el paquete 1 mientras recibe el 2) y el total baja… hasta que en el (4) las cabeceras acumuladas lo vuelven a estirar.
+  </div>
+
+  <h2 class="sec" id="retardos"><span class="n">16</span>Análisis de retardos: el tiempo total de transmisión</h2>
+  <div class="callout diagram">
+    <span class="ct">Qué muestra el diagrama (slide "Análisis de los retardos")</span>
+    Es <b>el gráfico más importante del módulo</b> — el que te tomaron en el Quiz 4. Son <b>tres columnas comparadas lado a lado</b>, con el eje vertical = tiempo y las líneas verticales = los nodos de la red:
+    <ul>
+      <li><b>(a) Conmutación de circuitos:</b> baja una <b>señal de solicitud de llamada</b> en diagonal por todos los nodos, sube la <b>señal de confirmación de llamada</b>, y recién ahí baja el bloque grande de <b>tiempo de transmisión</b> del mensaje (una sola pieza, sin cortes).</li>
+      <li><b>(b) Circuito virtual:</b> baja el <b>paquete de solicitud de llamada</b> con <u class="w">retardo de procesamiento en cada nodo</u> (marcado con escaloncitos), sube el <b>paquete de confirmación</b>, y después bajan <b>Paq.1, Paq.2, Paq.3</b> en escalera solapada.</li>
+      <li><b>(c) Datagramas:</b> <b>no hay fase de establecimiento</b>: los paquetes 1, 2 y 3 bajan directo en escalera, pero <u class="w">cada uno con su retardo de procesamiento (ruteo + cola) en cada nodo</u>.</li>
+    </ul>
+    <b>Los tres tipos de retardo que hay que saber identificar en el gráfico</b> (esto fue pregunta textual del Quiz 4): el segmento <b>vertical grueso</b> = <mark class="p">transmisión</mark> (poner los bits en el enlace); el segmento <b>diagonal</b> = <mark class="p">propagación</mark> (viaje por el medio); el <b>escaloncito horizontal dentro del nodo</b> = <mark class="p">procesamiento</mark> (ruteo y cola).
+  </div>
+
+  <h3>Cómo se compone cada técnica</h3>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Técnica</th><th>Establecimiento</th><th>Envío del mensaje</th><th>Desconexión</th></tr></thead>
+    <tbody>
+      <tr><td>Conmutación<br>de circuitos</td>
+        <td><b>Petición de llamada:</b> transmisión + propagación + <b>procesamiento en el nodo</b><br><b>Aceptación:</b> igual pero <u>sin</u> retardo en el nodo (la ruta ya se estableció al pasar la petición)</td>
+        <td>Transmisión + propagación<br><b>(sin retardo en nodos)</b></td>
+        <td>Ídem aceptación (sin retardo en nodos)</td></tr>
+      <tr><td>Circuito<br>virtual</td>
+        <td><b>Petición:</b> transmisión + propagación + procesamiento<br><b>Aceptación:</b> acá <u>SÍ</u> hay procesamiento en nodos (testeo del nº de CV + retardo por colas)</td>
+        <td>Fraccionado en paquetes. Tiene todos los retardos, pero <b>menos retardo en nodos que datagrama</b> porque no hay ruteo por paquete</td>
+        <td>Paquete de pedido de desconexión (ídem aceptación)</td></tr>
+      <tr><td>Datagrama</td>
+        <td><b>No hay</b></td>
+        <td>Transmisión + propagación + retardo en el nodo (<b>colas de entrada y salida + procesamiento por ruteo</b>)</td>
+        <td><b>No hay</b> (no existe conexión previa)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout warn">
+    <span class="ct">Corrección a tu resumen (importante)</span>
+    En tu <code>Resumen_Módulo_IV</code>, bajo el título <i>"Análisis de retardos: <b>Circuito Virtual Conmutado</b>"</i> escribiste <i>"Aceptación de llamada: igual que petición <b>pero sin retardo en el nodo</b>"</i>. Eso es la descripción de la <u class="w">Conmutación de Circuitos</u>, no del CV. En <b>circuito virtual SÍ hay retardo de procesamiento</b> en la aceptación (testeo del número de CV y colas). Te faltó además la sección de CC. La tabla de arriba tiene las tres bien separadas.
+  </div>
+
+  <h3>Las fórmulas del tiempo total</h3>
+  <div class="calc">
+    <span class="ct">Fórmulas generales</span>
+    <div class="step">Parámetros estándar (los usa el módulo, el TP y el parcial):
+<br>L = longitud del mensaje (bits)    ·  B = velocidad de transmisión (bps)
+<br>N = número de <b>saltos</b> (= nodos + 1)  ·  P = tamaño del paquete
+<br>H = bits de cabecera por paquete   ·  S = tiempo de establecimiento
+<br>D = retardo de propagación por salto
+<br>F = retardo por nodo en <b>CV</b> (nº de CV + cola)  ·  G = retardo por nodo en <b>datagrama</b> (ruteo + cola)</div>
+    <div class="step"><b>Conmutación de circuitos</b> (el mensaje va entero, una sola vez):
+<br><span class="res">T = S + L/B + N·D  (+ liberación)</span></div>
+    <div class="step"><b>Paquetes — el término clave, el "pipeline":</b>
+<br>Np = número de paquetes  ·  Tp = tiempo de transmitir 1 paquete = (P+H)/B
+<br><span class="res">tiempo de pipeline = (Np + N − 1) · Tp</span>
+<br>¿Por qué? El <b>último</b> paquete espera a que salgan los (Np−1) anteriores por el primer enlace,
+<br>y después hace su propio recorrido de N saltos. Los demás van solapados detrás.</div>
+    <div class="step"><b>Circuito virtual:</b>
+<br><span class="res">T = S + (Np + N − 1)·Tp + N·D + (procesamiento CV) + liberación</span></div>
+    <div class="step"><b>Datagrama:</b>
+<br><span class="res">T = (Np + N − 1)·Tp + N·D + (procesamiento de ruteo)</span></div>
+  </div>
+  <div class="callout warn">
+    <span class="ct">Ojo con el resumen práctico</span>
+    Tu <code>Resumen_Practico_M4</code> da la fórmula de datagrama como <code>(L/P) × (T_tx + H/B) + N × T_prop</code>. Esa fórmula <b>no contempla el store-and-forward</b>: le falta el término <u class="w">(N − 1)</u> que representa que el mensaje debe retransmitirse en cada salto. Con esa fórmula el resultado da bastante más bajo de lo que corresponde. La correcta es <b>(Np + N − 1)·Tp</b>.
+  </div>
+  <div class="callout key">
+    <span class="ct">La regla de oro para no marearse</span>
+    <ul>
+      <li><b>En CC el mensaje se transmite UNA vez</b> (circuito armado, nodos transparentes) ⇒ <code>L/B</code>.</li>
+      <li><b>En paquetes el mensaje se retransmite en CADA salto</b> (store-and-forward) ⇒ por eso aparece la N. Pero como los paquetes van <b>solapados</b>, no se multiplica todo por N: se suma <code>(Np + N − 1)</code>.</li>
+    </ul>
+  </div>
+
+  <h2 class="sec" id="ej-mod"><span class="n">17</span>Ejercicio del módulo resuelto (mensaje corto)</h2>
+  <div class="calc">
+    <span class="ct">Enunciado (slide 60)</span>
+    Una estación transmite a otra a través de una red de <b>3 nodos</b>. Calcular el retardo total para (a) CC, (b) CV y (c) datagrama.
+    <br>L = 1.280 bits · B = 64 Kbps · P = 256 bits · H = 10 bits · S = 0,1 s · D = 0,002 s · F = 0,001 s · G = 0,005 s
+    <span class="ct" style="margin-top:10px">Paso 0 — los datos derivados</span>
+    <div class="step">Saltos: 3 nodos ⇒ <span class="res">N = 4</span>
+<br>Nº de paquetes: Np = L/P = 1280/256 = <span class="res">5 paquetes</span>
+<br>Paquete completo = P + H = 266 bits
+<br>Tp = 266 / 64.000 = <span class="res">4,156 ms</span></div>
+    <span class="ct">a) Conmutación de circuitos</span>
+    <div class="step">T = S + L/B + N·D
+<br>= 0,1 + (1280/64000) + 4×0,002
+<br>= 0,1 + 0,02 + 0,008 = <span class="res">0,128 s = 128 ms</span></div>
+    <span class="ct">b) Circuito virtual</span>
+    <div class="step">pipeline = (5 + 4 − 1) × 4,156 ms = 8 × 4,156 = 33,25 ms
+<br>procesamiento = 3 nodos × 5 paquetes × F(0,001) = 15 ms
+<br>T = 0,1 + 0,03325 + 0,008 + 0,015 = <span class="res">0,156 s = 156 ms</span></div>
+    <span class="ct">c) Datagrama</span>
+    <div class="step">pipeline = 33,25 ms  (igual)
+<br>procesamiento = 3 nodos × 5 paquetes × G(0,005) = 75 ms
+<br>T = 0,03325 + 0,008 + 0,075 = <span class="res">0,116 s = 116 ms</span></div>
+    <span class="ct">Conclusión</span>
+    <div class="step">Datagrama (116 ms) &lt; CC (128 ms) &lt; CV (156 ms)
+<br><span class="res">Gana DATAGRAMA</span> — porque el mensaje es <b>corto</b> (sólo 5 paquetes)
+<br>y no paga el establecimiento de 0,1 s que sí pagan CC y CV.</div>
+  </div>
+
+  <h2 class="sec" id="ej-parcial"><span class="n">18</span>Ejercicio del 1er parcial resuelto (mensaje largo)</h2>
+  <div class="calc">
+    <span class="ct">Enunciado (textual del parcial)</span>
+    Se necesita contratar una red de conmutación de paquetes para comunicar un mensaje entre 2 dispositivos. La red puede proveer <b>datagrama</b> o <b>circuito virtual</b>. Determinar qué servicio da <b>menos tiempo de transmisión</b>.
+    <ul>
+      <li>Número de nodos de la red: <b>4</b></li>
+      <li>Longitud del mensaje: <b>1.200 Bytes</b></li>
+      <li>Tamaño fijo del paquete: <b>256 bits</b></li>
+      <li>Cabecera del paquete: <b>2 Bytes</b></li>
+      <li>Velocidad de transmisión: <b>100 Kbps</b></li>
+      <li>Establecimiento de la llamada (incluye confirmación): <b>1 ms</b></li>
+      <li>Liberación de la llamada: <b>0,05 ms</b></li>
+      <li>Procesamiento de ruteo en cada nodo: <b>0,01 ms</b></li>
+      <li>Propagación en cada nodo: <b>0,001 ms</b></li>
+    </ul>
+    <span class="ct" style="margin-top:10px">Paso 0 — datos derivados</span>
+    <div class="step">L = 1.200 B × 8 = <span class="res">9.600 bits</span>
+<br>Cabecera = 2 B × 8 = 16 bits  ⇒  datos por paquete = 256 − 16 = <span class="res">240 bits</span>
+<br>Np = 9.600 / 240 = <span class="res">40 paquetes</span>  (da entero ✓)
+<br>Saltos: 4 nodos ⇒ <span class="res">N = 5</span>
+<br>Tp = 256 / 100.000 = <span class="res">2,56 ms</span></div>
+    <span class="ct">Parte común a las dos técnicas</span>
+    <div class="step">pipeline = (40 + 5 − 1) × 2,56 ms = 44 × 2,56 = <span class="res">112,64 ms</span>
+<br>propagación = 5 × 0,001 = <span class="res">0,005 ms</span></div>
+    <span class="ct">a) Datagrama</span>
+    <div class="step">Cada paquete necesita decisión de ruteo en cada nodo:
+<br>procesamiento = 40 paq × 4 nodos × 0,01 ms = <span class="res">1,6 ms</span>
+<br>T = 112,64 + 0,005 + 1,6 = <span class="res">114,245 ms</span></div>
+    <span class="ct">b) Circuito virtual</span>
+    <div class="step">La ruta se decide una sola vez (en el establecimiento):
+<br>T = 1 (establec.) + 112,64 + 0,005 + 0,05 (liberación)
+<br>= <span class="res">113,695 ms</span></div>
+    <span class="ct">Conclusión</span>
+    <div class="step"><span class="res">Gana el CIRCUITO VIRTUAL</span> por 0,55 ms.
+<br>Motivo: el mensaje es <b>largo</b> (40 paquetes), así que el ruteo repetido del
+<br>datagrama (1,6 ms) supera al costo fijo de establecer + liberar el CV (1,05 ms).</div>
+  </div>
+  <div class="callout key">
+    <span class="ct">El par de ejercicios 17 y 18 es EL concepto del módulo</span>
+    Mismo método, resultado opuesto:
+    <ul>
+      <li><b>Mensaje corto</b> (5 paquetes) ⇒ gana <b>datagrama</b> (no paga establecimiento).</li>
+      <li><b>Mensaje largo</b> (40 paquetes) ⇒ gana <b>circuito virtual</b> (el establecimiento se amortiza y ahorra ruteo por paquete).</li>
+    </ul>
+    <u class="w">Ese es el punto que el Quiz 4 te preguntó como Verdadero/Falso.</u>
+  </div>
+  <div class="callout warn">
+    <span class="ct">Dos avisos honestos sobre este ejercicio</span>
+    <b>(1) La convención de P y H cambia entre enunciados.</b> Acá tomé que los <b>256 bits incluyen</b> la cabecera (datos = 240), porque así Np = 40 da entero. Pero en el ejercicio del módulo (sección 17), H son "bits <i>suplementarios</i>" que se <b>suman</b> a P (paquete = 266 bits). Regla práctica: <u class="w">probá las dos y quedate con la que dé número entero de paquetes</u>; esa es la que la cátedra quiere.
+    <br><br><b>(2) Cómo se cuenta el procesamiento.</b> Conté el retardo de ruteo <b>por paquete y por nodo</b> (40×4), que es lo que hace que el ejercicio tenga sentido (si no, la comparación sería trivial y ganaría datagrama por lejos). Si tu profe lo contara <b>una sola vez por nodo</b> (modelo estrictamente encolado), el datagrama daría 112,685 ms y ganaría él. <b>Confirmá el criterio con la resolución del profe</b> si la conseguís — el método y todos los demás números no cambian.
+  </div>
+
+  <h2 class="sec" id="trampas"><span class="n">19</span>Las trampas del Quiz 4</h2>
+  <div class="callout warn">
+    <span class="ct">Las 2 preguntas que fallaste en el Quiz 4 real (sacaste 70 %)</span>
+    <ul>
+      <li><b>"¿Qué técnica presenta menores tiempos de PROCESAMIENTO DE PAQUETES en nodos intermedios?"</b>
+        <br>Vos respondiste <i>Conmutación de circuitos</i>. La correcta es <mark class="p">Circuito Virtual</mark>.
+        <br><u class="w">Por qué:</u> la conmutación de circuitos <b>no procesa paquetes en absoluto</b> — no hay paquetes, el nodo es una vía de paso. La pregunta compara <b>entre las técnicas que usan paquetes</b>, y ahí CV tiene menos procesamiento que datagrama (no decide ruteo por paquete, sólo consulta el nº de CV). Leé bien: si la pregunta dice "de paquetes", CC queda fuera de juego.</li>
+      <li><b>"Indique los motivos de los siguientes tiempos empleados en la comunicación"</b> (arrastrar transmisión / procesamiento / propagación sobre el gráfico).
+        <br>Es identificar los tres retardos en el diagrama de tiempos. Repasá la caja violeta de la sección 16: <b>vertical grueso = transmisión</b>, <b>diagonal = propagación</b>, <b>escaloncito en el nodo = procesamiento</b>.</li>
+    </ul>
+  </div>
+  <div class="callout key">
+    <span class="ct">Las que SÍ acertaste — para no perderlas</span>
+    <ul>
+      <li><b>V/F:</b> <i>"El tiempo de transmisión total de un mensaje es independiente del número de nodos intermedios. Es sólo Longitud/Velocidad."</i> → <mark class="p">FALSO</mark>. En conmutación de paquetes cada nodo <b>retransmite</b> (store-and-forward), así que el número de saltos sí influye. Sólo en CC vale L/B.</li>
+      <li><b>V/F:</b> <i>"Datagrama presenta menores tiempos que circuito virtual siempre, sin importar la longitud del mensaje."</i> → <mark class="p">FALSO</mark>. Es justo lo que muestran los ejercicios 17 y 18: para mensajes largos gana CV.</li>
+      <li><b>"Para mensajes digitales cortos, ¿qué técnica presenta un uso más eficiente del medio?"</b> → <mark class="p">Datagrama</mark> (evita el establecimiento).</li>
+    </ul>
+  </div>
+
+  <hr>
+
+  <h2 class="sec" id="datos"><span class="n">20</span>Fórmulas y datos clave para el escrito</h2>
+  <div class="callout key">
+    <span class="ct">Fórmulas</span>
+    <ul>
+      <li><b>Saltos:</b> N = nodos + 1</li>
+      <li><b>Nº de paquetes:</b> Np = L / (datos por paquete) — verificar si P incluye o no a H</li>
+      <li><b>Tiempo de 1 paquete:</b> Tp = (P + H)/B &nbsp;·&nbsp; <b>Transmisión del mensaje:</b> L/B</li>
+      <li><b>Pipeline (paquetes):</b> (Np + N − 1) · Tp</li>
+      <li><b>CC:</b> T = S + L/B + N·D + liberación</li>
+      <li><b>CV:</b> T = S + (Np+N−1)·Tp + N·D + proc. CV + liberación</li>
+      <li><b>Datagrama:</b> T = (Np+N−1)·Tp + N·D + proc. ruteo</li>
+      <li><b>Overhead</b> = cabecera / tamaño total del paquete</li>
+      <li><b>Bus TDM:</b> half dúplex = 1 ranura por par · full dúplex = 2 ranuras por par · bloqueante aplica el % de uso, <u class="w">no bloqueante NO</u></li>
+    </ul>
+    <span class="ct" style="margin-top:10px">Datos que caen</span>
+    <ul>
+      <li><b>Lazo local:</b> longitud típica <b>5 km</b>, cable <b>UTP</b>.</li>
+      <li><b>Paquete:</b> longitud típica <b>50 a 1.500 bytes</b>.</li>
+      <li><b>Datos en la línea</b> entre dispositivos digitales: <b>menos del 20 %</b> del tiempo (por eso CC es ineficiente para datos).</li>
+      <li><b>Canal de voz</b> = 64 kbps (viene de M3).</li>
+      <li>Casos de fraccionamiento: 1 paq → <b>129</b> · 2 paq → <b>92</b> · 5 paq → <b>77</b> · 10 paq → <b>84</b> tiempo-byte.</li>
+      <li><b>Paquetes de control del CV:</b> Call Request · Call Accept · Clear Request.</li>
+      <li>Conexiones CC: <b>permanentes</b> (línea alquilada) o <b>transitorias</b> (llamada).</li>
+    </ul>
+  </div>
+
+  <h2 class="sec" id="conex"><span class="n">21</span>Conexión con otros módulos</h2>
+  <div class="callout link">
+    <span class="ct">Cómo se enlaza con el resto del programa</span>
+    <ul>
+      <li><b>Intro WAN (M1):</b> acá se desarrolla en profundidad la "técnica de transmisión" que el M1 sólo presentaba, y aparecen de nuevo PSTN, PBX e ISDN.</li>
+      <li><b>Multiplexión (M3):</b> el bus TDM del conmutador digital y las líneas troncales usan directamente TDM sincrónica y las jerarquías E1–E5. El canal de 64 kbps es el de PCM.</li>
+      <li><b>Frame Relay · ATM · MPLS (M5):</b> son <b>redes de conmutación de paquetes con circuito virtual</b>. Todo lo de CV de este módulo es el cimiento del que viene.</li>
+      <li><b>Ruteo (M7):</b> la "decisión de ruteo" que toma cada nodo en datagrama se desarrolla ahí (y el aprendizaje hacia atrás del TP4 punto 5 es un anticipo).</li>
+      <li><b>Transporte (M8):</b> el reordenamiento de paquetes y la recuperación de pérdidas que el datagrama delega en el destino es exactamente el trabajo de TCP.</li>
+    </ul>
+  </div>
+
+  <div class="callout note">
+    <span class="ct">Nota de fidelidad</span>
+    Todo sale de las slides del M4, el TP4 (2025), el Quiz 4 y la foto del ejercicio del 1er parcial. Correcciones que hice sobre tu material: <b>(1)</b> el caso 3 del fraccionamiento son <b>5 paquetes</b>, no 4; <b>(2)</b> el análisis de retardos que rotulaste como "Circuito Virtual" es en realidad el de <b>Conmutación de Circuitos</b> (en CV sí hay procesamiento en la aceptación); <b>(3)</b> la fórmula de datagrama del resumen práctico <b>omite el término (N−1)</b> del store-and-forward. Ambigüedad señalada: la convención de si P incluye la cabecera <b>cambia entre el ejercicio del módulo y el del parcial</b> (ver caja roja de la sección 18).
+  </div>
+</div>
+
+<script>
+  (function(){
+    var mem={};
+    var s; try{ s=localStorage.getItem("comii-theme"); }catch(e){ s=mem["comii-theme"]; }
+    if(s==="dark" || (!s && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+    document.getElementById("themeBtn").addEventListener("click",function(){
+      document.documentElement.classList.toggle("dark");
+      var v=document.documentElement.classList.contains("dark")?"dark":"light";
+      try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+    });
+  })();
+</script>
+</body>
+</html>

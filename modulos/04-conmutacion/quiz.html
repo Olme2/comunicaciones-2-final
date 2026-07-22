@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 4 · Conmutación — Quiz</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --card:#ffffff; --text:#1b2531; --muted:#6a7685; --border:#e4e8ee;
+    --accent:#2e6fb0; --accent-soft:#e9f1f9; --ok:#1f8a4c; --ok-bg:#e9f7ef; --ok-bd:#9fd9b6;
+    --no:#c0392b; --no-bg:#fcebea; --no-bd:#eeb4ae; --warn:#b8860b;
+    --shadow:0 1px 3px rgba(20,30,45,.06),0 1px 2px rgba(20,30,45,.04);
+  }
+  html.dark{
+    --bg:#0f141a; --card:#19212b; --text:#e6ebf1; --muted:#93a1b0; --border:#2a3542;
+    --accent:#5fa8e0; --accent-soft:#1d2c3a; --ok:#54c483; --ok-bg:#142a1e; --ok-bd:#2f6b47;
+    --no:#e06a5f; --no-bg:#2c1a19; --no-bd:#6b332f; --warn:#d6a94a;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;font-size:16px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:var(--accent-soft);color:var(--accent);padding:.05em .35em;border-radius:5px;font-size:.86em;font-family:ui-monospace,Menlo,monospace}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:780px;margin:0 auto}
+  .htop .lbl{font-size:.72rem;color:var(--muted)}
+  .htop h1{font-size:1.02rem;margin:1px 0 0;font-weight:700;letter-spacing:-.01em}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+  #shufBtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+  .stats{max-width:780px;margin:11px auto 0;display:flex;align-items:center;gap:12px}
+  .progress{flex:1;height:9px;background:var(--border);border-radius:99px;overflow:hidden}
+  #bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#5ac8a8));border-radius:99px;transition:width .35s ease}
+  #score{font-size:.8rem;white-space:nowrap}
+  #score b{color:var(--ok)} #score .pct{font-weight:800;color:var(--accent);margin-left:3px}
+
+  main{max-width:780px;margin:0 auto;padding:14px}
+  .intro{font-size:.84rem;color:var(--muted);margin:2px 4px 14px;line-height:1.5}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;margin-bottom:12px;box-shadow:var(--shadow);border-left:4px solid var(--border)}
+  .card.cok{border-left-color:var(--ok)} .card.cno{border-left-color:var(--no)}
+  .qhead{display:flex;gap:8px;align-items:center;margin-bottom:9px;flex-wrap:wrap}
+  .badge{font-size:.66rem;font-weight:700;padding:3px 8px;border-radius:7px;background:var(--accent-soft);color:var(--accent);font-family:ui-monospace,Menlo,monospace}
+  .badge.ty{background:transparent;border:1px solid var(--border);color:var(--muted)}
+  .qprompt{font-size:1rem;line-height:1.5;margin-bottom:12px;font-weight:500}
+
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opt{width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--border);color:var(--text);border-radius:11px;padding:11px 13px;font-size:.94rem;line-height:1.4;cursor:pointer;display:flex;align-items:center;gap:11px;min-height:48px;transition:border-color .12s,background .12s;font-family:inherit}
+  .opts.vf .opt{justify-content:center;font-weight:700}
+  @media(hover:hover){.opt:not(.locked):hover{border-color:var(--accent);background:var(--accent-soft)}}
+  .okey{flex:none;width:25px;height:25px;border-radius:50%;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:var(--muted)}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .okey{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .opt.ok{border-color:var(--ok-bd);background:var(--ok-bg)} .opt.ok .okey{background:var(--ok);color:#fff;border-color:var(--ok)}
+  .opt.no{border-color:var(--no-bd);background:var(--no-bg)} .opt.no .okey{background:var(--no);color:#fff;border-color:var(--no)}
+  .opt.miss{border-color:var(--ok-bd);border-style:dashed}
+  .opt.locked{cursor:default}
+
+  .btn{background:var(--accent);color:#fff;border:none;border-radius:11px;padding:10px 15px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px}
+  .btn:disabled{opacity:.5;cursor:default}
+  .fb{margin-top:11px;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px}
+  .fb.good{color:var(--ok)} .fb.bad{color:var(--no)}
+  .expl{margin-top:9px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;font-size:.88rem;line-height:1.5}
+
+  .result{display:none;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:12px;box-shadow:var(--shadow);text-align:center}
+  .result.show{display:block}
+  .result .big{font-size:3rem;font-weight:800;line-height:1;margin:6px 0}
+  .result p{color:var(--muted);font-size:.9rem;margin:6px 0 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 4 · Quiz</span><h1>Conmutación de circuitos y paquetes</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <button class="iconbtn" id="shufBtn" title="Mezclar preguntas">⤨ Mezclar</button>
+      <button class="iconbtn" id="resetBtn" title="Reiniciar quiz">↺ Reiniciar</button>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="progress"><div id="bar"></div></div>
+    <span id="score">0/40 · <b>0</b> correctas<span class="pct">0%</span></span>
+  </div>
+</header>
+
+<main>
+  <p class="intro">40 preguntas sobre el Módulo 4. Las <b>Q1 a Q5 son las reales del Quiz 4</b> (incluidas las dos que fallaste: la del procesamiento en nodos y la de identificar retardos en el gráfico). Hay varias de <b>cálculo</b> — tené lápiz y papel a mano. <b>Las opciones se mezclan solas en cada intento.</b></p>
+  <div class="result" id="result"></div>
+  <div id="quiz"></div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  var QUESTIONS = [
+    {id:1,type:"vf",prompt:"El tiempo de transmisión total de un mensaje es independiente del número de nodos intermedios. Es sólo Longitud del mensaje / Velocidad de transmisión.",
+     opts:[{t:"Verdadero"},{t:"Falso",ok:true}],
+     expl:"Pregunta real del Quiz 4. FALSO: en conmutación de paquetes cada nodo hace store-and-forward (recibe el paquete entero y lo retransmite), así que el número de saltos sí influye. La fórmula L/B sólo vale en conmutación de circuitos, donde el circuito ya está armado y los nodos son vía de paso."},
+
+    {id:2,type:"vf",prompt:"Datagrama presenta menores tiempos que circuito virtual siempre, sin importar la longitud del mensaje.",
+     opts:[{t:"Verdadero"},{t:"Falso",ok:true}],
+     expl:"Pregunta real del Quiz 4. FALSO: depende del largo. Con mensajes cortos gana datagrama (no paga el establecimiento). Con mensajes largos gana el circuito virtual, porque amortiza el establecimiento y se ahorra la decisión de ruteo de cada paquete en cada nodo."},
+
+    {id:3,type:"single",prompt:"¿Qué técnica presenta menores tiempos de procesamiento de <b>paquetes</b> en nodos intermedios?",
+     opts:[{t:"Circuito Virtual",ok:true},{t:"Conmutación de circuitos"},{t:"Datagrama"},{t:"Las tres son iguales"}],
+     expl:"Pregunta real del Quiz 4 (¡trampa!). La conmutación de circuitos NO procesa paquetes en absoluto: no hay paquetes, el nodo es una vía de paso. Por eso la comparación es entre las técnicas de paquetes, y ahí el CV tiene menos procesamiento que el datagrama, porque no decide ruteo para cada paquete: sólo consulta el número de circuito virtual."},
+
+    {id:4,type:"single",prompt:"Para mensajes digitales cortos, ¿qué técnica presenta un uso más eficiente del medio?",
+     opts:[{t:"Datagrama",ok:true},{t:"Conmutación de circuitos"},{t:"Circuito Virtual"},{t:"Conmutación de circuitos con línea alquilada"}],
+     expl:"Pregunta real del Quiz 4. Para mensajes cortos el datagrama es más eficiente porque evita por completo la fase de establecimiento de llamada, que en CC y CV representa un costo fijo que no se llega a amortizar."},
+
+    {id:5,type:"single",prompt:"En el diagrama de tiempos de una comunicación, ¿qué retardo representa el segmento <b>diagonal</b> entre dos nodos?",
+     opts:[{t:"Propagación",ok:true},{t:"Transmisión"},{t:"Procesamiento"},{t:"Establecimiento"}],
+     expl:"En el gráfico de tiempos: el segmento vertical grueso es la TRANSMISIÓN (poner los bits en el enlace), el diagonal es la PROPAGACIÓN (el viaje de la señal por el medio) y el escaloncito horizontal dentro del nodo es el PROCESAMIENTO (ruteo y colas). Esta identificación fue pregunta del Quiz 4."},
+
+    {id:6,type:"single",prompt:"¿Qué significa \"conmutar\" según la definición del módulo?",
+     opts:[{t:"Ante un pedido de conexión, el conmutador debe elegir un enlace de entre varios para enviar el mensaje hacia el destino final",ok:true},
+           {t:"Fraccionar un mensaje en paquetes de tamaño fijo"},
+           {t:"Multiplexar varias señales sobre un mismo medio físico"},
+           {t:"Convertir una señal analógica en digital antes de transmitirla"}],
+     expl:"Conmutar es elegir, entre varios enlaces disponibles, por cuál se envía el mensaje del usuario hacia su destino. Ejemplos de conmutador: PBX, central pública, switch de LAN."},
+
+    {id:7,type:"single",prompt:"En conmutación de circuitos, las conexiones pueden ser:",
+     opts:[{t:"Permanentes (línea alquilada) o transitorias (comunicación telefónica)",ok:true},
+           {t:"Sólo permanentes, porque el canal es dedicado"},
+           {t:"Sólo transitorias, porque se liberan al terminar"},
+           {t:"Lógicas o físicas, según el protocolo"}],
+     expl:"El módulo indica que las conexiones en CC pueden ser permanentes (una línea alquilada) o transitorias (una comunicación telefónica común)."},
+
+    {id:8,type:"single",prompt:"¿Cuál es el orden correcto de las fases de la conmutación de circuitos?",
+     opts:[{t:"Establecimiento del circuito → Transferencia de datos → Desconexión del circuito",ok:true},
+           {t:"Transferencia de datos → Establecimiento → Desconexión"},
+           {t:"Establecimiento → Desconexión → Transferencia"},
+           {t:"Petición de ruteo → Transferencia → Confirmación"}],
+     expl:"Las tres fases son: 1ª establecimiento del circuito (extremo a extremo, antes de transmitir nada), 2ª transferencia de datos (normalmente full duplex), 3ª desconexión (pedida por cualquiera de los dos extremos, liberando los recursos de los nodos)."},
+
+    {id:9,type:"multi",prompt:"Sobre la eficiencia del canal en conmutación de circuitos, ¿cuáles afirmaciones son correctas? (múltiple)",
+     opts:[{t:"Puede ser bastante ineficiente porque el canal se dedica aunque no se transfieran datos",ok:true},
+           {t:"Tiene mediana a alta eficiencia para transmisiones de voz",ok:true},
+           {t:"Tiene baja eficiencia para transmisiones de datos entre computadores",ok:true},
+           {t:"Alcanza el 100% de utilización del canal en voz"},
+           {t:"Es más eficiente que la conmutación de paquetes para datos en ráfagas"}],
+     expl:"CC dedica el canal de forma permanente y exclusiva mientras dura la conexión, aun sin datos. Para voz la utilización es de mediana a alta (pero no llega al 100%); para datos de computador es baja, porque el canal suele estar libre la mayor parte del tiempo."},
+
+    {id:10,type:"single",prompt:"En la red de telefonía pública, ¿cuál es la longitud típica del lazo local y con qué medio se implementa?",
+     opts:[{t:"5 km, con cable de par trenzado (UTP)",ok:true},
+           {t:"1 km, con fibra óptica"},
+           {t:"50 km, con cable coaxial"},
+           {t:"5 km, con cable coaxial"}],
+     expl:"El lazo local (o línea de abonado) es el acceso entre el usuario y la red: longitud típica de 5 km con UTP. Si llega a varias decenas de km se requieren amplificadores, radioenlaces o fibra óptica."},
+
+    {id:11,type:"single",prompt:"¿Qué es una línea troncal en la red telefónica pública?",
+     opts:[{t:"El enlace entre centrales públicas, que transporta miles de canales de voz mediante TDM sincrónica o DWDM",ok:true},
+           {t:"El acceso entre el usuario y la central local"},
+           {t:"El cable interno de la PBX de una empresa"},
+           {t:"El enlace entre el módem del abonado y el DSLAM"}],
+     expl:"La línea troncal es el enlace entre centrales públicas. Transporta hasta decenas o centenas de miles de canales de voz por TDM sincrónica o DWDM sobre fibra, y su capacidad responde a las jerarquías digitales (E1–E5)."},
+
+    {id:12,type:"single",prompt:"En un conmutador digital de bus TDM con 2n líneas, ¿cuántas ranuras temporales se asignan por par de líneas en transmisión <b>full duplex</b>?",
+     opts:[{t:"2 ranuras (una por cada sentido)",ok:true},
+           {t:"1 ranura"},
+           {t:"n ranuras"},
+           {t:"Ninguna, el full duplex no usa ranuras"}],
+     expl:"Según la slide del bus TDM: en transmisión en un solo sentido (half duplex) la trama tiene n muestras, o sea 1 ranura por par. En full duplex la trama tiene 2n muestras: 2 ranuras por par, una para cada sentido."},
+
+    {id:13,type:"single",prompt:"Una central tiene 5.000 líneas digitales que transmiten el 15% del tiempo. ¿Cuál es la velocidad mínima del bus TDM <b>bloqueante half dúplex</b>?",
+     opts:[{t:"24 Mbps",ok:true},{t:"48 Mbps"},{t:"160 Mbps"},{t:"320 Mbps"}],
+     expl:"5.000 líneas = 2.500 pares. Bloqueante ⇒ se dimensiona al uso real: 2.500 × 0,15 = 375 pares activos. Half dúplex ⇒ 1 ranura por par: 375 × 64 kbps = 24 Mbps."},
+
+    {id:14,type:"single",prompt:"Misma central (5.000 líneas, 15% del tiempo). ¿Cuál es la velocidad mínima del bus TDM <b>no bloqueante full dúplex</b>?",
+     opts:[{t:"320 Mbps",ok:true},{t:"96 Mbps"},{t:"160 Mbps"},{t:"48 Mbps"}],
+     expl:"No bloqueante significa que atiende TODAS las líneas simultáneamente, así que NO se aplica el 15%. 2.500 pares × 2 ranuras (full dúplex) × 64 kbps = 320 Mbps. Error típico: aplicarle el porcentaje de uso al caso no bloqueante."},
+
+    {id:15,type:"single",prompt:"Se transmite un fichero de 30 MBytes por conmutación de circuitos: 4 conmutadores, establecimiento y liberación de 0,5 s cada uno, enlaces de 3 Mbps, propagación despreciable. ¿Cuál es el tiempo total aproximado?",
+     opts:[{t:"81 s",ok:true},{t:"80 s"},{t:"400 s"},{t:"81 ms"}],
+     expl:"L = 30 MB × 8 = 240.000.000 bits. T_tx = 240.000.000/3.000.000 = 80 s. Total = 0,5 (establecimiento) + 80 (transmisión) + propagación despreciable + 0,5 (liberación) = 81 s. Clave: en CC el mensaje se transmite UNA sola vez, no se multiplica por los saltos."},
+
+    {id:16,type:"single",prompt:"¿Cuál es la limitación de la conmutación de circuitos que la conmutación de paquetes viene a resolver?",
+     opts:[{t:"La ineficiencia de línea: los datos digitales viajan en ráfagas y la línea está desocupada la mayor parte del tiempo",ok:true},
+           {t:"La imposibilidad de transmitir voz digitalizada"},
+           {t:"La falta de un identificador de circuito en la cabecera"},
+           {t:"Que no puede usar fibra óptica en las troncales"}],
+     expl:"La transmisión entre dispositivos digitales es en forma de ráfagas de corta duración: la presencia de datos en la línea es normalmente menor al 20% del tiempo total, y CC compromete muchos recursos para mantener un canal dedicado que está ocioso."},
+
+    {id:17,type:"single",prompt:"¿Cuál es la longitud típica de un paquete según el módulo?",
+     opts:[{t:"Entre 50 y 1.500 bytes, según la tecnología de red",ok:true},
+           {t:"Exactamente 53 bytes"},
+           {t:"Entre 1 y 50 bytes"},
+           {t:"256 bits fijos"}],
+     expl:"El módulo indica que la longitud típica del paquete está entre 50 y 1.500 bytes, dependiendo de la tecnología de red. (Los 53 bytes son la celda ATM, que es otra cosa.)"},
+
+    {id:18,type:"multi",prompt:"¿Cuáles son ventajas de la conmutación de paquetes sobre la de circuitos? (múltiple)",
+     opts:[{t:"Mayor eficiencia de línea: el enlace es un canal compartido dinámicamente",ok:true},
+           {t:"Conversión de velocidad: estaciones de distinta velocidad pueden intercambiar paquetes",ok:true},
+           {t:"Aceptación de paquetes en condiciones adversas (a costa de más retardo)",ok:true},
+           {t:"Uso de prioridades: el nodo puede enviar primero los paquetes prioritarios",ok:true},
+           {t:"Retardo constante y garantizado extremo a extremo"}],
+     expl:"Las cuatro ventajas del módulo son: eficiencia de línea, conversión de velocidad, aceptación en condiciones adversas y uso de prioridades (QoS). El retardo constante y garantizado es precisamente una característica de la conmutación de CIRCUITOS, no de paquetes."},
+
+    {id:19,type:"single",prompt:"En una red congestionada, ¿qué diferencia hay entre CC y CP?",
+     opts:[{t:"En CC se rehúsan nuevos pedidos de conexión (llamadas bloqueadas); en CP los paquetes se aceptan igual pero con más retardo",ok:true},
+           {t:"En CC los paquetes se aceptan igual; en CP se bloquean las conexiones"},
+           {t:"En ambas se bloquean las nuevas conexiones por igual"},
+           {t:"En ninguna hay bloqueo, la congestión no afecta"}],
+     expl:"En CC, cuando las conexiones existentes ocupan toda la capacidad, la red rehúsa aceptar nuevos pedidos. En CP los paquetes se siguen aceptando a costa de incrementar el retardo; el bloqueo sólo ocurre en condiciones extremas, como la caída del nodo al que está conectada la estación."},
+
+    {id:20,type:"single",prompt:"¿Cuál es la característica principal de la técnica de datagrama?",
+     opts:[{t:"Cada paquete es tratado por los nodos en forma independiente del resto",ok:true},
+           {t:"Se establece una ruta predefinida antes de enviar los paquetes"},
+           {t:"Se reserva un canal físico dedicado extremo a extremo"},
+           {t:"Todos los paquetes llevan un identificador de circuito virtual"}],
+     expl:"En datagrama cada paquete se trata de forma independiente: el nodo toma una decisión de ruteo para cada uno, según las colas y la congestión del momento. Por eso pueden seguir rutas distintas."},
+
+    {id:21,type:"multi",prompt:"¿Cuáles son consecuencias de usar datagrama? (múltiple)",
+     opts:[{t:"Los paquetes pueden llegar a destino en distinto orden y el destino debe reordenarlos",ok:true},
+           {t:"Un paquete puede destruirse y el destino debe detectar la pérdida y recuperarlo",ok:true},
+           {t:"Todos los paquetes atraviesan indefectiblemente los mismos nodos"},
+           {t:"La cabecera debe llevar un identificador de circuito virtual"}],
+     expl:"Como cada paquete se rutea independientemente, pueden seguir rutas distintas y llegar desordenados (el destino los reordena) o perderse si cae un nodo (el destino debe detectarlo y recuperarlos). Las otras dos opciones describen el circuito virtual."},
+
+    {id:22,type:"single",prompt:"¿Cómo se llama el paquete especial de control con el que una estación solicita una conexión lógica en circuito virtual?",
+     opts:[{t:"Call Request Packet (Paquete de Pedido de Llamada)",ok:true},
+           {t:"Call Accept Packet (Paquete de Aceptación)"},
+           {t:"Clear Request Packet (Paquete de Finalización)"},
+           {t:"Datagram Header Packet"}],
+     expl:"La secuencia es: Call Request Packet (pedido de llamada) → si el destino acepta responde con un Call Accept Packet (aceptación de la conexión) → al terminar, una de las estaciones envía un Clear Request Packet (finalización de pedido)."},
+
+    {id:23,type:"vf",prompt:"En circuito virtual, la ruta queda fija durante toda la conexión, lo que significa que es un canal dedicado igual que en conmutación de circuitos.",
+     opts:[{t:"Verdadero"},{t:"Falso",ok:true}],
+     expl:"FALSO. Se llama virtual justamente porque todos los paquetes siguen la misma ruta, pero eso NO implica que sea un canal dedicado: el enlace se sigue compartiendo con paquetes de otros circuitos virtuales."},
+
+    {id:24,type:"single",prompt:"Respecto al almacenamiento de datos en los nodos, ¿qué diferencia hay entre CC y CV?",
+     opts:[{t:"En CC no hay almacenamiento (el nodo es vía de paso); en CV sí, el nodo inspecciona la cabecera y encola el paquete",ok:true},
+           {t:"En CC sí hay almacenamiento; en CV no"},
+           {t:"En ambas hay almacenamiento por igual"},
+           {t:"En ninguna hay almacenamiento en los nodos"}],
+     expl:"En CC hay una conexión física entre el canal de entrada y el de salida del nodo, que se comporta como simple vía de paso. En CV el nodo almacena el paquete, inspecciona la cabecera y lo pone en cola según el circuito virtual al que pertenece."},
+
+    {id:25,type:"multi",prompt:"¿Cuáles son ventajas del <b>circuito virtual</b> sobre el datagrama? (múltiple)",
+     opts:[{t:"Control de secuenciamiento: los paquetes llegan en el mismo orden de partida",ok:true},
+           {t:"Control de error y de pérdidas más sencillo",ok:true},
+           {t:"Tránsito más veloz una vez establecida la conexión",ok:true},
+           {t:"Evita la fase de establecimiento de llamada"},
+           {t:"Mayor confiabilidad ante la caída de un nodo"}],
+     expl:"Las ventajas del CV son: provisión de servicios de red (secuenciamiento y control de error/pérdidas) y tránsito veloz (no hay decisión de ruteo por paquete). Evitar el establecimiento y la mayor confiabilidad ante caídas son ventajas del DATAGRAMA."},
+
+    {id:26,type:"single",prompt:"Si se cae un nodo o un enlace de la red, ¿qué ocurre en cada técnica?",
+     opts:[{t:"En CV se caen todos los circuitos virtuales que pasan por ahí; en datagrama los paquetes siguientes buscan una ruta alternativa",ok:true},
+           {t:"En datagrama se pierde toda la comunicación; en CV se recupera automáticamente"},
+           {t:"En ambas se mantiene la comunicación sin cambios"},
+           {t:"Sólo afecta a la conmutación de circuitos"}],
+     expl:"Ésta es la ventaja de confiabilidad del datagrama: al ser una técnica más primitiva y flexible, ante la caída de un nodo o enlace los paquetes siguientes pueden encontrar una ruta alternativa. En CV, en cambio, se caen todos los circuitos virtuales que pasaban por ese punto."},
+
+    {id:27,type:"single",prompt:"Un mensaje de 40 bytes con cabecera de 3 bytes viaja por X→a→b→Y. Si se envía en <b>un solo paquete</b>, ¿cuál es el tiempo total?",
+     opts:[{t:"129 tiempo-byte (43 × 3 transmisiones)",ok:true},
+           {t:"92 tiempo-byte"},
+           {t:"77 tiempo-byte"},
+           {t:"43 tiempo-byte"}],
+     expl:"Con un solo paquete de 43 bytes (40 datos + 3 cabecera), cada nodo debe recibirlo entero antes de retransmitir: son 3 transmisiones (X→a, a→b, b→Y) de 43 bytes = 129 tiempo-byte."},
+
+    {id:28,type:"single",prompt:"Ese mismo mensaje fraccionado en <b>10 paquetes</b> da 84 tiempo-byte, más que los 77 de 5 paquetes. ¿Por qué empeora?",
+     opts:[{t:"Porque la cabecera es de longitud fija: más paquetes significan más cabeceras y más overhead",ok:true},
+           {t:"Porque los paquetes chicos viajan más lento por el medio"},
+           {t:"Porque se pierde el solapamiento entre nodos"},
+           {t:"Porque aumenta el retardo de propagación"}],
+     expl:"Al seguir fraccionando, la cabecera fija de 3 bytes se repite en cada paquete: 10 paquetes de 4 bytes de datos + 3 de cabecera = 7 bytes × 12 transmisiones = 84. El overhead acumulado neutraliza el beneficio del fraccionamiento."},
+
+    {id:29,type:"single",prompt:"¿Cómo se calcula el overhead de un paquete?",
+     opts:[{t:"Overhead = tamaño de cabecera / tamaño total del paquete",ok:true},
+           {t:"Overhead = tamaño total del paquete / tamaño de cabecera"},
+           {t:"Overhead = cabecera / datos útiles"},
+           {t:"Overhead = número de paquetes × cabecera"}],
+     expl:"El overhead es la proporción del paquete ocupada por la cabecera: cabecera / tamaño total. Por eso, cuanto más grande la carga útil, menor el overhead relativo."},
+
+    {id:30,type:"single",prompt:"En el análisis de retardos, ¿qué pasa con la <b>aceptación de llamada</b> en circuito virtual?",
+     opts:[{t:"SÍ hay retardo de procesamiento en los nodos (testeo del número de CV y retardo por colas)",ok:true},
+           {t:"No hay retardo en los nodos, porque la ruta ya se estableció con la petición"},
+           {t:"No existe fase de aceptación en circuito virtual"},
+           {t:"Sólo hay retardo de propagación, nunca de procesamiento"}],
+     expl:"Ésta es la diferencia fina con la conmutación de circuitos: en CC la aceptación NO tiene retardo en los nodos (la ruta ya quedó armada al pasar la petición), pero en CV SÍ hay procesamiento, porque el nodo debe testear el número de circuito virtual y encolar."},
+
+    {id:31,type:"single",prompt:"¿Qué retardos NO existen en la técnica de datagrama?",
+     opts:[{t:"El de establecimiento de la conexión y el de desconexión",ok:true},
+           {t:"El de propagación y el de transmisión"},
+           {t:"El de ruteo y el de colas en los nodos"},
+           {t:"Ninguno, tiene todos los retardos"}],
+     expl:"En datagrama no hay retardo de establecimiento (no se establece conexión previa) ni de desconexión (no hay paquete de pedido de desconexión). Sí tiene transmisión, propagación y retardo en el nodo (colas de entrada y salida + procesamiento por ruteo)."},
+
+    {id:32,type:"single",prompt:"En conmutación de paquetes, si hay Np paquetes y N saltos, ¿cuál es el tiempo de \"pipeline\" (transmisión total del mensaje)?",
+     opts:[{t:"(Np + N − 1) × Tp",ok:true},
+           {t:"Np × N × Tp"},
+           {t:"Np × Tp"},
+           {t:"(Np − N + 1) × Tp"}],
+     expl:"El último paquete espera a que salgan los (Np−1) anteriores por el primer enlace, y después hace su propio recorrido de N saltos; los demás van solapados detrás. De ahí (Np + N − 1) × Tp. No se multiplica por N porque los paquetes viajan solapados."},
+
+    {id:33,type:"single",prompt:"Una red tiene <b>3 nodos</b> entre dos estaciones. ¿Cuántos saltos (N) hay?",
+     opts:[{t:"4",ok:true},{t:"3"},{t:"2"},{t:"5"}],
+     expl:"La regla es saltos = nodos + 1. Con 3 nodos: estación → n1 → n2 → n3 → estación = 4 enlaces. Es un detalle que se falla seguido y arrastra el error a todo el ejercicio."},
+
+    {id:34,type:"single",prompt:"Ejercicio del módulo: L=1.280 bits, B=64 Kbps, P=256 bits, H=10 bits, 3 nodos, S=0,1 s, D=0,002 s, G=0,005 s. ¿Cuánto da el <b>datagrama</b>?",
+     opts:[{t:"116 ms",ok:true},{t:"128 ms"},{t:"156 ms"},{t:"33 ms"}],
+     expl:"Np = 1280/256 = 5 paquetes. Tp = (256+10)/64000 = 4,156 ms. Pipeline = (5+4−1)×4,156 = 33,25 ms. Propagación = 4×0,002 = 8 ms. Procesamiento = 3 nodos × 5 paquetes × 0,005 = 75 ms. Total = 116 ms. (CC daba 128 ms y CV 156 ms: gana datagrama por ser mensaje corto.)"},
+
+    {id:35,type:"single",prompt:"Ejercicio del parcial: mensaje de 1.200 Bytes, paquetes de 256 bits con cabecera de 2 Bytes, 4 nodos, 100 Kbps. ¿Cuántos paquetes se envían?",
+     opts:[{t:"40 paquetes",ok:true},{t:"38 paquetes"},{t:"37 paquetes"},{t:"48 paquetes"}],
+     expl:"L = 1.200 B × 8 = 9.600 bits. La cabecera de 2 B = 16 bits está incluida en los 256, así que los datos por paquete son 256 − 16 = 240 bits. Np = 9.600/240 = 40 paquetes exactos. Truco: si el número da entero, la interpretación es la correcta."},
+
+    {id:36,type:"single",prompt:"En ese ejercicio del parcial (mensaje largo, 40 paquetes), ¿qué técnica da menor tiempo total?",
+     opts:[{t:"Circuito virtual, porque amortiza el establecimiento y evita el ruteo por paquete",ok:true},
+           {t:"Datagrama, porque nunca paga establecimiento"},
+           {t:"Las dos dan exactamente lo mismo"},
+           {t:"Conmutación de circuitos"}],
+     expl:"Con 40 paquetes, el ruteo repetido del datagrama (40 paq × 4 nodos × 0,01 ms = 1,6 ms) supera al costo fijo del CV (1 ms de establecimiento + 0,05 ms de liberación = 1,05 ms). Resultado: CV ≈ 113,7 ms vs datagrama ≈ 114,2 ms."},
+
+    {id:37,type:"single",prompt:"El TP4 plantea: \"en conmutación de circuitos no hacen falta bits suplementarios, por lo tanto la utilización de la línea es más eficiente que en paquetes\". ¿Dónde está el punto débil?",
+     opts:[{t:"Confunde overhead por paquete con eficiencia de uso del canal: en CC el canal queda reservado y ocioso la mayor parte del tiempo",ok:true},
+           {t:"En que la conmutación de circuitos sí usa cabeceras"},
+           {t:"En que la conmutación de paquetes no agrega bits de control"},
+           {t:"En que los circuitos son más lentos por el establecimiento"}],
+     expl:"Es cierto que CP agrega cabeceras, pero la eficiencia se mide sobre el tiempo total que el canal está ocupado. En CC el canal está reservado aunque no haya datos (presentes menos del 20% del tiempo), un desperdicio mucho mayor que el de las cabeceras."},
+
+    {id:38,type:"single",prompt:"En el esquema de encaminamiento por <b>aprendizaje hacia atrás</b> (TP4), ¿qué información lleva cada paquete además de origen y destino?",
+     opts:[{t:"Un contador de saltos que se incrementa con cada salto",ok:true},
+           {t:"Un identificador de circuito virtual"},
+           {t:"El número de ranura TDM asignada"},
+           {t:"La velocidad de transmisión del enlace"}],
+     expl:"Cada paquete lleva un contador de saltos. El nodo mira de qué vecino vino y cuántos saltos acumuló para construir su tabla (nodo siguiente + número de saltos por destino). Ventaja: se adapta a la topología real sin tablas iniciales. Desventaja: posible congestión, información redundante y retrasos iniciales."},
+
+    {id:39,type:"vf",prompt:"En conmutación de circuitos, el mensaje debe fraccionarse en paquetes con cabecera antes de transmitirse.",
+     opts:[{t:"Verdadero"},{t:"Falso",ok:true}],
+     expl:"FALSO. Al tener un canal dedicado en toda la trayectoria, el mensaje NO necesita fraccionarse en paquetes con cabecera. Ésa es una de las consideraciones finales del módulo, y es la razón por la que en CC el tiempo de transmisión es simplemente L/B."},
+
+    {id:40,type:"single",prompt:"¿Por qué en conmutación de circuitos la velocidad de transmisión es constante entre las estaciones?",
+     opts:[{t:"Porque la red no almacena los datos: las señales pasan sin retardo por los nodos y el retardo de transmisión es fijo",ok:true},
+           {t:"Porque los paquetes se rutean siempre por el camino más corto"},
+           {t:"Porque el nodo prioriza los paquetes de mayor prioridad"},
+           {t:"Porque se usa multiplexación estadística en las troncales"}],
+     expl:"En CC la red no almacena los datos del mensaje, así que las señales pasan sin retardo por los nodos. El retardo total sólo depende del tiempo de transmisión más la propagación, y por eso es fijo y la velocidad constante."}
+  ];
+
+  var order=QUESTIONS.map(function(_,i){return i;});
+  var state={}; // id -> {answered, correct}
+  var rendered={}; // id -> array de opciones EN EL ORDEN MOSTRADO (la mezcla vive acá)
+  var shuffle=false;
+
+  function shuf(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+  function letter(i){ return String.fromCharCode(65+i); }
+
+  var quiz=document.getElementById("quiz");
+
+  function build(){
+    quiz.innerHTML=""; state={}; rendered={};
+    document.getElementById("result").className="result";
+    order.forEach(function(qi){
+      var q=QUESTIONS[qi];
+      // Las opciones se mezclan en CADA render, así la correcta nunca queda fija.
+      // V/F se deja en su orden natural (Verdadero, Falso).
+      var shown = (q.type==="vf") ? q.opts.slice() : shuf(q.opts.slice());
+      rendered[q.id]=shown;
+      var card=document.createElement("div"); card.className="card"; card.id="card-"+q.id;
+      var tyLabel=q.type==="multi"?"Selección múltiple":(q.type==="vf"?"Verdadero / Falso":"Opción única");
+      var head='<div class="qhead"><span class="badge">Q'+q.id+'</span><span class="badge ty">'+tyLabel+'</span></div>';
+      card.innerHTML=head+'<div class="qprompt">'+q.prompt+'</div>';
+      var opts=document.createElement("div"); opts.className="opts"+(q.type==="vf"?" vf":"");
+      shown.forEach(function(o,oi){
+        var b=document.createElement("button"); b.className="opt"; b.type="button";
+        b.innerHTML=(q.type==="vf"?"":'<span class="okey">'+letter(oi)+'</span>')+'<span>'+o.t+'</span>';
+        b.addEventListener("click",function(){ onOpt(q,oi,opts,card,b); });
+        opts.appendChild(b);
+      });
+      card.appendChild(opts);
+      if(q.type==="multi"){
+        var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Comprobar";
+        btn.addEventListener("click",function(){ checkMulti(q,opts,card,btn); });
+        card.appendChild(btn);
+      }
+      quiz.appendChild(card);
+    });
+    updateStats();
+  }
+
+  function onOpt(q,oi,opts,card,btn){
+    if(state[q.id]) return;                 // ya respondida
+    if(q.type==="multi"){ btn.classList.toggle("sel"); return; }  // multi: solo togglear
+    lockSingle(q,oi,opts);                  // single/vf: evaluar al instante
+  }
+
+  function lockSingle(q,chosen,opts){
+    var shown=rendered[q.id];
+    var kids=opts.querySelectorAll(".opt"); var correct=false;
+    kids.forEach(function(k,ki){
+      k.classList.add("locked");
+      if(shown[ki].ok) k.classList.add("ok");
+      if(ki===chosen && !shown[ki].ok) k.classList.add("no");
+      if(ki===chosen && shown[ki].ok) correct=true;
+    });
+    finish(q,opts.parentNode,correct);
+  }
+
+  function checkMulti(q,opts,card,btn){
+    if(state[q.id]) return;
+    var shown=rendered[q.id];
+    var kids=opts.querySelectorAll(".opt"); var allCorrect=true;
+    kids.forEach(function(k,ki){
+      var sel=k.classList.contains("sel"); var ok=!!shown[ki].ok;
+      k.classList.add("locked");
+      if(ok && sel) k.classList.add("ok");
+      else if(ok && !sel){ k.classList.add("miss"); allCorrect=false; }
+      else if(!ok && sel){ k.classList.add("no"); allCorrect=false; }
+    });
+    btn.disabled=true;
+    finish(q,card,allCorrect);
+  }
+
+  function finish(q,card,correct){
+    state[q.id]={answered:true,correct:correct};
+    card.classList.add(correct?"cok":"cno");
+    var fb=document.createElement("div"); fb.className="fb "+(correct?"good":"bad");
+    fb.textContent=correct?"✓ Correcto":"✗ Incorrecto";
+    card.appendChild(fb);
+    var ex=document.createElement("div"); ex.className="expl"; ex.innerHTML="<b>Por qué:</b> "+q.expl;
+    card.appendChild(ex);
+    updateStats();
+  }
+
+  function updateStats(){
+    var ans=0,cor=0;
+    Object.keys(state).forEach(function(k){ ans++; if(state[k].correct)cor++; });
+    var total=QUESTIONS.length;
+    document.getElementById("bar").style.width=Math.round(ans/total*100)+"%";
+    var pct=ans?Math.round(cor/total*100):0;
+    document.getElementById("score").innerHTML=ans+"/"+total+" · <b>"+cor+"</b> correctas<span class='pct'>"+pct+"%</span>";
+    if(ans===total) showResult(cor,total);
+  }
+
+  function showResult(cor,total){
+    var pct=Math.round(cor/total*100);
+    var msg = pct>=90?"Excelente, dominado.":pct>=70?"Bien, repasá los que fallaste.":pct>=50?"Aprobado justo — conviene reforzar.":"A repasar el módulo con el resumen.";
+    var r=document.getElementById("result");
+    r.className="result show";
+    r.innerHTML='<div style="font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Resultado</div>'+
+      '<div class="big" style="color:'+(pct>=70?"var(--ok)":pct>=50?"var(--warn)":"var(--no)")+'">'+pct+'%</div>'+
+      '<div style="font-weight:700">'+cor+' de '+total+' correctas</div><p>'+msg+'</p>';
+    r.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+
+  // controles
+  document.getElementById("resetBtn").addEventListener("click",build);
+  document.getElementById("shufBtn").addEventListener("click",function(){
+    shuffle=!shuffle; this.classList.toggle("on",shuffle);
+    order = shuffle ? shuf(QUESTIONS.map(function(_,i){return i;})) : QUESTIONS.map(function(_,i){return i;});
+    build();
+  });
+  var mem={};
+  var st; try{ st=localStorage.getItem("comii-theme"); }catch(e){ st=mem["comii-theme"]; }
+  if(st==="dark" || (!st && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+  document.getElementById("themeBtn").addEventListener("click",function(){
+    document.documentElement.classList.toggle("dark");
+    var v=document.documentElement.classList.contains("dark")?"dark":"light";
+    try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+  });
+
+  build();
+})();
+</script>
+</body>
+</html>
