@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 5 · Frame Relay · ATM · MPLS — Resumen acortado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f6f1; --card:#ffffff; --ink:#2b2b2b; --muted:#6d6a60; --border:#e7e2d5;
+    --accent:#2e6fb0;
+    --hl-pink:#ffc6cd; --hl-green:#c6ecca;
+    --key:#c78a00; --key-bg:#fff4d4; --key-bd:#ecd58c;
+    --calc:#0e7c86; --calc-bg:#e2f6f7; --calc-bd:#a5dde1;
+    --shadow:0 1px 3px rgba(40,35,20,.06),0 1px 2px rgba(40,35,20,.04);
+    --font:"Comic Sans MS","Comic Neue","Chalkboard SE","Segoe Print",cursive;
+  }
+  html.dark{
+    --bg:#13151a; --card:#1b1f27; --ink:#e9e5d9; --muted:#9b988c; --border:#2c303a;
+    --accent:#5fa8e0;
+    --key:#e6bd52; --key-bg:#2b2410; --key-bd:#4a3d1c;
+    --calc:#4fc9d4; --calc-bg:#0f2a2d; --calc-bd:#245055;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.72;font-size:17px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:#eef1f5;color:#245a92;padding:.04em .34em;border-radius:5px;font-size:.82em;font-family:ui-monospace,Menlo,monospace}
+  html.dark code{background:#20262f;color:#7fb6e6}
+  mark{color:#2b2b2b;padding:.02em .16em;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  mark.p{background:var(--hl-pink)}
+  mark.s{background:var(--hl-green)}
+  u.w{text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:820px;margin:0 auto}
+  .htop .lbl{font-size:.74rem;color:var(--muted)}
+  .htop h1{font-size:1.02rem;margin:1px 0 0;font-weight:700}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--ink);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;font-family:var(--font)}
+
+  .wrap{max-width:820px;margin:0 auto;padding:18px 18px 44px}
+  .meta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+  .tag{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--muted)}
+  .tag.freq{color:var(--key);border-color:var(--key-bd);background:var(--key-bg)}
+
+  .lead{color:var(--muted);font-size:1rem;margin:2px 0 18px}
+  .lead b{color:var(--ink)}
+
+  h2.sec{font-size:1.22rem;margin:26px 0 6px;display:inline-block;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:5px}
+  p{margin:8px 0}
+  .idea{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;margin:10px 0 4px;box-shadow:var(--shadow)}
+
+  .fbox{background:var(--calc-bg);border:1px solid var(--calc-bd);border-left:5px solid var(--calc);border-radius:12px;padding:12px 15px;margin:16px 0}
+  .fbox .ct{font-size:.78rem;font-weight:700;color:var(--calc);margin-bottom:6px;display:block;text-decoration:underline;text-underline-offset:3px}
+  .fbox .f{font-family:ui-monospace,Menlo,monospace;font-size:.84rem;background:var(--card);border:1px solid var(--calc-bd);border-radius:7px;padding:7px 10px;margin:6px 0;line-height:1.6;overflow-x:auto}
+  html.dark .fbox .f{background:#12181d}
+
+  .warnbox{background:var(--key-bg);border:1px solid var(--key-bd);border-left:5px solid var(--key);border-radius:12px;padding:12px 15px;margin:16px 0;font-size:.94rem}
+  .warnbox b{color:var(--key)}
+
+  h2.big{font-size:1rem;color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px;margin:34px 0 4px}
+  .subt{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+  .grupo{font-size:.8rem;font-weight:700;color:var(--muted);margin:20px 2px 6px;text-transform:uppercase;letter-spacing:.04em}
+
+  .punteros{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:620px){.punteros{grid-template-columns:1fr}}
+  details.punt{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:11px;padding:11px 14px;box-shadow:var(--shadow)}
+  details.punt summary{font-weight:700;cursor:pointer;list-style:none;outline:none;display:flex;align-items:flex-start;gap:7px}
+  details.punt summary::-webkit-details-marker{display:none}
+  details.punt summary::before{content:"▸";color:var(--accent);flex:none}
+  details.punt[open] summary::before{content:"▾"}
+  details.punt summary:focus-visible{text-decoration:underline}
+  details.punt .exp{margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);font-size:.92rem;color:var(--ink);line-height:1.6}
+  details.punt .exp code{background:#eef1f5;color:#245a92;padding:.03em .3em;border-radius:4px;font-size:.86em;font-family:ui-monospace,Menlo,monospace}
+  html.dark details.punt .exp code{background:#20262f;color:#7fb6e6}
+  .hint{font-size:.82rem;color:var(--muted);margin:8px 2px 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 5 · Resumen acortado</span><h1>Frame Relay · ATM · MPLS</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <a class="iconbtn" href="resumen-principal.html">Principal</a>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="meta">
+    <span class="tag freq">Frecuencia: media</span>
+    <span class="tag">Para leer y absorber · + oral</span>
+  </div>
+
+  <p class="lead">Este módulo tiene <b>poco cálculo y mucho vocabulario preciso</b>, así que se juega casi todo en el oral. La versión corta te da el hilo histórico y las tres tecnologías en su lugar; el detalle está en el principal.</p>
+
+  <h2 class="sec">La idea en seis trazos</h2>
+
+  <div class="idea"><b>1. El hilo conductor.</b> Las tres tecnologías del módulo son <mark class="p">la misma idea del Módulo 4</mark> —el circuito virtual— implementada tres veces, cada una arreglando lo que le faltaba a la anterior: <b>X.25</b> era seguro pero lento → <b>Frame Relay</b> lo simplificó → <b>ATM</b> le agregó calidad de servicio → <b>MPLS</b> se quedó con lo mejor pero sobre IP. Si entendés esa secuencia, el módulo se ordena solo.</div>
+
+  <div class="idea"><b>2. Frame Relay: sacarle capas a X.25.</b> Nace en los 80 porque las líneas ya eran confiables y las PC potentes: se podía usar un <u class="w">protocolo simple</u> y dejarle trabajo al usuario. Conmuta en <mark class="p">nivel 2</mark> (X.25 lo hacía en nivel 3), eliminando una capa entera de procesamiento. No da control de flujo, ni de secuencia, ni de error, ni confirmación. El identificador del circuito es el <mark class="s">DLCI</mark>, y su argumento de venta es económico: 6 LAN necesitan <b>15 líneas punto a punto pero solo 6 accesos</b> con Frame Relay.</div>
+
+  <div class="idea"><b>3. ATM: celdas fijas para que la voz no espere.</b> Frame Relay tenía un problema: <u class="w">no servía para tráfico de tasa constante</u> (voz, video). ATM lo resuelve con <mark class="p">celdas de 53 bytes</mark> (5+48) siempre iguales: si todas las unidades son chicas y del mismo tamaño, la espera máxima es <b>predecible y acotada</b>. Agrega dos niveles jerárquicos (<mark class="s">VP</mark> y <mark class="s">VC</mark>, identificados por VPI/VCI) y una batería rica de calidad de servicio.</div>
+
+  <div class="idea"><b>4. Los servicios de ATM: de reservar todo a no reservar nada.</b> <mark class="s">CBR</mark> reserva fijo aunque no se use (desperdicia). <mark class="s">VBR</mark> permite ráfagas con garantías (rt y nrt). <mark class="s">ABR</mark> usa lo sobrante <u class="w">pero con mínimo garantizado y control de congestión</u>. <mark class="s">UBR</mark> usa las migajas sin garantizar nada. Es una escala continua de "cuánto te compromete la red".</div>
+
+  <div class="idea"><b>5. MPLS: etiquetar en vez de rutear.</b> ATM era bueno pero <u class="w">complejo, caro y poco implementado</u>. MPLS toma la idea del etiquetado y la pone <b>sobre IP</b>, que ya estaba en todos lados. Es <mark class="p">capa 2,5</mark>: se mete entre enlace y red, así que puede montarse sobre PPP, Ethernet, FR o ATM indistintamente (por eso "multiprotocolo"). La frase que lo resume: <b>ruteo en el borde, conmutación en el core</b>.</div>
+
+  <div class="idea"><b>6. El ciclo de la etiqueta.</b> El tráfico entra por un <mark class="s">LER</mark>, que lo clasifica en una <mark class="s">FEC</mark>, le hace <b>PUSH</b> de la etiqueta y lo manda por un <mark class="s">LSP</mark>. Adentro, cada <mark class="s">LSR</mark> consulta su <mark class="s">LIB</mark> y hace <b>SWAP</b> (cambia la etiqueta por la de salida). En el LER de salida se hace <b>POP</b> y el paquete IP sigue su camino. El <mark class="s">LDP</mark> es quien repartió esas etiquetas de antemano.</div>
+
+  <div class="fbox">
+    <span class="ct">Los números que hay que tener (para el escrito)</span>
+    <div class="f">FR: capas 1 y 2 · 1,544 a 44,736 Mbps · trama 0–8188 bytes de datos</div>
+    <div class="f">DLCI: 10/16/23 bits · con 10 bits 0–1023 · usables 16–1007 (992 CVs)</div>
+    <div class="f">Malla punto a punto: n(n−1)/2 líneas   (6 LAN → 15 vs 6 con FR)</div>
+    <div class="f">ATM: celda 53 B = 5 cabecera + 48 datos (90,6% útil / 9,4% overhead)</div>
+    <div class="f">VPI 8 bits UNI (256) / 12 bits NNI (4096) · VCI 16 bits (65536)</div>
+    <div class="f">ATM: 155 y 622 Mbps, hoy hasta 10 Gbps · voz de 64 kbps</div>
+    <div class="f">MPLS: etiqueta 32 bits = Label 20 + Exp 3 + S 1 + TTL 8   (RFC 3031)</div>
+    <div class="f">Velocidad: ATM &gt; Frame Relay &gt; X.25</div>
+  </div>
+
+  <div class="warnbox">
+    <b>Cinco correcciones sobre tu material:</b> (1) falta entera la sección de <b>ABR</b>; (2) la fila ABR de la tabla está cortada — le falta "sobrante de la red" y "<b>incorpora control de congestión</b>"; (3) copiaste "<b>Pull</b>" del título de la slide 60, pero la operación es <b>Pop</b>; (4) "camino virtual" debería ser "<b>circuito virtual</b>"; (5) faltan la introducción histórica de Frame Relay y las <b>5 motivaciones de MPLS</b>, que son de las cosas más preguntables en oral. Todo desarrollado en el principal.
+  </div>
+
+  <h2 class="big">Punteros para rendir</h2>
+  <p class="subt">Leé el gatillo → explicalo en voz alta → abrí para verificar. Si no te sale completo, volvé al resumen principal.</p>
+
+  <div class="grupo">Frame Relay</div>
+  <div class="punteros">
+    <details class="punt"><summary>Por qué nace Frame Relay</summary><div class="exp">En los 80, veinte años después de X.25: ya había líneas confiables en UTP y fibra; las computadoras eran mucho más rápidas y baratas (aparece la PC); eso sugería protocolos simples con los computadores de usuario haciendo parte del trabajo de comunicación, aliviando a la red; y la demanda de WAN había cambiado, ni X.25 ni las líneas T alcanzaban. Objetivo de diseño: eliminar el overhead y el costo que X.25 imponía a la red y al usuario final.</div></details>
+
+    <details class="punt"><summary>El argumento económico (las 15 líneas)</summary><div class="exp">Para conectar varias LAN se podían usar líneas T, pero sólo ofrecen conexiones punto a punto. Una malla completa de n sitios necesita n(n−1)/2 líneas: para 6 LAN son 15 líneas. Con Frame Relay bastan 6 accesos, uno por sitio. Mismo servicio con menor costo. Velocidades: diseñado para 1,544 Mbps (T1), con implementaciones hasta 44,736 Mbps (T3).</div></details>
+
+    <details class="punt"><summary>Qué es Frame Relay</summary><div class="exp">Protocolo WAN de alto rendimiento en las capas física y de enlace de datos del modelo OSI. Tecnología de conmutación de tramas; sirve como protocolo de transporte y de acceso en redes públicas o privadas. Los datos se dividen en paquetes de largo variable con información de direccionamiento, y se transportan hasta el destino sobre una conexión virtual asignada.</div></details>
+
+    <details class="punt"><summary>Las 8 características (enumerarlas)</summary><div class="exp">1) Circuito Virtual, normalmente PVC. 2) Multiplexión de tramas full duplex: varios CV sobre un único enlace físico, cada uno con su DLCI (10, 16 o 23 bits). 3) Señalización y datos por canales separados: los nodos no mantienen tablas de estado. 4) Multiplexión y conmutación en nivel 2, no en nivel 3 como X.25: elimina una capa entera. 5) No provee control de flujo, secuencia ni error. 6) No provee confirmación al emisor. 7) Implementa control de tráfico. 8) Permite definir parámetros del servicio.</div></details>
+
+    <details class="punt"><summary>El matiz de "no provee control de error"</summary><div class="exp">Normalmente no se proveen los controles de flujo, secuencia y error, para agilizar la comunicación. PERO la cabecera de la trama dispone de un campo de Control de Secuencia de Tramas con cuya información se puede controlar la secuencia y detectar errores. O sea: la capacidad existe, no se usa por defecto. Y sí se comprueba el CRC en cada salto: si es erróneo, se descarta la trama (sin pedir retransmisión).</div></details>
+
+    <details class="punt"><summary>CIR, BC, BE y SLA</summary><div class="exp">CIR (Committed Information Rate): velocidad garantizada en bps que el proveedor se compromete a proporcionar. BC (Burst Committed): cantidad máxima de bits que la red se compromete a enviar en condiciones normales durante un intervalo T; pueden estar o no contiguos. BE (Burst Excess): cantidad máxima de bits no suscriptos que el switch intenta transferir más allá del CIR; se limita a la velocidad de puerto del loop de acceso local. SLA: el acuerdo de nivel de servicio. Resumen: CIR garantizado, BC comprometido por intervalo, BE sólo intentado.</div></details>
+
+    <details class="punt"><summary>Los 4 puntos de los circuitos virtuales FR</summary><div class="exp">Un CV entre dos routers equivale a una línea punto a punto entre ellos. Por un enlace pueden pasar varios circuitos, cada uno identificado con un DLCI. Cada circuito que comparte un enlace debe tener DLCI único, pero su número puede variar a lo largo de la ruta. Para configurar varios circuitos en una misma interfaz se usan subinterfaces (Serial0.1, Serial0.2, etc.).</div></details>
+
+    <details class="punt"><summary>Formato de la trama FR</summary><div class="exp">Flag (1 byte, 01111110) + Dirección (2 a 4 bytes) + Datos (0 a 8188 bytes) + CRC (2 bytes) + Flag (1 byte). Protocolo orientado a conexión, normalmente PVC. Las tramas pasan de nodo a nodo comprobando el CRC en cada salto; si es erróneo se descarta. Funcionamiento store-and-forward, con mayor retardo que las líneas punto a punto. El campo dirección lleva el DLCI y parámetros de control de tráfico.</div></details>
+
+    <details class="punt"><summary>FECN, BECN, DE y C/R</summary><div class="exp">El campo dirección de 2 bytes lleva: DLCI superior + C/R + bit de extensión (byte 1), y DLCI inferior + FECN + BECN + DE + bit de extensión (byte 2). C/R: significado específico de la aplicación, no indicado en FR. FECN (Forward Explicit Congestion Notification): avisa congestión hacia adelante, al destino. BECN (Backward): avisa hacia atrás, al emisor. DE (Discard Eligibility): si vale 1, la trama es de "2ª clase" y se descarta primero ante congestión.</div></details>
+
+    <details class="punt"><summary>Rango de DLCI y función LMI</summary><div class="exp">Con 10 bits el DLCI puede valer entre 0 y 1023. Los valores 0 a 15 y del 1008 en adelante están reservados para funciones especiales. Del 16 al 1007 se usan para identificar los VCs: son 992 circuitos posibles. Las funciones LMI (Local Management Interface) permiten que el conmutador le indique al host o router qué DLCI tienen los PVC definidos, de forma que el router se puede autoconfigurar.</div></details>
+
+    <details class="punt"><summary>Las 3 desventajas de Frame Relay</summary><div class="exp">1) Como está orientado a conexión, todas las tramas siguen la misma ruta basadas en un identificador de conexión: si se cae un nodo de esa ruta, se debe reconfigurar un nuevo camino extremo a extremo. 2) No fue diseñada originalmente para aplicaciones de tasa de bits constante como voz y video, y no puede asegurar que las tramas perdidas no superen un umbral. 3) Pérdida de calidad del sonido como resultado de la compresión de la voz.</div></details>
+  </div>
+
+  <div class="grupo">ATM</div>
+  <div class="punteros">
+    <details class="punt"><summary>Introducción a ATM: los 5 puntos</summary><div class="exp">Servicio orientado a conexión, como Frame Relay. En lugar de tramas usa celdas de 53 bytes, con el motivo de permitir el rápido envío de tráfico urgente. Optimizado para tráfico de voz digitalizada (64 kbps). Dos niveles jerárquicos: VP (trayectos virtuales) y VC (canales virtuales, que pueden ser PVC o SVC). Parecido a FR pero con más velocidad y muchas más posibilidades de control de tráfico; pensado para ofrecer calidad de servicio.</div></details>
+
+    <details class="punt"><summary>Por qué la celda es de largo fijo</summary><div class="exp">Con tramas de largo variable, una trama urgente que llega detrás de una grande debe esperar a que termine. Con celdas chicas y todas iguales, la espera máxima es predecible y acotada: como mucho lo que tarda una celda de 53 bytes. Por eso ATM sirve para voz y video en tiempo real y Frame Relay no. El precio es un overhead fijo del 9,4% (5 de cabecera sobre 53).</div></details>
+
+    <details class="punt"><summary>VP, VC, UNI y NNI</summary><div class="exp">Por un enlace físico pueden pasar múltiples VP (trayectos virtuales); cada VP contiene múltiples VC (canales virtuales); el VC es el camino lógico entre hosts. El identificador de conexión es el par VPI/VCI. UNI (User-to-Network Interface) es la interfaz entre usuario y red; NNI (Network-to-Network Interface) es entre nodos de la red. Velocidades del enlace físico: E1 (2 Mb/s), E3 (34), STM-1/OC-3c (155), STM-4/OC-12c (622).</div></details>
+
+    <details class="punt"><summary>Cabecera de la celda: campos y diferencias UNI/NNI</summary><div class="exp">Campos: GFC (Generic Flow Control, sólo en UNI y no usado), VPI, VCI (16 bits, hasta 65536), PTI (3 bits), CLP (Cell Loss Priority, 1 bit) y HEC (8 bits, un CRC de toda la cabecera). Diferencia: en la celda NNI desaparece el GFC y esos bits se los queda el VPI, que pasa de 8 bits (256 en UNI) a 12 bits (4096 en NNI).</div></details>
+
+    <details class="punt"><summary>Campo PTI</summary><div class="exp">3 bits. 000: celda tipo 0 normal sin congestión. 001: tipo 1 (fin de mensaje AAL5) sin congestión. 010: tipo 0 con congestión. 011: tipo 1 con congestión. 100: celda OAM de segmento (entre vecinos). 101: celda OAM extremo a extremo. 110: celda RM (Resource Management). 111: reservado. Los cuatro primeros son de usuario, los últimos de gestión.</div></details>
+
+    <details class="punt"><summary>Funcionamiento: las 5 reglas</summary><div class="exp">El conmutador dirige las celdas según el VPI/VCI y el puerto de entrada. Los VPI/VCI se fijan al crear el VC: si son PVC los fija el operador, si son SVC los elige el conmutador (números en orden creciente). En general cambian en cada salto. Deben ser únicos para cada puerto, pero pueden reutilizarse en puertos distintos. Se pueden conmutar grupos de VCI en bloque conmutando por VPI.</div></details>
+
+    <details class="punt"><summary>VPI/VCI reservados</summary><div class="exp">0/0 celda de relleno (idle cell). 0/3 celda OAM entre conmutadores vecinos. 0/4 celda OAM entre extremos. 0/5 señalización. 0/16 ILMI (autoconfiguración). 0/17 LANE (LAN Emulation). 0/18 PNNI (protocolo de routing). Reparto general: VCI 0 a 14 pertenecen a la ITU, 15 a 31 al ATM Forum.</div></details>
+
+    <details class="punt"><summary>CBR y VBR</summary><div class="exp">CBR (Constant Bit Rate): caudal fijo, se reserva de forma estática para cada VC, se use o no. Como la mayoría de las aplicaciones no generan caudal constante, hay que reservar el máximo y se desperdicia mucha capacidad. VBR (Variable Bit Rate): permite caudal variable a ráfagas, mejorando el aprovechamiento respecto a CBR. Dos variantes: VBR-rt (real time) y VBR-nrt. El usuario recibe garantías de QoS y la capacidad se reserva, pero si no la usa queda libre para servicios menos exigentes.</div></details>
+
+    <details class="punt"><summary>ABR vs UBR: la diferencia clave</summary><div class="exp">Los dos aprovechan la capacidad sobrante que deja VBR (CBR no deja migajas porque su reserva es total). UBR no garantiza caudal mínimo ni tasa máxima de celdas perdidas, y no devuelve información sobre la congestión. ABR sí ofrece un caudal mínimo garantizado (MCR) y mantiene baja la tasa de pérdidas gracias a la realimentación sobre el grado de congestión: incorpora control de congestión. Por eso a ABR se lo describe como "tráfico elástico con garantías".</div></details>
+
+    <details class="punt"><summary>La tabla de los 5 servicios</summary><div class="exp">CBR: simula línea punto a punto, reserva estricta, caudal constante con mínima tolerancia a ráfagas. VBR-rt: asegura caudal medio Y retardo, permite ráfagas, usa dos pozales agujereados. VBR-nrt: asegura caudal medio pero NO retardo, permite ráfagas, un pozal. ABR: asegura caudal mínimo, permite usar capacidad sobrante, incorpora control de congestión. UBR: no asegura nada, usa caudal sobrante.</div></details>
+
+    <details class="punt"><summary>Parámetros de tráfico vs de calidad</summary><div class="exp">De TRÁFICO (cómo emite el usuario): PCR (Peak Cell Rate) con CDVT (tolerancia pequeña); SCR (Sustainable Cell Rate) con BT (Burst Tolerance, tolerancia grande); MCR (Minimum Cell Rate). De CALIDAD (qué garantiza la red): Max CTD (máximo retardo de una celda; si llega más tarde se considera perdida); Peak-to-Peak CDV (máxima fluctuación del retardo, equivalente al jitter); CLR (tasa máxima aceptable de celdas perdidas).</div></details>
+
+    <details class="punt"><summary>Las conclusiones de ATM</summary><div class="exp">Está orientada a conexión: no garantiza la entrega de celdas pero sí el orden en que fueron enviadas (igual que Frame Relay). Las redes ATM se organizan como las WAN tradicionales, con líneas y nodos conmutadores. Velocidades pretendidas 155 y 622 Mbps, hoy hasta 10 Gbps. Para distribuir televisión es esencial la difusión, que puede dar la conmutación de celdas pero no la de circuitos. A altas velocidades (1 Gbps) multiplexar celdas es más fácil que las técnicas tradicionales, sobre todo con fibra.</div></details>
+  </div>
+
+  <div class="grupo">MPLS</div>
+  <div class="punteros">
+    <details class="punt"><summary>Qué es MPLS (introducción)</summary><div class="exp">Mecanismo de transporte de todo tipo de datos basado en el etiquetado de paquetes. Definido en el RFC 3031. Opera entre la capa de enlace y la de red. Es una mejora a las soluciones de Frame Relay y ATM. Transporta tráfico de voz y paquetes IP. Es más eficiente y confiable, reduciendo costos de conectividad. Combina las tecnologías de conmutación de circuitos y de paquetes.</div></details>
+
+    <details class="punt"><summary>Las 5 motivaciones de MPLS</summary><div class="exp">1) Necesidad de una red con la eficiencia de ATM (orientada a conexión, conmutación veloz, QoS, integración de datos) pero sin sus inconvenientes: complejo, caro y moderadamente implementado. 2) Desafío de mejorar IP: no orientado a conexión, no soporta QoS por sí mismo, el ruteo es más lento que el switching, elige el camino más corto sin considerar métricas, y maneja enormes tablas de ruteo. 3) Demanda de VPN seguras sobre vínculos públicos. 4) Necesidad de ampliar la priorización de tráfico (CoS y QoS). 5) Desafío de aplicar Ingeniería de Tráfico.</div></details>
+
+    <details class="punt"><summary>Capa 2,5 y multiprotocolo</summary><div class="exp">MPLS es un protocolo de capa 2,5, independiente de los protocolos de capa 2 y de capa 3: se inserta entre ellos sin reemplazar a ninguno. "Multiprotocolo" significa que, como sólo trabaja con etiquetas y no con el contenido, puede encapsularse sobre PPP, Ethernet, Frame Relay, ATM o X.25 indistintamente, y transportar cualquier protocolo superior. Se integra a IP, Ethernet, ATM, Frame Relay y OTN.</div></details>
+
+    <details class="punt"><summary>La etiqueta MPLS: los 4 campos</summary><div class="exp">32 bits en total (4 bytes). Label (20 bits): la identificación de la etiqueta. Exp (3 bits): bits experimentales, también llamados QoS; afectan al encolado y descarte de paquetes. S (1 bit): stack, para el apilado jerárquico; S=0 indica que hay más etiquetas, S=1 indica el fondo de la jerarquía. TTL (8 bits): igual que en IP, se decrementa en cada enrutador y al llegar a 0 el paquete se descarta; generalmente sustituye al TTL de la cabecera IP.</div></details>
+
+    <details class="punt"><summary>LER y LSR</summary><div class="exp">LER (Label Edge Router): routers al borde de la red MPLS. Asignan y remueven los labels. Soportan múltiples puertas conectadas a redes no similares (frame relay, ATM, Ethernet). Pueden ser Ingress LER (entrada) o Egress LER (salida). LSR (Label Switching Router): router que conmuta paquetes en función del valor de las etiquetas; generalmente de alta velocidad. Dato: los switches ATM pueden usarse como LSR sin cambiar su hardware.</div></details>
+
+    <details class="punt"><summary>LSP, LDP, FEC y LIB</summary><div class="exp">LSP (Label Switched Path): nombre genérico de un camino MPLS para cierto tráfico o FEC; es el circuito virtual que siguen los paquetes con el mismo FEC. Importante: un LSP es unidireccional. LDP (Label Distribution Protocol): protocolo para distribuir las etiquetas entre los equipos. FEC (Forwarding Equivalence Class): conjunto de paquetes que entran por la misma interfaz, reciben la misma etiqueta y circulan por el mismo trayecto. LIB (Label Information Base): tabla que relaciona (interfaz de entrada, etiqueta de entrada) con (interfaz de salida, etiqueta de salida).</div></details>
+
+    <details class="punt"><summary>La relación FEC ↔ Label ↔ LSP</summary><div class="exp">Es una cadena: al entrar, el LER clasifica el tráfico en una FEC (una clase con tratamiento común). Esa FEC está asociada a un LSP (el camino que va a seguir). Y para recorrer ese LSP, cada paquete lleva una Label que en cada salto le indica al LSR por dónde seguir. En una frase: la FEC dice qué clase de tráfico sos, el LSP dice por dónde vas, y la Label es el mecanismo concreto que te lleva salto a salto.</div></details>
+
+    <details class="punt"><summary>Push, Swap y Pop</summary><div class="exp">PUSH (Ingress LER): revisa la cabecera, ve si coincide con una FEC predefinida, busca en la LIB el label y la interfaz de salida asociados a ese LSP, agrega la etiqueta y reenvía. Si aún no existe un LSP para esa FEC, coopera con los otros LSR para construirlo. SWAP (LSR del core): remueve la etiqueta entrante, inserta la saliente y envía al próximo LSR a lo largo del LSP. POP (Egress LER): remueve la etiqueta, lee la cabecera IP y reenvía a su destino final.</div></details>
+
+    <details class="punt"><summary>"Ruteo en el borde, conmutación en el core"</summary><div class="exp">Es la síntesis de MPLS. El trabajo caro —mirar la cabecera IP, consultar tablas de ruteo enormes, clasificar el tráfico— se hace una sola vez, en el LER de entrada. Adentro de la nube, el paquete no vuelve a clasificarse: los LSR sólo miran una etiqueta de 20 bits y hacen swap, que es muchísimo más rápido que rutear.</div></details>
+
+    <details class="punt"><summary>Pilas de etiquetas y VPN</summary><div class="exp">Un paquete etiquetado puede transportar varias etiquetas, en una pila tipo LIFO (Last In, First Out). El "label stacking" permite la agregación de varios LSP en un solo LSP, creando un túnel. Su aplicación real es la VPN sobre MPLS: permite que un proveedor lleve el tráfico de muchos clientes por la misma infraestructura, cada uno aislado en su túnel. Acá cierra el sentido del bit S: como puede haber varias etiquetas, hace falta marcar cuál es la última.</div></details>
+
+    <details class="punt"><summary>OSPF vs LDP en el laboratorio ⚠</summary><div class="exp">Los dos se configuran en el lab pero hacen cosas distintas. OSPF mantiene las TABLAS DE RUTEO: le da a MPLS el mapa de qué redes IP existen y cómo llegar. LDP distribuye las ETIQUETAS entre los routers, mapeando FECs a labels y creando los LSP. Regla: si la pregunta dice "tablas de ruteo" → OSPF; si dice "intercambio de etiquetas" → LDP. También pueden usarse IS-IS (interno) o BGP (externo).</div></details>
+
+    <details class="punt"><summary>Los comandos del laboratorio</summary><div class="exp">Loopback: interfaces virtuales que identifican a cada nodo ante OSPF, LDP o BGP. Ruteo: "router ospf 1" y luego "network red wildcard area 0" por cada red. MPLS: "ip cef", "mpls label protocol ldp", "mpls label range 16 99", y "mpls ip" en todas las interfaces menos loopback. Guardar con "copy running-config startup-config". Verificación: show mpls interfaces / ldp parameters / ldp discovery / ldp neighbor; y clear mpls ldp neighbor *.</div></details>
+
+    <details class="punt"><summary>Comparación FR vs ATM vs MPLS</summary><div class="exp">Unidad: trama variable (0–8188 B) / celda fija 53 B / paquete IP con etiqueta de 4 B. Capa: 1 y 2 / similar a 2 / 2,5. Identificador: DLCI / VPI-VCI / Label. Los tres cambian el identificador en cada salto y son orientados a conexión. QoS: básica (CIR, FECN/BECN/DE) / muy rica (CBR-VBR-ABR-UBR) / sí (bits Exp, ingeniería de tráfico). Sólo MPLS es multiprotocolo. Orden de velocidad: ATM &gt; Frame Relay &gt; X.25.</div></details>
+  </div>
+
+  <p class="hint">Cuando puedas expandir los 35 punteros sin abrirlos, tenés el Módulo 5 listo. Acá lo que decide es el vocabulario preciso: qué sigla es qué, y por qué cada tecnología reemplazó a la anterior.</p>
+</div>
+
+<script>
+  (function(){
+    var mem={};
+    var s; try{ s=localStorage.getItem("comii-theme"); }catch(e){ s=mem["comii-theme"]; }
+    if(s==="dark" || (!s && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+    document.getElementById("themeBtn").addEventListener("click",function(){
+      document.documentElement.classList.toggle("dark");
+      var v=document.documentElement.classList.contains("dark")?"dark":"light";
+      try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+    });
+  })();
+</script>
+</body>
+</html>

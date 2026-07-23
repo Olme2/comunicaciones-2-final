@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 5 · Frame Relay · ATM · MPLS — Quiz</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --card:#ffffff; --text:#1b2531; --muted:#6a7685; --border:#e4e8ee;
+    --accent:#2e6fb0; --accent-soft:#e9f1f9; --ok:#1f8a4c; --ok-bg:#e9f7ef; --ok-bd:#9fd9b6;
+    --no:#c0392b; --no-bg:#fcebea; --no-bd:#eeb4ae; --warn:#b8860b;
+    --shadow:0 1px 3px rgba(20,30,45,.06),0 1px 2px rgba(20,30,45,.04);
+  }
+  html.dark{
+    --bg:#0f141a; --card:#19212b; --text:#e6ebf1; --muted:#93a1b0; --border:#2a3542;
+    --accent:#5fa8e0; --accent-soft:#1d2c3a; --ok:#54c483; --ok-bg:#142a1e; --ok-bd:#2f6b47;
+    --no:#e06a5f; --no-bg:#2c1a19; --no-bd:#6b332f; --warn:#d6a94a;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;font-size:16px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:var(--accent-soft);color:var(--accent);padding:.05em .35em;border-radius:5px;font-size:.86em;font-family:ui-monospace,Menlo,monospace}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:780px;margin:0 auto}
+  .htop .lbl{font-size:.72rem;color:var(--muted)}
+  .htop h1{font-size:1.02rem;margin:1px 0 0;font-weight:700;letter-spacing:-.01em}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+  #shufBtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+  .stats{max-width:780px;margin:11px auto 0;display:flex;align-items:center;gap:12px}
+  .progress{flex:1;height:9px;background:var(--border);border-radius:99px;overflow:hidden}
+  #bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#5ac8a8));border-radius:99px;transition:width .35s ease}
+  #score{font-size:.8rem;white-space:nowrap}
+  #score b{color:var(--ok)} #score .pct{font-weight:800;color:var(--accent);margin-left:3px}
+
+  main{max-width:780px;margin:0 auto;padding:14px}
+  .intro{font-size:.84rem;color:var(--muted);margin:2px 4px 14px;line-height:1.5}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;margin-bottom:12px;box-shadow:var(--shadow);border-left:4px solid var(--border)}
+  .card.cok{border-left-color:var(--ok)} .card.cno{border-left-color:var(--no)}
+  .qhead{display:flex;gap:8px;align-items:center;margin-bottom:9px;flex-wrap:wrap}
+  .badge{font-size:.66rem;font-weight:700;padding:3px 8px;border-radius:7px;background:var(--accent-soft);color:var(--accent);font-family:ui-monospace,Menlo,monospace}
+  .badge.ty{background:transparent;border:1px solid var(--border);color:var(--muted)}
+  .qprompt{font-size:1rem;line-height:1.5;margin-bottom:12px;font-weight:500}
+
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opt{width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--border);color:var(--text);border-radius:11px;padding:11px 13px;font-size:.94rem;line-height:1.4;cursor:pointer;display:flex;align-items:center;gap:11px;min-height:48px;transition:border-color .12s,background .12s;font-family:inherit}
+  .opts.vf .opt{justify-content:center;font-weight:700}
+  @media(hover:hover){.opt:not(.locked):hover{border-color:var(--accent);background:var(--accent-soft)}}
+  .okey{flex:none;width:25px;height:25px;border-radius:50%;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:var(--muted)}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .okey{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .opt.ok{border-color:var(--ok-bd);background:var(--ok-bg)} .opt.ok .okey{background:var(--ok);color:#fff;border-color:var(--ok)}
+  .opt.no{border-color:var(--no-bd);background:var(--no-bg)} .opt.no .okey{background:var(--no);color:#fff;border-color:var(--no)}
+  .opt.miss{border-color:var(--ok-bd);border-style:dashed}
+  .opt.locked{cursor:default}
+
+  .btn{background:var(--accent);color:#fff;border:none;border-radius:11px;padding:10px 15px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px}
+  .btn:disabled{opacity:.5;cursor:default}
+  .fb{margin-top:11px;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px}
+  .fb.good{color:var(--ok)} .fb.bad{color:var(--no)}
+  .expl{margin-top:9px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;font-size:.88rem;line-height:1.5}
+
+  .result{display:none;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:12px;box-shadow:var(--shadow);text-align:center}
+  .result.show{display:block}
+  .result .big{font-size:3rem;font-weight:800;line-height:1;margin:6px 0}
+  .result p{color:var(--muted);font-size:.9rem;margin:6px 0 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 5 · Quiz</span><h1>Frame Relay · ATM · MPLS</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <button class="iconbtn" id="shufBtn" title="Mezclar preguntas">⤨ Mezclar</button>
+      <button class="iconbtn" id="resetBtn" title="Reiniciar quiz">↺ Reiniciar</button>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="progress"><div id="bar"></div></div>
+    <span id="score">0/40 · <b>0</b> correctas<span class="pct">0%</span></span>
+  </div>
+</header>
+
+<main>
+  <p class="intro">40 preguntas sobre el Módulo 5. Las <b>Q1 a Q6 son las reales del Quiz 5</b> (incluida la de OSPF que fallaste). <b>Este quiz es más difícil a propósito:</b> todas las opciones tienen largo y nivel de detalle parejos, y los distractores son confusiones reales (FECN/BECN, ABR/UBR, CIR/BC/BE, VBR-rt/nrt, LDP/OSPF). No se puede responder por la forma. <b>Las opciones se mezclan solas en cada intento.</b></p>
+  <div class="result" id="result"></div>
+  <div id="quiz"></div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  var QUESTIONS = [
+    {id:1,type:"vf",prompt:"En ATM, si una trama de alta prioridad llega a un nodo, el mismo cancela cualquier acción y transmite de manera inmediata esta trama.",
+     opts:[{t:"Verdadero"},{t:"Falso",ok:true}],
+     expl:"Pregunta real del Quiz 5. FALSO. ATM no interrumpe la transmisión en curso: lo que hace la celda chica y de largo fijo es acotar la espera máxima, no eliminarla. La prioridad se gestiona por encolado (CLP, PTI, categorías de servicio). Además, en ATM la unidad se llama celda, no trama."},
+
+    {id:2,type:"vf",prompt:"Todo el tráfico asociado a un FEC dado sigue el mismo camino desde su origen al destino dentro de la red MPLS, sin cambiar nunca su label.",
+     opts:[{t:"Verdadero"},{t:"Falso",ok:true}],
+     expl:"Pregunta real del Quiz 5. FALSO, y es una afirmación mixta: la primera mitad es cierta (mismo FEC = mismo LSP = mismo camino), pero la etiqueta SÍ cambia en cada salto, que es exactamente lo que hace la operación swap del LSR."},
+
+    {id:3,type:"single",prompt:"¿Qué protocolo se configuró en el laboratorio de MPLS para mantener las <b>tablas de ruteo</b> de los LER y LSR?",
+     opts:[{t:"OSPF, que le da a la red el conocimiento de qué redes IP existen",ok:true},
+           {t:"LDP, que se encarga de mantener actualizadas las rutas entre nodos"},
+           {t:"CEF, que construye la tabla de reenvío a partir de las interfaces"},
+           {t:"BGP, que intercambia las rutas internas entre los routers del dominio"}],
+     expl:"Pregunta real del Quiz 5 y también del 1er parcial. La respuesta es OSPF. LDP distribuye ETIQUETAS, no rutas. CEF es el mecanismo de conmutación que hay que habilitar (ip cef) pero no arma rutas. BGP existe pero es un protocolo EXTERNO, y en el laboratorio se usó OSPF."},
+
+    {id:4,type:"single",prompt:"¿Qué protocolo se configuró en el laboratorio para el <b>intercambio de etiquetas</b>?",
+     opts:[{t:"LDP, que mapea las FEC a labels y con ello construye los LSP",ok:true},
+           {t:"OSPF, que difunde las etiquetas junto con la información de rutas"},
+           {t:"CEF, que asigna una etiqueta a cada entrada de la tabla de reenvío"},
+           {t:"PNNI, que negocia los identificadores entre nodos vecinos"}],
+     expl:"Pregunta real del Quiz 5. LDP (Label Distribution Protocol) es el que distribuye las etiquetas y crea los LSP. OSPF sólo maneja rutas. PNNI es un protocolo de routing de ATM, no de MPLS. Es el par de la pregunta anterior: 'ruteo' → OSPF, 'etiquetas' → LDP."},
+
+    {id:5,type:"single",prompt:"Un paquete MPLS puede llevar una o varias etiquetas al mismo tiempo. ¿Qué campo permite identificar si hay una sola o hay más?",
+     opts:[{t:"El bit S, donde 1 indica que se llegó al fondo de la pila",ok:true},
+           {t:"Los bits Exp, que codifican la profundidad del apilamiento"},
+           {t:"El campo Label, cuyo valor cambia al haber más de una"},
+           {t:"El campo TTL, que se decrementa por cada etiqueta añadida"}],
+     expl:"Pregunta real del Quiz 5. El bit S (stack): S=0 indica que hay más etiquetas añadidas, S=1 indica que estamos en el fondo de la jerarquía. Exp son los bits de QoS que afectan encolado y descarte; TTL es el tiempo de vida, igual que en IP."},
+
+    {id:6,type:"single",prompt:"Ordenadas de la más rápida a la más lenta, las tres tecnologías son:",
+     opts:[{t:"ATM, luego Frame Relay y por último X.25",ok:true},
+           {t:"Frame Relay, luego ATM y por último X.25"},
+           {t:"X.25, luego ATM y por último Frame Relay"},
+           {t:"ATM, luego X.25 y por último Frame Relay"}],
+     expl:"Pregunta real del Quiz 5. ATM > Frame Relay > X.25. Coincide con el orden histórico: X.25 en los 70, Frame Relay en los 80 simplificándolo, y ATM en los 90 con celdas y calidad de servicio."},
+
+    {id:7,type:"single",prompt:"¿Cuál era el objetivo de diseño explícito de Frame Relay?",
+     opts:[{t:"Eliminar en lo posible el overhead y el costo que X.25 imponía a la red y al usuario",ok:true},
+           {t:"Garantizar la entrega ordenada y sin errores de todas las tramas del usuario"},
+           {t:"Ofrecer calidad de servicio diferenciada para tráfico de voz y de video"},
+           {t:"Reemplazar las jerarquías digitales plesiócronas en los enlaces troncales"}],
+     expl:"El objetivo textual es eliminar el overhead y el costo de X.25. Justamente NO garantiza entrega ni orden (eso queda para capas superiores) y NO fue diseñado para voz y video, que es una de sus desventajas declaradas."},
+
+    {id:8,type:"single",prompt:"Para conectar 6 LAN con líneas punto a punto en malla completa hacen falta 15 líneas. ¿Cuántos accesos requiere la misma conexión con Frame Relay?",
+     opts:[{t:"6 accesos, uno por cada sitio conectado a la nube",ok:true},
+           {t:"15 accesos, ya que se replica la misma topología lógica"},
+           {t:"5 accesos, uno menos que la cantidad de sitios"},
+           {t:"12 accesos, dos por sitio para dar redundancia"}],
+     expl:"Con Frame Relay basta un acceso por sitio a la nube del operador: 6. La malla punto a punto necesita n(n−1)/2 = 6×5/2 = 15 líneas. Ése es el argumento económico con el que la cátedra presenta la tecnología: mismo servicio con menor costo."},
+
+    {id:9,type:"single",prompt:"¿En qué nivel realiza Frame Relay la multiplexión y conmutación de tramas, y qué consecuencia tiene?",
+     opts:[{t:"En el nivel 2, lo que elimina una capa completa de procesamiento respecto de X.25",ok:true},
+           {t:"En el nivel 3, igual que X.25, pero con tramas de menor tamaño"},
+           {t:"En el nivel 1, lo que le permite prescindir del direccionamiento"},
+           {t:"En el nivel 2,5, ubicándose entre el enlace y la red como MPLS"}],
+     expl:"Frame Relay conmuta en nivel 2, mientras que X.25 lo hacía en nivel 3. Eso elimina una capa completa de procesamiento, y por eso a Frame Relay se le asignan sólo dos capas: física y enlace de datos. La capa 2,5 es MPLS."},
+
+    {id:10,type:"multi",prompt:"¿Cuáles de estos servicios <b>no</b> provee normalmente Frame Relay? (múltiple)",
+     opts:[{t:"Control de flujo entre los extremos de la comunicación",ok:true},
+           {t:"Control de secuencia de las tramas entregadas",ok:true},
+           {t:"Confirmación al emisor de la recepción en destino",ok:true},
+           {t:"Control de tráfico para manejar la congestión de la red"},
+           {t:"Multiplexión de varios circuitos sobre un mismo enlace físico"}],
+     expl:"Frame Relay no provee control de flujo, de secuencia, de error ni confirmación: todo eso se delega a capas superiores del usuario. Sí implementa control de tráfico (congestión, con FECN/BECN/DE) y sí multiplexa varios CV sobre un enlace físico."},
+
+    {id:11,type:"single",prompt:"Sobre el control de errores en Frame Relay, ¿cuál afirmación es correcta?",
+     opts:[{t:"Existe un campo de Control de Secuencia que permite detectarlos, aunque no se use",ok:true},
+           {t:"No existe ningún mecanismo de detección de errores en ninguna parte de la trama"},
+           {t:"El CRC se verifica sólo en el nodo destino final, nunca en los nodos intermedios"},
+           {t:"Cuando el CRC falla, el nodo solicita la retransmisión de la trama al nodo anterior"}],
+     expl:"El matiz que la cátedra marca: normalmente no se proveen los controles para agilizar la comunicación, pero la cabecera dispone de un campo de Control de Secuencia de Tramas con el que se PUEDE controlar secuencia y detectar errores. Además el CRC sí se comprueba en cada salto, y si falla la trama se descarta sin pedir retransmisión."},
+
+    {id:12,type:"single",prompt:"¿Qué representa el parámetro <b>CIR</b> en Frame Relay?",
+     opts:[{t:"La velocidad garantizada en bps que el proveedor se compromete a proporcionar",ok:true},
+           {t:"La cantidad máxima de bits que la red envía en un intervalo de tiempo T",ok:false},
+           {t:"La cantidad máxima de bits no suscriptos que el switch intenta transferir",ok:false},
+           {t:"La velocidad de puerto máxima del loop de acceso local del abonado",ok:false}],
+     expl:"CIR (Committed Information Rate) es la velocidad GARANTIZADA. La segunda opción describe el BC (Burst Committed) y la tercera el BE (Burst Excess). La cuarta es el límite al que se acota el BE, no un parámetro en sí."},
+
+    {id:13,type:"single",prompt:"¿Qué representa el parámetro <b>BE</b> (Burst Excess) en Frame Relay?",
+     opts:[{t:"Los bits no suscriptos que el switch intenta transferir por encima del CIR",ok:true},
+           {t:"Los bits que la red se compromete a enviar en condiciones normales en un intervalo T"},
+           {t:"La velocidad mínima que el proveedor garantiza durante toda la conexión"},
+           {t:"El volumen de tramas descartadas cuando se supera el umbral de congestión"}],
+     expl:"BE es lo que el switch INTENTA transferir más allá del CIR, sin garantía; depende de las ofertas del distribuidor y se limita a la velocidad de puerto del loop de acceso local. La segunda opción describe el BC y la tercera el CIR. Regla: CIR garantizado, BC comprometido por intervalo, BE sólo intentado."},
+
+    {id:14,type:"single",prompt:"¿Cuál es la diferencia entre los bits FECN y BECN de la trama Frame Relay?",
+     opts:[{t:"FECN avisa la congestión hacia adelante y BECN la avisa hacia atrás",ok:true},
+           {t:"FECN avisa la congestión hacia atrás y BECN la avisa hacia adelante"},
+           {t:"FECN marca la trama como descartable y BECN indica su prioridad"},
+           {t:"FECN se usa en PVC y BECN se usa exclusivamente en SVC"}],
+     expl:"FECN = Forward Explicit Congestion Notification: avisa hacia adelante, en el mismo sentido en que viaja la trama (al destino). BECN = Backward: avisa hacia atrás, al emisor. El bit que marca la trama como descartable es el DE."},
+
+    {id:15,type:"single",prompt:"¿Qué indica el bit <b>DE</b> cuando vale 1 en una trama Frame Relay?",
+     opts:[{t:"Que la trama es de segunda clase y es candidata a descarte ante congestión",ok:true},
+           {t:"Que la trama viaja en sentido inverso al de la notificación de congestión"},
+           {t:"Que el DLCI de la trama fue modificado por el conmutador anterior"},
+           {t:"Que la trama excedió el tiempo de vida y debe eliminarse de la red"}],
+     expl:"DE = Discard Eligibility. Si vale 1, la trama es de '2ª clase' y se descarta primero si hay congestión. Típicamente se marcan así las tramas que exceden el CIR contratado. Su análogo en ATM es el bit CLP."},
+
+    {id:16,type:"single",prompt:"Con un DLCI de 10 bits, ¿qué rango queda efectivamente disponible para identificar circuitos virtuales?",
+     opts:[{t:"Del 16 al 1007, quedando reservados el 0–15 y el 1008 en adelante",ok:true},
+           {t:"Del 0 al 1023 completo, ya que ninguno está reservado en Frame Relay"},
+           {t:"Del 16 al 1023, reservándose únicamente los primeros dieciséis valores"},
+           {t:"Del 0 al 1007, reservándose sólo los valores del 1008 en adelante"}],
+     expl:"Con 10 bits el DLCI va de 0 a 1023, pero los valores 0–15 y del 1008 en adelante están reservados para funciones especiales. Quedan del 16 al 1007: 992 circuitos virtuales identificables."},
+
+    {id:17,type:"single",prompt:"¿Cuál es la función de LMI (Local Management Interface) en Frame Relay?",
+     opts:[{t:"Permitir que el conmutador le indique al router qué DLCI tienen sus PVC definidos",ok:true},
+           {t:"Negociar el valor de CIR y BE al establecerse cada circuito virtual"},
+           {t:"Distribuir las tablas de conmutación entre los switches de la nube"},
+           {t:"Detectar tramas con CRC erróneo y solicitar su retransmisión al origen"}],
+     expl:"Las funciones LMI permiten que el conmutador Frame Relay indique al host o router qué DLCI tienen los PVC definidos, de forma que el router se puede autoconfigurar."},
+
+    {id:18,type:"single",prompt:"Respecto al DLCI de un circuito virtual que atraviesa varios conmutadores:",
+     opts:[{t:"Debe ser único en cada enlace, pero su valor puede variar a lo largo de la ruta",ok:true},
+           {t:"Debe mantenerse constante extremo a extremo para identificar el circuito"},
+           {t:"Es asignado por el host de origen y ningún conmutador puede modificarlo"},
+           {t:"Se repite en todos los enlaces del camino para simplificar las tablas"}],
+     expl:"Cada circuito que comparte un enlace debe tener un DLCI único en ese enlace, pero su número puede variar a lo largo de la ruta: el conmutador tiene una tabla que asigna la nueva etiqueta y la interfaz de salida en función de la etiqueta vieja y la interfaz de entrada."},
+
+    {id:19,type:"multi",prompt:"¿Cuáles son desventajas de Frame Relay señaladas por la cátedra? (múltiple)",
+     opts:[{t:"Si se cae un nodo de la ruta hay que reconfigurar un camino extremo a extremo",ok:true},
+           {t:"No fue diseñada para tráfico de tasa de bits constante como voz y video",ok:true},
+           {t:"Hay pérdida de calidad del sonido como resultado de la compresión de la voz",ok:true},
+           {t:"No permite multiplexar más de un circuito virtual por enlace físico"},
+           {t:"Requiere establecer y liberar la conexión antes de cada transferencia"}],
+     expl:"Las tres desventajas textuales son las primeras. La cuarta es falsa: multiplexar varios CV sobre un enlace es justamente una de sus características. La quinta también: normalmente usa PVC, que son permanentes y no requieren establecimiento por transferencia."},
+
+    {id:20,type:"single",prompt:"¿Por qué ATM utiliza celdas de largo fijo en lugar de tramas de largo variable?",
+     opts:[{t:"Para permitir el rápido envío de tráfico urgente, acotando la espera máxima",ok:true},
+           {t:"Para reducir el overhead de cabecera respecto de las tramas variables"},
+           {t:"Para poder prescindir del CRC en los nodos intermedios de la red"},
+           {t:"Para que el identificador de conexión no deba cambiar en cada salto"}],
+     expl:"El motivo textual es permitir el rápido envío de tráfico urgente. Con celdas iguales y chicas, una celda urgente espera como mucho lo que tarda una celda de 53 bytes: la espera es predecible y acotada. El overhead en realidad EMPEORA (9,4% fijo), y el VPI/VCI sí cambia en cada salto."},
+
+    {id:21,type:"single",prompt:"Una celda ATM tiene 53 bytes. ¿Cómo se reparten y qué proporción es carga útil?",
+     opts:[{t:"5 bytes de cabecera y 48 de datos, o sea un 90,6 % de carga útil",ok:true},
+           {t:"8 bytes de cabecera y 45 de datos, o sea un 84,9 % de carga útil"},
+           {t:"3 bytes de cabecera y 50 de datos, o sea un 94,3 % de carga útil"},
+           {t:"5 bytes de cabecera y 48 de datos, o sea un 9,4 % de carga útil"}],
+     expl:"53 = 5 de cabecera + 48 de carga útil. 48/53 = 90,6 % útil, y 5/53 = 9,4 % de overhead. La última opción tiene el reparto correcto pero invierte los porcentajes: el 9,4 % es el overhead, no la carga útil."},
+
+    {id:22,type:"single",prompt:"¿Qué diferencia hay entre la cabecera de una celda UNI y la de una celda NNI?",
+     opts:[{t:"En NNI desaparece el GFC y esos bits los toma el VPI, que pasa de 8 a 12 bits",ok:true},
+           {t:"En NNI desaparece el GFC y esos bits los toma el VCI, que pasa de 16 a 20 bits"},
+           {t:"En UNI desaparece el HEC porque el usuario no verifica errores de cabecera"},
+           {t:"En UNI el campo CLP ocupa 2 bits en lugar del único bit de la celda NNI"}],
+     expl:"En la celda NNI desaparece el GFC (Generic Flow Control, que además no se usa) y esos 4 bits se los queda el VPI: pasa de 8 bits (256 trayectos en UNI) a 12 bits (4096 en NNI). El VCI se mantiene en 16 bits en ambas, el HEC está en las dos y el CLP siempre es 1 bit."},
+
+    {id:23,type:"single",prompt:"En ATM, ¿quién fija los valores de VPI/VCI de un circuito y en qué caso?",
+     opts:[{t:"El operador si es un PVC, y el conmutador si es un SVC",ok:true},
+           {t:"El conmutador si es un PVC, y el operador si es un SVC"},
+           {t:"Siempre el host de origen, tanto en PVC como en SVC"},
+           {t:"Siempre el operador, ya que los SVC no existen en ATM"}],
+     expl:"Los VPI/VCI se fijan al crear el VC: si son PVC los fija el operador al configurarlos; si son SVC los elige el conmutador, normalmente usando números en orden creciente. Cada entrada en la tabla de un conmutador es un VC."},
+
+    {id:24,type:"single",prompt:"¿Qué relación existe entre VP y VC en la jerarquía de ATM?",
+     opts:[{t:"Por un enlace físico pasan varios VP, y cada VP contiene varios VC",ok:true},
+           {t:"Por un enlace físico pasan varios VC, y cada VC contiene varios VP"},
+           {t:"VP y VC son sinónimos que designan el mismo nivel de conexión"},
+           {t:"Cada enlace físico admite un único VP que contiene un único VC"}],
+     expl:"La jerarquía es de tres niveles, como cañerías dentro de cañerías: enlace físico → múltiples VP (trayectos virtuales) → cada VP con múltiples VC (canales virtuales). El VC es el camino lógico entre hosts, y el identificador de la conexión es el par VPI/VCI."},
+
+    {id:25,type:"single",prompt:"¿Qué valor de VPI/VCI está reservado para <b>señalización</b> en ATM?",
+     opts:[{t:"0/5",ok:true},{t:"0/0"},{t:"0/16"},{t:"0/18"}],
+     expl:"0/5 es señalización. 0/0 es la celda de relleno (idle cell), 0/16 es ILMI (autoconfiguración) y 0/18 es PNNI (protocolo de routing). También reservados: 0/3 y 0/4 para celdas OAM entre vecinos y entre extremos."},
+
+    {id:26,type:"single",prompt:"¿Cuál es la diferencia esencial entre los servicios <b>ABR</b> y <b>UBR</b> de ATM?",
+     opts:[{t:"ABR garantiza un caudal mínimo e incorpora control de congestión; UBR no garantiza nada",ok:true},
+           {t:"UBR garantiza un caudal mínimo e incorpora control de congestión; ABR no garantiza nada"},
+           {t:"ABR reserva capacidad de forma estática y UBR la reserva de forma dinámica"},
+           {t:"ABR sólo admite tráfico de voz mientras que UBR admite cualquier tipo de dato"}],
+     expl:"Los dos aprovechan la capacidad sobrante que deja VBR, pero ABR ofrece un caudal mínimo garantizado (MCR) y mantiene baja la tasa de pérdidas gracias a la realimentación sobre la congestión. UBR no garantiza caudal mínimo ni tasa máxima de pérdidas, y no devuelve información sobre congestión. El que reserva de forma estática es CBR."},
+
+    {id:27,type:"single",prompt:"¿Qué distingue a <b>VBR-rt</b> de <b>VBR-nrt</b>?",
+     opts:[{t:"VBR-rt asegura caudal medio y retardo, VBR-nrt asegura caudal medio pero no retardo",ok:true},
+           {t:"VBR-nrt asegura caudal medio y retardo, VBR-rt asegura caudal medio pero no retardo"},
+           {t:"VBR-rt permite ráfagas mientras que VBR-nrt exige un caudal estrictamente constante"},
+           {t:"VBR-rt usa un pozal agujereado mientras que VBR-nrt usa dos pozales agujereados"}],
+     expl:"VBR-rt (real time) asegura un caudal medio Y un retardo, y usa DOS pozales agujereados. VBR-nrt asegura el caudal medio pero NO el retardo, y usa UN pozal. Los dos permiten ráfagas: el que tiene mínima tolerancia a ráfagas es CBR."},
+
+    {id:28,type:"single",prompt:"¿Cuál es el problema del servicio <b>CBR</b> que motiva la existencia de VBR?",
+     opts:[{t:"Reserva el máximo de forma estática se use o no, desperdiciando capacidad del enlace",ok:true},
+           {t:"No puede garantizar un caudal constante cuando la red está congestionada"},
+           {t:"Sólo funciona sobre circuitos virtuales permanentes y no sobre conmutados"},
+           {t:"Necesita realimentación de la red, lo que agrega retardo a la comunicación"}],
+     expl:"CBR reserva un caudal determinado de forma estática, se use o no. Como la mayoría de las aplicaciones no generan un caudal completamente constante, hay que reservar el máximo que se quiera usar y se desperdicia mucha capacidad. La realimentación es característica de ABR."},
+
+    {id:29,type:"single",prompt:"Entre los parámetros de ATM, ¿cuáles son de <b>calidad de servicio</b> (lo que la red garantiza) y no de tráfico?",
+     opts:[{t:"Max CTD (retardo), Peak-to-Peak CDV (jitter) y CLR (pérdidas)",ok:true},
+           {t:"PCR (caudal pico), SCR (caudal medio) y MCR (caudal mínimo)"},
+           {t:"CDVT (tolerancia), BT (ráfagas) y MCR (caudal mínimo)"},
+           {t:"CIR (garantizado), BC (comprometido) y BE (excedente)"}],
+     expl:"Los de QoS describen lo que la red garantiza: Max CTD (máximo retardo de una celda), Peak-to-Peak CDV (máxima fluctuación del retardo, equivalente al jitter) y CLR (tasa máxima aceptable de celdas perdidas). PCR, SCR y MCR son parámetros de tráfico (caudales). CIR, BC y BE son de Frame Relay."},
+
+    {id:30,type:"single",prompt:"¿A qué equivale el parámetro <b>Peak-to-Peak CDV</b> de ATM?",
+     opts:[{t:"Al jitter: la máxima fluctuación que puede sufrir el retardo de una celda",ok:true},
+           {t:"Al ancho de banda pico que el circuito virtual puede alcanzar"},
+           {t:"A la proporción de celdas que la red puede descartar sin penalización"},
+           {t:"Al tiempo máximo tras el cual una celda se considera definitivamente perdida"}],
+     expl:"Peak-to-Peak CDV (Cell Delay Variation) es la máxima fluctuación del retardo: equivale al jitter. El ancho de banda pico es el PCR, la proporción de pérdidas es el CLR y el tiempo máximo tras el cual se considera perdida es el Max CTD."},
+
+    {id:31,type:"vf",prompt:"ATM garantiza la entrega de todas las celdas, pero no necesariamente el orden en que fueron enviadas.",
+     opts:[{t:"Verdadero"},{t:"Falso",ok:true}],
+     expl:"FALSO, y está invertido. La conclusión textual de la cátedra es la contraria: ATM no garantiza la entrega de celdas, pero SÍ garantiza el orden en que fueron enviadas. En esto es similar a Frame Relay."},
+
+    {id:32,type:"single",prompt:"MPLS opera en la llamada \"capa 2,5\". ¿Qué significa exactamente?",
+     opts:[{t:"Se ubica entre enlace y red, siendo independiente de los protocolos de ambas capas",ok:true},
+           {t:"Reemplaza a la capa de enlace y delega el direccionamiento a la capa de red"},
+           {t:"Divide la capa de red en dos subcapas, una de ruteo y otra de conmutación"},
+           {t:"Funciona alternativamente como capa 2 o como capa 3 según el tipo de tráfico"}],
+     expl:"MPLS opera entre la capa de enlace y la de red, y es independiente de los protocolos de capa 2 y de capa 3: no reemplaza a ninguno, se inserta entre ellos. Eso es lo que le permite encapsularse sobre PPP, Ethernet, FR, ATM o X.25 indistintamente."},
+
+    {id:33,type:"single",prompt:"¿A qué se refiere que el etiquetado de MPLS le permita ofrecer un <b>servicio multiprotocolo</b>?",
+     opts:[{t:"A que puede encapsularse sobre PPP, Ethernet, Frame Relay, ATM o X.25 indistintamente",ok:true},
+           {t:"A que puede transportar simultáneamente celdas ATM y tramas Frame Relay sin conversión"},
+           {t:"A que cada etiqueta identifica cuál es el protocolo de capa 4 del paquete transportado"},
+           {t:"A que admite varios protocolos de ruteo interno funcionando en paralelo en la red"}],
+     expl:"Multiprotocolo se refiere a que, como MPLS sólo trabaja con etiquetas y no con el contenido, puede montarse sobre cualquier tecnología de capa 2 y transportar cualquier protocolo superior. Fue pregunta textual del 1er parcial."},
+
+    {id:34,type:"single",prompt:"¿Cuántos bits tiene la etiqueta MPLS completa y cómo se reparten?",
+     opts:[{t:"32 bits: Label 20, Exp 3, S 1 y TTL 8",ok:true},
+           {t:"32 bits: Label 16, Exp 4, S 4 y TTL 8"},
+           {t:"24 bits: Label 20, Exp 3 y S 1, sin campo TTL"},
+           {t:"20 bits en total, que corresponden únicamente al campo Label"}],
+     expl:"La etiqueta MPLS son 32 bits (4 bytes): Label de 20 bits (2²⁰ = 1.048.576 valores posibles), Exp de 3 bits (QoS), S de 1 bit (stack) y TTL de 8 bits."},
+
+    {id:35,type:"single",prompt:"¿Cuál es la función del campo <b>TTL</b> en la cabecera MPLS?",
+     opts:[{t:"Se decrementa en cada enrutador y al llegar a cero el paquete se descarta",ok:true},
+           {t:"Indica el tiempo máximo que la etiqueta permanece válida en la tabla LIB"},
+           {t:"Fija la prioridad de encolado del paquete dentro de cada nodo del LSP"},
+           {t:"Cuenta la cantidad de etiquetas que el paquete lleva apiladas en ese momento"}],
+     expl:"El TTL de MPLS tiene la misma funcionalidad que en IP: se decrementa en cada enrutador y al llegar a 0 el paquete se descarta (evita bucles infinitos). Generalmente sustituye al campo TTL de la cabecera IP. La prioridad de encolado la fijan los bits Exp, y el apilado lo indica el bit S."},
+
+    {id:36,type:"single",prompt:"¿Qué operaciones realizan respectivamente el LER de ingreso, los LSR del core y el LER de egreso?",
+     opts:[{t:"Push, swap y pop",ok:true},
+           {t:"Pop, swap y push"},
+           {t:"Swap, push y pop"},
+           {t:"Push, pop y swap"}],
+     expl:"El Ingress LER clasifica en una FEC y agrega la etiqueta (push). Cada LSR del core remueve la etiqueta entrante e inserta la saliente (swap). El Egress LER remueve la etiqueta (pop), lee la cabecera IP y reenvía. Ojo: el título de una slide de la cátedra dice 'Pull' por error; la operación correcta es Pop."},
+
+    {id:37,type:"single",prompt:"¿Qué es un <b>LSP</b> y qué característica importante tiene?",
+     opts:[{t:"El camino que siguen los paquetes de una misma FEC, y es unidireccional",ok:true},
+           {t:"El camino que siguen los paquetes de una misma FEC, y es bidireccional"},
+           {t:"La tabla que relaciona etiquetas de entrada con etiquetas de salida en cada nodo"},
+           {t:"El protocolo que distribuye las etiquetas entre los routers del dominio MPLS"}],
+     expl:"LSP (Label Switched Path) es el nombre genérico de un camino MPLS para cierto FEC: el circuito virtual que siguen esos paquetes. La cátedra remarca que un LSP es UNIDIRECCIONAL. La tabla es la LIB y el protocolo que distribuye etiquetas es LDP."},
+
+    {id:38,type:"single",prompt:"¿Qué información relaciona la tabla <b>LIB</b> de un LSR?",
+     opts:[{t:"La interfaz y etiqueta de entrada con la interfaz y etiqueta de salida",ok:true},
+           {t:"La dirección IP de destino con la interfaz de salida correspondiente"},
+           {t:"Cada FEC conocida con el conjunto de protocolos que puede transportar"},
+           {t:"El identificador de circuito virtual con el valor de CIR contratado"}],
+     expl:"La LIB (Label Information Base) relaciona la pareja (interfaz de entrada, etiqueta de entrada) con (interfaz de salida, etiqueta de salida). La segunda opción describe una tabla de ruteo IP común, y la última mezcla conceptos de Frame Relay."},
+
+    {id:39,type:"single",prompt:"¿Para qué sirve el apilado de etiquetas (<i>label stacking</i>) en MPLS?",
+     opts:[{t:"Para agregar varios LSP dentro de un solo LSP, creando un túnel",ok:true},
+           {t:"Para que cada nodo pueda elegir entre varias rutas alternativas disponibles"},
+           {t:"Para transportar en paralelo tráfico de distintas clases de servicio"},
+           {t:"Para reemplazar la etiqueta dañada si falla la verificación de la cabecera"}],
+     expl:"El label stacking permite la agregación de varios LSP en un solo LSP, creando un túnel. La pila es de tipo LIFO (Last In, First Out) y su aplicación real más importante es la VPN sobre MPLS. El bit S indica cuándo se llegó al fondo de la pila."},
+
+    {id:40,type:"single",prompt:"¿Cuál de estas afirmaciones describe correctamente el rol de los <b>LER</b> frente a los <b>LSR</b>?",
+     opts:[{t:"Los LER están en el borde y asignan o remueven etiquetas; los LSR conmutan por etiqueta en el core",ok:true},
+           {t:"Los LER están en el core y conmutan por etiqueta; los LSR asignan las etiquetas en el borde"},
+           {t:"Los LER distribuyen las etiquetas entre nodos; los LSR mantienen las tablas de ruteo IP"},
+           {t:"Los LER y los LSR cumplen la misma función, pero los LER trabajan a mayor velocidad"}],
+     expl:"LER (Label Edge Router): en el borde, asigna y remueve labels; soporta puertas hacia redes no similares (FR, ATM, Ethernet); puede ser Ingress o Egress. LSR (Label Switching Router): conmuta paquetes según el valor de la etiqueta, en el core, y son de alta velocidad. Es la idea de 'ruteo en el borde, conmutación en el core'."}
+  ];
+
+  var order=QUESTIONS.map(function(_,i){return i;});
+  var state={}; // id -> {answered, correct}
+  var rendered={}; // id -> array de opciones EN EL ORDEN MOSTRADO (la mezcla vive acá)
+  var shuffle=false;
+
+  function shuf(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+  function letter(i){ return String.fromCharCode(65+i); }
+
+  var quiz=document.getElementById("quiz");
+
+  function build(){
+    quiz.innerHTML=""; state={}; rendered={};
+    document.getElementById("result").className="result";
+    order.forEach(function(qi){
+      var q=QUESTIONS[qi];
+      // Las opciones se mezclan en CADA render, así la correcta nunca queda fija.
+      // V/F se deja en su orden natural (Verdadero, Falso).
+      var shown = (q.type==="vf") ? q.opts.slice() : shuf(q.opts.slice());
+      rendered[q.id]=shown;
+      var card=document.createElement("div"); card.className="card"; card.id="card-"+q.id;
+      var tyLabel=q.type==="multi"?"Selección múltiple":(q.type==="vf"?"Verdadero / Falso":"Opción única");
+      var head='<div class="qhead"><span class="badge">Q'+q.id+'</span><span class="badge ty">'+tyLabel+'</span></div>';
+      card.innerHTML=head+'<div class="qprompt">'+q.prompt+'</div>';
+      var opts=document.createElement("div"); opts.className="opts"+(q.type==="vf"?" vf":"");
+      shown.forEach(function(o,oi){
+        var b=document.createElement("button"); b.className="opt"; b.type="button";
+        b.innerHTML=(q.type==="vf"?"":'<span class="okey">'+letter(oi)+'</span>')+'<span>'+o.t+'</span>';
+        b.addEventListener("click",function(){ onOpt(q,oi,opts,card,b); });
+        opts.appendChild(b);
+      });
+      card.appendChild(opts);
+      if(q.type==="multi"){
+        var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Comprobar";
+        btn.addEventListener("click",function(){ checkMulti(q,opts,card,btn); });
+        card.appendChild(btn);
+      }
+      quiz.appendChild(card);
+    });
+    updateStats();
+  }
+
+  function onOpt(q,oi,opts,card,btn){
+    if(state[q.id]) return;                 // ya respondida
+    if(q.type==="multi"){ btn.classList.toggle("sel"); return; }  // multi: solo togglear
+    lockSingle(q,oi,opts);                  // single/vf: evaluar al instante
+  }
+
+  function lockSingle(q,chosen,opts){
+    var shown=rendered[q.id];
+    var kids=opts.querySelectorAll(".opt"); var correct=false;
+    kids.forEach(function(k,ki){
+      k.classList.add("locked");
+      if(shown[ki].ok) k.classList.add("ok");
+      if(ki===chosen && !shown[ki].ok) k.classList.add("no");
+      if(ki===chosen && shown[ki].ok) correct=true;
+    });
+    finish(q,opts.parentNode,correct);
+  }
+
+  function checkMulti(q,opts,card,btn){
+    if(state[q.id]) return;
+    var shown=rendered[q.id];
+    var kids=opts.querySelectorAll(".opt"); var allCorrect=true;
+    kids.forEach(function(k,ki){
+      var sel=k.classList.contains("sel"); var ok=!!shown[ki].ok;
+      k.classList.add("locked");
+      if(ok && sel) k.classList.add("ok");
+      else if(ok && !sel){ k.classList.add("miss"); allCorrect=false; }
+      else if(!ok && sel){ k.classList.add("no"); allCorrect=false; }
+    });
+    btn.disabled=true;
+    finish(q,card,allCorrect);
+  }
+
+  function finish(q,card,correct){
+    state[q.id]={answered:true,correct:correct};
+    card.classList.add(correct?"cok":"cno");
+    var fb=document.createElement("div"); fb.className="fb "+(correct?"good":"bad");
+    fb.textContent=correct?"✓ Correcto":"✗ Incorrecto";
+    card.appendChild(fb);
+    var ex=document.createElement("div"); ex.className="expl"; ex.innerHTML="<b>Por qué:</b> "+q.expl;
+    card.appendChild(ex);
+    updateStats();
+  }
+
+  function updateStats(){
+    var ans=0,cor=0;
+    Object.keys(state).forEach(function(k){ ans++; if(state[k].correct)cor++; });
+    var total=QUESTIONS.length;
+    document.getElementById("bar").style.width=Math.round(ans/total*100)+"%";
+    var pct=ans?Math.round(cor/total*100):0;
+    document.getElementById("score").innerHTML=ans+"/"+total+" · <b>"+cor+"</b> correctas<span class='pct'>"+pct+"%</span>";
+    if(ans===total) showResult(cor,total);
+  }
+
+  function showResult(cor,total){
+    var pct=Math.round(cor/total*100);
+    var msg = pct>=90?"Excelente, dominado.":pct>=70?"Bien, repasá los que fallaste.":pct>=50?"Aprobado justo — conviene reforzar.":"A repasar el módulo con el resumen.";
+    var r=document.getElementById("result");
+    r.className="result show";
+    r.innerHTML='<div style="font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Resultado</div>'+
+      '<div class="big" style="color:'+(pct>=70?"var(--ok)":pct>=50?"var(--warn)":"var(--no)")+'">'+pct+'%</div>'+
+      '<div style="font-weight:700">'+cor+' de '+total+' correctas</div><p>'+msg+'</p>';
+    r.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+
+  // controles
+  document.getElementById("resetBtn").addEventListener("click",build);
+  document.getElementById("shufBtn").addEventListener("click",function(){
+    shuffle=!shuffle; this.classList.toggle("on",shuffle);
+    order = shuffle ? shuf(QUESTIONS.map(function(_,i){return i;})) : QUESTIONS.map(function(_,i){return i;});
+    build();
+  });
+  var mem={};
+  var st; try{ st=localStorage.getItem("comii-theme"); }catch(e){ st=mem["comii-theme"]; }
+  if(st==="dark" || (!st && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+  document.getElementById("themeBtn").addEventListener("click",function(){
+    document.documentElement.classList.toggle("dark");
+    var v=document.documentElement.classList.contains("dark")?"dark":"light";
+    try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+  });
+
+  build();
+})();
+</script>
+</body>
+</html>
