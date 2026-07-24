@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 6 · Direccionamiento IP — Quiz</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --card:#ffffff; --text:#1b2531; --muted:#6a7685; --border:#e4e8ee;
+    --accent:#2e6fb0; --accent-soft:#e9f1f9; --ok:#1f8a4c; --ok-bg:#e9f7ef; --ok-bd:#9fd9b6;
+    --no:#c0392b; --no-bg:#fcebea; --no-bd:#eeb4ae; --warn:#b8860b;
+    --shadow:0 1px 3px rgba(20,30,45,.06),0 1px 2px rgba(20,30,45,.04);
+  }
+  html.dark{
+    --bg:#0f141a; --card:#19212b; --text:#e6ebf1; --muted:#93a1b0; --border:#2a3542;
+    --accent:#5fa8e0; --accent-soft:#1d2c3a; --ok:#54c483; --ok-bg:#142a1e; --ok-bd:#2f6b47;
+    --no:#e06a5f; --no-bg:#2c1a19; --no-bd:#6b332f; --warn:#d6a94a;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;font-size:16px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:var(--accent-soft);color:var(--accent);padding:.05em .35em;border-radius:5px;font-size:.86em;font-family:ui-monospace,Menlo,monospace}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:780px;margin:0 auto}
+  .htop .lbl{font-size:.72rem;color:var(--muted)}
+  .htop h1{font-size:1.02rem;margin:1px 0 0;font-weight:700;letter-spacing:-.01em}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+  #shufBtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+  .stats{max-width:780px;margin:11px auto 0;display:flex;align-items:center;gap:12px}
+  .progress{flex:1;height:9px;background:var(--border);border-radius:99px;overflow:hidden}
+  #bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#5ac8a8));border-radius:99px;transition:width .35s ease}
+  #score{font-size:.8rem;white-space:nowrap}
+  #score b{color:var(--ok)} #score .pct{font-weight:800;color:var(--accent);margin-left:3px}
+
+  main{max-width:780px;margin:0 auto;padding:14px}
+  .intro{font-size:.84rem;color:var(--muted);margin:2px 4px 14px;line-height:1.5}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;margin-bottom:12px;box-shadow:var(--shadow);border-left:4px solid var(--border)}
+  .card.cok{border-left-color:var(--ok)} .card.cno{border-left-color:var(--no)}
+  .qhead{display:flex;gap:8px;align-items:center;margin-bottom:9px;flex-wrap:wrap}
+  .badge{font-size:.66rem;font-weight:700;padding:3px 8px;border-radius:7px;background:var(--accent-soft);color:var(--accent);font-family:ui-monospace,Menlo,monospace}
+  .badge.ty{background:transparent;border:1px solid var(--border);color:var(--muted)}
+  .qprompt{font-size:1rem;line-height:1.5;margin-bottom:12px;font-weight:500}
+
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opt{width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--border);color:var(--text);border-radius:11px;padding:11px 13px;font-size:.94rem;line-height:1.4;cursor:pointer;display:flex;align-items:center;gap:11px;min-height:48px;transition:border-color .12s,background .12s;font-family:inherit}
+  .opts.vf .opt{justify-content:center;font-weight:700}
+  @media(hover:hover){.opt:not(.locked):hover{border-color:var(--accent);background:var(--accent-soft)}}
+  .okey{flex:none;width:25px;height:25px;border-radius:50%;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:var(--muted)}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .okey{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .opt.ok{border-color:var(--ok-bd);background:var(--ok-bg)} .opt.ok .okey{background:var(--ok);color:#fff;border-color:var(--ok)}
+  .opt.no{border-color:var(--no-bd);background:var(--no-bg)} .opt.no .okey{background:var(--no);color:#fff;border-color:var(--no)}
+  .opt.miss{border-color:var(--ok-bd);border-style:dashed}
+  .opt.locked{cursor:default}
+
+  .btn{background:var(--accent);color:#fff;border:none;border-radius:11px;padding:10px 15px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px}
+  .btn:disabled{opacity:.5;cursor:default}
+  .fb{margin-top:11px;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px}
+  .fb.good{color:var(--ok)} .fb.bad{color:var(--no)}
+  .expl{margin-top:9px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;font-size:.88rem;line-height:1.5}
+
+  .result{display:none;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:12px;box-shadow:var(--shadow);text-align:center}
+  .result.show{display:block}
+  .result .big{font-size:3rem;font-weight:800;line-height:1;margin:6px 0}
+  .result p{color:var(--muted);font-size:.9rem;margin:6px 0 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 6 · Quiz</span><h1>Protocolos de red · Direccionamiento IP</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <button class="iconbtn" id="shufBtn" title="Mezclar preguntas">⤨ Mezclar</button>
+      <button class="iconbtn" id="resetBtn" title="Reiniciar quiz">↺ Reiniciar</button>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="progress"><div id="bar"></div></div>
+    <span id="score">0/40 · <b>0</b> correctas<span class="pct">0%</span></span>
+  </div>
+</header>
+
+<main>
+  <p class="intro">40 preguntas sobre el Módulo 6. Las <b>Q1 a Q4 son las reales del Quiz 6</b>. Hay <b>mucho cálculo de subnetting</b>: tené lápiz, papel y la tabla de prefijos a mano. Los distractores son errores plausibles (confundir 2ⁿ con 2ⁿ−2, el broadcast con la red siguiente, la interfaz con el gateway), así que <b>no se pueden descartar por la forma</b>. <b>Las opciones se mezclan solas en cada intento.</b></p>
+  <div class="result" id="result"></div>
+  <div id="quiz"></div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  var QUESTIONS = [
+    {id:1,type:"single",prompt:"Indique cuáles direcciones corresponden a <b>IP privadas asignables a un host</b>.",
+     opts:[{t:"10.0.0.254 , 172.18.0.1 , 192.168.155.100",ok:true},
+           {t:"10.0.0.0 , 172.18.0.0 , 192.168.0.0"},
+           {t:"127.0.0.1 , 10.0.0.254 , 172.18.0.1 , 192.168.155.100"},
+           {t:"172.31.254 , 10.200.100.254 , 192.168.255.254"},
+           {t:"224.100.100.1 , 127.127.127.1 , 0.0.0.0"}],
+     expl:"Pregunta real del Quiz 6. Las trampas: 10.0.0.0 / 172.18.0.0 / 192.168.0.0 son direcciones de RED (host ID en ceros); 127.0.0.1 es loopback; 172.31.254 tiene sólo tres octetos; 224.x es clase D (multicast) y 0.0.0.0 es reservada."},
+
+    {id:2,type:"single",prompt:"Indique la notación abreviada de <code>2001:0000:0000:0012:0000:0000:1234:56</code>. Si hay más de una posible, elija la que haga <b>mejor uso</b> de las reglas.",
+     opts:[{t:"2001::12:0:0:1234:56",ok:true},
+           {t:"2001:0:0:12::1234:56"},
+           {t:"2001:0:0:12:0:0:1234:56"},
+           {t:"2001::12:0000:0000:1234:56"}],
+     expl:"Pregunta real del Quiz 6. Hay DOS rachas de ceros del mismo largo. Como el '::' se usa una sola vez, la forma canónica (RFC 5952) lo pone en la PRIMERA racha. La segunda opción es válida pero no canónica: por eso puntúa parcial. La tercera no usa '::' y la cuarta no suprime los ceros a la izquierda."},
+
+    {id:3,type:"single",prompt:"¿A qué red pertenece la IP <code>172.31.250.100/18</code>?",
+     opts:[{t:"172.31.192.0",ok:true},{t:"172.31.224.0"},{t:"172.31.0.0"},{t:"172.30.0.0"}],
+     expl:"Pregunta real del Quiz 6. /18 = 255.255.192.0. El tercer octeto: 250 = 11111010, máscara 192 = 11000000, AND = 11000000 = 192. Red: 172.31.192.0."},
+
+    {id:4,type:"single",prompt:"Tomando <code>172.31.250.0/23</code>, haga subnetting para generar <b>4 subredes de 126 hosts</b>. ¿Cuál es la dirección del <b>último host de la subred 3</b>?",
+     opts:[{t:"172.31.251.126/25",ok:true},{t:"172.31.251.127/25"},{t:"172.31.250.254/25"},{t:"172.31.251.254/26"}],
+     expl:"Pregunta real del Quiz 6. El /23 abarca 172.31.250.0 a 172.31.251.255. Para 126 hosts hace falta /25 (2⁷−2 = 126). Subred 1: 250.0, subred 2: 250.128, subred 3: 251.0 (hosts .1 a .126), subred 4: 251.128. La .127 sería el broadcast, no un host."},
+
+    {id:5,type:"single",prompt:"¿Cuál es la dirección de red y el broadcast de <code>192.168.10.77/26</code>?",
+     opts:[{t:"Red 192.168.10.64 y broadcast 192.168.10.127",ok:true},
+           {t:"Red 192.168.10.64 y broadcast 192.168.10.128"},
+           {t:"Red 192.168.10.0 y broadcast 192.168.10.127"},
+           {t:"Red 192.168.10.76 y broadcast 192.168.10.191"}],
+     expl:"Un /26 tiene bloques de 64: las redes van en .0, .64, .128, .192. La .77 cae en el bloque que arranca en .64, cuyo broadcast es .127 (la última del bloque). Ojo: la .128 ya es la red siguiente, no el broadcast."},
+
+    {id:6,type:"single",prompt:"Una subred debe alojar <b>60 hosts</b>. ¿Qué prefijo es el más ajustado?",
+     opts:[{t:"/26, que ofrece 62 direcciones útiles",ok:true},
+           {t:"/27, que ofrece 32 direcciones útiles"},
+           {t:"/25, que ofrece 128 direcciones útiles"},
+           {t:"/28, que ofrece 30 direcciones útiles"}],
+     expl:"2⁶−2 = 62 ≥ 60 ✓, y es el más ajustado. Cuidado con los números de las otras opciones: un /27 da 30 útiles (no 32) y un /25 da 126 (no 128) — los enunciados que confunden 2ⁿ con 2ⁿ−2 son la trampa clásica."},
+
+    {id:7,type:"single",prompt:"Una subred debe alojar <b>64 hosts</b>. ¿Qué prefijo corresponde?",
+     opts:[{t:"/25, porque un /26 sólo ofrece 62 direcciones útiles",ok:true},
+           {t:"/26, porque 2⁶ = 64 es exactamente lo pedido"},
+           {t:"/27, porque alcanza con reservar 32 direcciones"},
+           {t:"/24, porque hay que dejar margen para el crecimiento"}],
+     expl:"El error clásico. 2⁶ = 64 direcciones TOTALES, pero se descuentan la de red y la de broadcast: quedan 62 útiles, que no alcanzan para 64 hosts. Hay que subir a /25 (2⁷−2 = 126). Este caso exacto aparece en el TP6."},
+
+    {id:8,type:"single",prompt:"¿Cuántas subredes <code>/27</code> entran dentro de una red <code>/24</code>?",
+     opts:[{t:"8 subredes de 30 hosts útiles cada una",ok:true},
+           {t:"4 subredes de 62 hosts útiles cada una"},
+           {t:"16 subredes de 14 hosts útiles cada una"},
+           {t:"32 subredes de 6 hosts útiles cada una"}],
+     expl:"Se prestan 3 bits (27 − 24 = 3), así que salen 2³ = 8 subredes. Cada una tiene 5 bits de host: 2⁵−2 = 30 útiles. Las otras opciones corresponden a /26 (4 de 62), /28 (16 de 14) y /29 (32 de 6)."},
+
+    {id:9,type:"single",prompt:"¿Cuál es la dirección de red de <code>172.20.130.99/20</code>?",
+     opts:[{t:"172.20.128.0",ok:true},{t:"172.20.130.0"},{t:"172.20.0.0"},{t:"172.20.144.0"}],
+     expl:"/20 = 255.255.240.0, con saltos de 16 en el tercer octeto: 0, 16, 32... 128, 144. El 130 cae en el bloque que arranca en 128. Red: 172.20.128.0 (broadcast 172.20.143.255)."},
+
+    {id:10,type:"single",prompt:"Se necesita subdividir una red para 4 subredes de <b>50 hosts</b> cada una. ¿Qué prefijo y qué salto corresponde?",
+     opts:[{t:"/26, con saltos de 64 en el último octeto",ok:true},
+           {t:"/26, con saltos de 32 en el último octeto"},
+           {t:"/27, con saltos de 32 en el último octeto"},
+           {t:"/25, con saltos de 128 en el último octeto"}],
+     expl:"50 hosts → 2⁶−2 = 62 ✓ → /26, que tiene bloques de 64 direcciones. Las subredes quedan en .0, .64, .128 y .192. La opción del /27 daría sólo 30 hosts útiles y la del /25 desperdiciaría la mitad del espacio."},
+
+    {id:11,type:"multi",prompt:"En el método <b>VLSM</b>, ¿cuáles de estos pasos son necesarios? (múltiple)",
+     opts:[{t:"Contar las interfaces de router como hosts de cada subred",ok:true},
+           {t:"Ordenar las subredes de mayor a menor cantidad de hosts",ok:true},
+           {t:"Asignar los bloques de forma contigua, uno tras otro",ok:true},
+           {t:"Usar la misma máscara para todas las subredes de la red"},
+           {t:"Descartar siempre la primera y la última subred generada"}],
+     expl:"Los tres primeros son el método. Usar la misma máscara para todas es justamente FLSM, lo contrario de VLSM. Y descartar la primera y la última es la regla de subredes de FLSM, que no aplica al asignar bloques VLSM contiguos."},
+
+    {id:12,type:"single",prompt:"En el ejercicio del parcial, una subred tiene <b>100 PC más la interfaz del router</b>. ¿Cuántos hosts hay que direccionar y con qué prefijo?",
+     opts:[{t:"101 hosts, que requieren un /25 con 126 direcciones útiles",ok:true},
+           {t:"100 hosts, que requieren un /25 con 126 direcciones útiles"},
+           {t:"101 hosts, que requieren un /26 con 62 direcciones útiles"},
+           {t:"100 hosts, que requieren un /26 con 64 direcciones útiles"}],
+     expl:"La interfaz del router también consume una dirección: son 101 hosts. Y 101 &gt; 62, así que un /26 no alcanza: hay que usar /25 (126 útiles). Ojo, la resolución que circula del parcial pone /26 acá, y está mal."},
+
+    {id:13,type:"single",prompt:"Un enlace punto a punto entre dos routers, ¿qué prefijo lleva y por qué?",
+     opts:[{t:"/30, porque hace falta direccionar exactamente 2 interfaces",ok:true},
+           {t:"/31, porque son sólo dos direcciones las que se necesitan"},
+           {t:"/29, porque conviene dejar margen para futuros equipos"},
+           {t:"No lleva subred propia: las interfaces usan las redes vecinas"}],
+     expl:"Un enlace router-router es una subred más, con exactamente 2 hosts (las dos interfaces). Un /30 da 2²−2 = 2 direcciones útiles: justo lo necesario. Un /31 daría 2−2 = 0 útiles con la fórmula clásica. Olvidarse de estas subredes es un error frecuente en el parcial."},
+
+    {id:14,type:"single",prompt:"En una tabla de ruteo, ¿qué se escribe en la columna <b>Interfaz</b>?",
+     opts:[{t:"La IP de la interfaz propia del router por la que sale el tráfico",ok:true},
+           {t:"La IP de la interfaz del router vecino que recibe el tráfico"},
+           {t:"El nombre físico del puerto, por ejemplo FastEthernet 0/0"},
+           {t:"La dirección de red de destino con su máscara correspondiente"}],
+     expl:"La columna Interfaz lleva la IP propia del router por donde sale el paquete; la IP del vecino va en la columna Gateway. Confundirlas es el error más común de este ejercicio. Chequeo rápido: la interfaz y su gateway deben pertenecer a la misma subred."},
+
+    {id:15,type:"single",prompt:"En una tabla de ruteo, ¿cuándo se pone <b>\"local\"</b> en la columna Gateway?",
+     opts:[{t:"Cuando la red de destino está directamente conectada a ese router",ok:true},
+           {t:"Cuando la red de destino se alcanza por la ruta por defecto"},
+           {t:"Cuando el destino está dentro de la misma red privada del router"},
+           {t:"Cuando el tráfico debe salir por la interfaz de loopback del router"}],
+     expl:"Gateway = local significa que el router está directamente conectado a esa red y no necesita reenviar a nadie. Si hay que saltar a otro router, se pone la IP de ese vecino. La ruta por defecto (0.0.0.0/0) va al final y sí lleva gateway."},
+
+    {id:16,type:"single",prompt:"¿Qué se puede hacer con las filas de la tabla de ruteo una vez agregada la ruta por defecto?",
+     opts:[{t:"Eliminar las filas que apuntan al mismo gateway que la ruta por defecto",ok:true},
+           {t:"Eliminar las filas de las redes directamente conectadas al router"},
+           {t:"Eliminar todas las filas, ya que la ruta por defecto cubre todo el tráfico"},
+           {t:"Reordenar las filas de menor a mayor prefijo para acelerar la búsqueda"}],
+     expl:"La ruta por defecto 0.0.0.0/0 captura todo lo que no coincida antes, así que las filas de redes remotas que apuntan a ese mismo gateway se vuelven redundantes. Las directamente conectadas (gateway = local) NO se pueden eliminar: sin ellas el router no sabría entregar en sus propias redes."},
+
+    {id:17,type:"multi",prompt:"¿Cuáles de estas funciones <b>NO</b> realiza el protocolo IP? (múltiple)",
+     opts:[{t:"Detectar datagramas dañados o perdidos",ok:true},
+           {t:"Generar y recibir acuses de recibo (ACK)",ok:true},
+           {t:"Controlar el orden de llegada de los datagramas",ok:true},
+           {t:"Fragmentar y reensamblar los datagramas cuando es necesario"},
+           {t:"Direccionar y encaminar los datagramas recibidos"}],
+     expl:"IP hace dos cosas: direccionar/encaminar y fragmentar/reensamblar. No detecta pérdidas, no maneja ACK, no controla el orden y no es orientado a conexión. Todo eso lo asumen las capas superiores (TCP). Su entrega es 'best effort'."},
+
+    {id:18,type:"single",prompt:"¿Dónde se reensamblan los fragmentos de un datagrama IP y por qué?",
+     opts:[{t:"En el destino final, para que los fragmentos puedan seguir rutas distintas",ok:true},
+           {t:"En el primer router del camino, para reducir el tráfico de la interred"},
+           {t:"En cada router intermedio, que los rearma antes de volver a fragmentar"},
+           {t:"En el router de borde de la red destino, antes de la entrega local"}],
+     expl:"Fue una decisión de diseño explícita: reensamblar en el destino final permite que cada fragmento de un mismo datagrama siga su propia ruta, flexibilizando el ruteo. Si se reensamblara en un router intermedio, todos los fragmentos tendrían que pasar por ahí."},
+
+    {id:19,type:"single",prompt:"¿Cómo implementa IP el <b>tiempo de vida</b> de un datagrama y para qué sirve?",
+     opts:[{t:"Con un contador de saltos que cada router decrementa; a cero se descarta",ok:true},
+           {t:"Con una marca de tiempo que se compara con el reloj de cada router"},
+           {t:"Con un temporizador en el origen que retransmite si no llega el ACK"},
+           {t:"Con un campo que indica los segundos máximos de permanencia en cola"}],
+     expl:"El tiempo de vida se cuantifica en CANTIDAD DE SALTOS, no en tiempo real: se graba un número en la cabecera, cada router lo decrementa en uno y al llegar a cero el datagrama se descarta. Sirve para que un datagrama con la cabecera errónea no viaje indefinidamente por la interred."},
+
+    {id:20,type:"single",prompt:"¿Por qué el control de flujo de IP es <b>rudimentario</b>?",
+     opts:[{t:"Porque un control efectivo requiere confirmaciones, propias de servicios con conexión",ok:true},
+           {t:"Porque el campo de control de flujo de la cabecera IP es de un solo bit"},
+           {t:"Porque los routers no tienen memoria suficiente para encolar datagramas"},
+           {t:"Porque las capas superiores lo desactivan para no duplicar el trabajo"}],
+     expl:"Un control de flujo efectivo necesita mecanismos de envío y confirmación (comunicación de ida y vuelta), que son propios de los servicios orientados a conexión. Como IP opera sin conexión, lo único que puede hacer es pedirle a la fuente que baje la velocidad mediante un mensaje ICMP."},
+
+    {id:21,type:"single",prompt:"¿Cuál es el rango completo del bloque privado de <b>clase B</b>?",
+     opts:[{t:"172.16.0.0 a 172.31.255.255",ok:true},
+           {t:"172.16.0.0 a 172.16.255.255"},
+           {t:"172.16.0.0 a 172.255.255.255"},
+           {t:"172.0.0.0 a 172.31.255.255"}],
+     expl:"El bloque es 172.16.0.0/12, que abarca de 172.16.0.0 a 172.31.255.255. El error típico es creer que llega hasta 172.255: el /12 fija los primeros 12 bits, con lo que el segundo octeto puede ir de 16 a 31 solamente."},
+
+    {id:22,type:"single",prompt:"¿Para qué está reservado el rango <code>169.254.0.0/16</code>?",
+     opts:[{t:"Para APIPA, la autoconfiguración cuando no hay servidor DHCP",ok:true},
+           {t:"Para las direcciones de multidifusión de la clase D"},
+           {t:"Para las interfaces de loopback de los dispositivos"},
+           {t:"Para los enlaces punto a punto entre routers de borde"}],
+     expl:"169.254.0.0/16 es el rango de APIPA (Automatic Private IP Addressing): el equipo se autoasigna una dirección de ahí cuando no consigue una por DHCP. Su equivalente en IPv6 son las direcciones link-local FE80::/10. El loopback es 127.x y la multidifusión 224–239."},
+
+    {id:23,type:"single",prompt:"¿Cuál es la diferencia entre la <b>difusión dirigida</b> y la <b>difusión limitada</b>?",
+     opts:[{t:"La dirigida apunta a una red específica; la limitada queda en la red origen",ok:true},
+           {t:"La dirigida queda en la red origen; la limitada apunta a una red específica"},
+           {t:"La dirigida usa direcciones clase D y la limitada usa direcciones clase E"},
+           {t:"La dirigida la generan los routers y la limitada la generan los hosts"}],
+     expl:"Difusión dirigida: net ID de una red específica seguido de unos (ej. 56.255.255.255) — llega a todos los hosts de ESA red. Difusión limitada: todos los bits en 1 (255.255.255.255) — no sale de la red origen, los routers no la reenvían."},
+
+    {id:24,type:"single",prompt:"¿Qué diferencia hay entre una tabla de ruteo <b>estática</b> y una <b>dinámica</b>?",
+     opts:[{t:"La estática se carga manualmente; en la dinámica los routers se informan entre sí",ok:true},
+           {t:"La estática la usan los hosts finales y la dinámica solamente los routers"},
+           {t:"La estática guarda direcciones físicas y la dinámica guarda direcciones IP"},
+           {t:"La estática se recalcula por paquete y la dinámica se calcula una sola vez"}],
+     expl:"Estática: ingreso manual de la información. Dinámica: los routers se comunican automáticamente entre ellos enviándose información actualizada del estado de la red, cada cierto tiempo o cuando se produce una variación. Ambas viven tanto en routers como en dispositivos finales."},
+
+    {id:25,type:"single",prompt:"¿Cuál es la función de <b>ARP</b> y cuál es el primer paso de su procedimiento?",
+     opts:[{t:"Obtener la dirección física de una IP; primero consulta su caché ARP",ok:true},
+           {t:"Obtener la dirección física de una IP; primero difunde el pedido en la red"},
+           {t:"Obtener la dirección IP de una dirección física; primero consulta al router"},
+           {t:"Obtener la dirección IP de un nombre de dominio; primero consulta al DNS"}],
+     expl:"ARP resuelve IP → dirección física. Y el primer paso es consultar el caché ARP (en memoria RAM): sólo si no está ahí hace la difusión en la red. La traducción inversa nombre → IP es trabajo del DNS (Módulo 9)."},
+
+    {id:26,type:"single",prompt:"Cuando un host debe enviar un datagrama a una IP de <b>otra red</b>, ¿qué dirección física obtiene por ARP?",
+     opts:[{t:"La del router, porque ARP resuelve siempre el próximo salto",ok:true},
+           {t:"La del host destino, que el router reenvía en su difusión"},
+           {t:"La de difusión, porque el destino no está en el mismo segmento"},
+           {t:"Ninguna: para destinos remotos no se utiliza el protocolo ARP"}],
+     expl:"ARP no atraviesa routers. En una resolución remota, el host difunde en su propio segmento y obtiene la MAC del ROUTER; después el router hace otra difusión ARP en su otro puerto para resolver la MAC del destino final. Cada uno mantiene su propio caché."},
+
+    {id:27,type:"multi",prompt:"¿Cuáles afirmaciones sobre <b>ICMP</b> son correctas? (múltiple)",
+     opts:[{t:"Sus mensajes viajan dentro de datagramas IP, por lo que no son confiables",ok:true},
+           {t:"Su cabecera tiene una longitud de 8 bytes, a la que se agregan los datos",ok:true},
+           {t:"Actúa en la capa de interred reportando errores hacia el origen",ok:true},
+           {t:"Hace que la operación del protocolo IP resulte confiable extremo a extremo"},
+           {t:"Retransmite por su cuenta los datagramas que fueron descartados"}],
+     expl:"ICMP reporta errores y da realimentación, pero explícitamente NO intenta hacer confiable a IP ni retransmite nada: sólo avisa al origen, que decide qué hacer. Sus mensajes viajan en datagramas IP, así que ellos mismos pueden perderse."},
+
+    {id:28,type:"single",prompt:"En la trama <b>IGMP</b>, ¿quién envía el tipo 1 y quién el tipo 2?",
+     opts:[{t:"El tipo 1 (query) lo envían los routers y el tipo 2 (report) los hosts",ok:true},
+           {t:"El tipo 1 (query) lo envían los hosts y el tipo 2 (report) los routers"},
+           {t:"Ambos tipos los envían los routers, en distintos momentos del proceso"},
+           {t:"Ambos tipos los envían los hosts, según se unan o dejen un grupo"}],
+     expl:"Tipo 1 = Membership Query: los routers preguntan quién pertenece al grupo. Tipo 2 = Membership Report: los hosts responden informando su pertenencia. El campo Vers vale siempre 1, y la dirección de clase D es cero en la petición y una dirección multicast válida en el informe."},
+
+    {id:29,type:"single",prompt:"¿Qué protocolo reemplaza a IGMP en IPv6?",
+     opts:[{t:"MLD (Multicast Listener Discovery)",ok:true},
+           {t:"ICMPv6 (Internet Control Message Protocol v6)"},
+           {t:"NDP (Neighbor Discovery Protocol)"},
+           {t:"IGMPv6, la versión adaptada del mismo protocolo"}],
+     expl:"En IPv6, IGMP es reemplazado por MLD (Multicast Listener Discovery). ICMPv6 existe pero es el reemplazo de ICMP, no de IGMP. No hay un 'IGMPv6' como tal."},
+
+    {id:30,type:"multi",prompt:"¿Cuáles son características de <b>IPv6</b>? (múltiple)",
+     opts:[{t:"Direcciones de 128 bits, es decir 2¹²⁸ direcciones disponibles",ok:true},
+           {t:"No existe la dirección de broadcast ni hace falta procesar checksum",ok:true},
+           {t:"El direccionamiento extremo a extremo hace innecesario el NAT",ok:true},
+           {t:"Incorpora seguridad mediante IPsec y mejoras de QoS",ok:true},
+           {t:"Mantiene las clases A, B y C para organizar el espacio de direcciones"}],
+     expl:"IPv6 tiene 128 bits, elimina el broadcast (lo cubre multicast) y el checksum, hace innecesario el NAT, trae IPsec y mejora QoS con etiquetas de flujo. Lo que NO conserva son las clases: ésas ya habían sido eliminadas por CIDR incluso en IPv4."},
+
+    {id:31,type:"single",prompt:"¿Cuál es la característica distintiva de una dirección <b>anycast</b> en IPv6?",
+     opts:[{t:"Se envía a la interfaz más cercana y sólo puede asignarse a un router",ok:true},
+           {t:"Se envía a todas las interfaces del grupo de forma simultánea"},
+           {t:"Se envía a una única interfaz identificada de forma exclusiva"},
+           {t:"Se genera automáticamente en toda interfaz al iniciar el equipo"}],
+     expl:"Anycast va 'de uno al más cercano': identifica una lista de nodos que comparten la dirección. No tiene un direccionamiento distinguible, no puede usarse como dirección de origen ni para direccionar un host, y sólo se asigna a la interfaz de un router. Sirve para balanceo de carga."},
+
+    {id:32,type:"single",prompt:"¿Qué rango de IPv6 es el equivalente de APIPA y se genera automáticamente?",
+     opts:[{t:"FE80::/10, las direcciones link-local",ok:true},
+           {t:"FC00::/7, las direcciones unique local"},
+           {t:"FF00::/8, las direcciones de multidifusión"},
+           {t:"2000::/3, las direcciones unicast globales"}],
+     expl:"FE80::/10 son las link-local, que toda interfaz IPv6 genera automáticamente: es el equivalente funcional de APIPA (169.254.0.0/16) en IPv4. FC00::/7 son las unique local (equivalentes a las privadas), FF00::/8 multicast y 2000::/3 las globales ruteables."},
+
+    {id:33,type:"single",prompt:"¿Cuántas veces puede usarse el símbolo <code>::</code> en una dirección IPv6 y por qué?",
+     opts:[{t:"Una sola vez, porque si no sería ambiguo cuántos ceros representa cada uno",ok:true},
+           {t:"Dos veces como máximo, una en cada mitad de la dirección"},
+           {t:"Tantas veces como rachas de ceros contenga la dirección"},
+           {t:"Una sola vez, y siempre debe ubicarse al final de la dirección"}],
+     expl:"El '::' se usa una sola vez por dirección. El motivo es la ambigüedad: con dos '::' no habría forma de saber cuántos grupos de ceros corresponden a cada uno. Puede ir en cualquier posición, no sólo al final: ::1 es el loopback y FF01::1 lo tiene en el medio."},
+
+    {id:34,type:"single",prompt:"¿Cuál es el aporte principal de <b>CIDR</b> a las tablas de ruteo?",
+     opts:[{t:"Agrega prefijos contiguos en superredes, reduciendo la cantidad de entradas",ok:true},
+           {t:"Comprime cada entrada de la tabla para que ocupe menos memoria"},
+           {t:"Reparte las entradas entre varios routers para equilibrar la carga"},
+           {t:"Elimina las rutas estáticas y las reemplaza por rutas dinámicas"}],
+     expl:"CIDR permite agregar múltiples prefijos contiguos en superredes, con lo que varias redes se representan con una sola entrada. Eso reduce el tamaño de las tablas de ruteo y la carga de los routers. Es la contracara del subnetting: en vez de dividir, agrupa."},
+
+    {id:35,type:"single",prompt:"En CIDR, si el prefijo <code>/N</code> <b>decrece</b> en 1, ¿qué le pasa a la red?",
+     opts:[{t:"Duplica su tamaño, porque queda un bit más para numerar hosts",ok:true},
+           {t:"Reduce su tamaño a la mitad, porque tiene un bit menos de red"},
+           {t:"Mantiene el mismo tamaño pero cambia su dirección de red"},
+           {t:"Se divide en dos subredes iguales dentro del mismo espacio"}],
+     expl:"Menos bits de prefijo = menos bits de red = más bits de host = red más grande. Un /23 tiene el doble de direcciones que un /24 (512 contra 256). Es la misma lógica que gobierna toda la tabla de prefijos."},
+
+    {id:36,type:"single",prompt:"¿Cuál es la limitación de <b>FLSM</b> que VLSM viene a resolver?",
+     opts:[{t:"Usa máscaras de igual tamaño, con uso poco optimizado del espacio",ok:true},
+           {t:"No permite crear más de 254 subredes a partir de una red clase B"},
+           {t:"Obliga a numerar las subredes en orden creciente de direcciones"},
+           {t:"No es compatible con las direcciones privadas definidas en RFC 1918"}],
+     expl:"Las limitaciones de FLSM que enumera la cátedra son tres: uso de máscaras de subred de igual tamaño, poca escalabilidad y uso poco optimizado del espacio de direcciones. VLSM permite asignar a cada subred exactamente el tamaño que necesita."},
+
+    {id:37,type:"single",prompt:"En el método FLSM de la cátedra, para <b>6 subredes</b>, ¿cuántos bits se toman y qué máscara sale en clase B?",
+     opts:[{t:"3 bits, dando la máscara 255.255.224.0",ok:true},
+           {t:"3 bits, dando la máscara 255.255.192.0"},
+           {t:"6 bits, dando la máscara 255.255.252.0"},
+           {t:"2 bits, dando la máscara 255.255.192.0"}],
+     expl:"6 en binario es 110: son 3 bits. Al ponerlos en 1 desde la izquierda del host ID de una clase B: 11111111.11111111.11100000.00000000 = 255.255.224.0. Con 3 bits salen 8 combinaciones, y descartando la primera y la última quedan exactamente las 6 pedidas."},
+
+    {id:38,type:"single",prompt:"¿Cuál de estas direcciones <b>no es válida</b> para asignar a un host?",
+     opts:[{t:"198.121.254.255, porque es el broadcast de esa red clase C",ok:true},
+           {t:"222.222.255.222, porque el tercer octeto está en su valor máximo"},
+           {t:"190.7.2.100, porque el tercer octeto de una clase B debe ser cero"},
+           {t:"126.1.0.100, porque las direcciones clase A no se asignan a hosts"}],
+     expl:"198.121.254.255 es clase C, así que su host ID es el último octeto: 255 = todos los bits en uno = broadcast. Las otras tres son válidas: en 222.222.255.222 el host es .222; en clase B el host son los dos últimos octetos; y las clase A sí se asignan a hosts."},
+
+    {id:39,type:"single",prompt:"¿Qué hace el <b>servidor proxy</b> que lo diferencia del router NAT?",
+     opts:[{t:"Captura los pedidos de los clientes y los reenvía con su propia identidad",ok:true},
+           {t:"Traduce la dirección privada de origen por la dirección pública del router"},
+           {t:"Asigna dinámicamente las direcciones IP a los clientes de la red interna"},
+           {t:"Resuelve los nombres de dominio en las direcciones IP correspondientes"}],
+     expl:"El proxy actúa como intermediario: captura los pedidos de los clientes y los reenvía a destino CON SU PROPIA IDENTIDAD, buscando seguridad, rendimiento y anonimato. La traducción de direcciones es lo que hace el NAT; asignar direcciones es DHCP y resolver nombres es DNS."},
+
+    {id:40,type:"single",prompt:"Se subdivide <code>200.15.7.0/24</code> en 8 subredes iguales. ¿Cuál es el <b>rango de hosts de la cuarta</b>?",
+     opts:[{t:"200.15.7.97 a 200.15.7.126",ok:true},
+           {t:"200.15.7.96 a 200.15.7.127"},
+           {t:"200.15.7.65 a 200.15.7.94"},
+           {t:"200.15.7.128 a 200.15.7.158"}],
+     expl:"8 subredes = 3 bits prestados → /27, con saltos de 32. Las redes van en .0, .32, .64, .96, .128... La cuarta arranca en .96: su primer host es .97 y el último .126 (el .127 es el broadcast). La tercera opción es el rango de la subred 3."}
+  ];
+
+  var order=QUESTIONS.map(function(_,i){return i;});
+  var state={}; // id -> {answered, correct}
+  var rendered={}; // id -> array de opciones EN EL ORDEN MOSTRADO (la mezcla vive acá)
+  var shuffle=false;
+
+  function shuf(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+  function letter(i){ return String.fromCharCode(65+i); }
+
+  var quiz=document.getElementById("quiz");
+
+  function build(){
+    quiz.innerHTML=""; state={}; rendered={};
+    document.getElementById("result").className="result";
+    order.forEach(function(qi){
+      var q=QUESTIONS[qi];
+      // Las opciones se mezclan en CADA render, así la correcta nunca queda fija.
+      // V/F se deja en su orden natural (Verdadero, Falso).
+      var shown = (q.type==="vf") ? q.opts.slice() : shuf(q.opts.slice());
+      rendered[q.id]=shown;
+      var card=document.createElement("div"); card.className="card"; card.id="card-"+q.id;
+      var tyLabel=q.type==="multi"?"Selección múltiple":(q.type==="vf"?"Verdadero / Falso":"Opción única");
+      var head='<div class="qhead"><span class="badge">Q'+q.id+'</span><span class="badge ty">'+tyLabel+'</span></div>';
+      card.innerHTML=head+'<div class="qprompt">'+q.prompt+'</div>';
+      var opts=document.createElement("div"); opts.className="opts"+(q.type==="vf"?" vf":"");
+      shown.forEach(function(o,oi){
+        var b=document.createElement("button"); b.className="opt"; b.type="button";
+        b.innerHTML=(q.type==="vf"?"":'<span class="okey">'+letter(oi)+'</span>')+'<span>'+o.t+'</span>';
+        b.addEventListener("click",function(){ onOpt(q,oi,opts,card,b); });
+        opts.appendChild(b);
+      });
+      card.appendChild(opts);
+      if(q.type==="multi"){
+        var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Comprobar";
+        btn.addEventListener("click",function(){ checkMulti(q,opts,card,btn); });
+        card.appendChild(btn);
+      }
+      quiz.appendChild(card);
+    });
+    updateStats();
+  }
+
+  function onOpt(q,oi,opts,card,btn){
+    if(state[q.id]) return;                 // ya respondida
+    if(q.type==="multi"){ btn.classList.toggle("sel"); return; }  // multi: solo togglear
+    lockSingle(q,oi,opts);                  // single/vf: evaluar al instante
+  }
+
+  function lockSingle(q,chosen,opts){
+    var shown=rendered[q.id];
+    var kids=opts.querySelectorAll(".opt"); var correct=false;
+    kids.forEach(function(k,ki){
+      k.classList.add("locked");
+      if(shown[ki].ok) k.classList.add("ok");
+      if(ki===chosen && !shown[ki].ok) k.classList.add("no");
+      if(ki===chosen && shown[ki].ok) correct=true;
+    });
+    finish(q,opts.parentNode,correct);
+  }
+
+  function checkMulti(q,opts,card,btn){
+    if(state[q.id]) return;
+    var shown=rendered[q.id];
+    var kids=opts.querySelectorAll(".opt"); var allCorrect=true;
+    kids.forEach(function(k,ki){
+      var sel=k.classList.contains("sel"); var ok=!!shown[ki].ok;
+      k.classList.add("locked");
+      if(ok && sel) k.classList.add("ok");
+      else if(ok && !sel){ k.classList.add("miss"); allCorrect=false; }
+      else if(!ok && sel){ k.classList.add("no"); allCorrect=false; }
+    });
+    btn.disabled=true;
+    finish(q,card,allCorrect);
+  }
+
+  function finish(q,card,correct){
+    state[q.id]={answered:true,correct:correct};
+    card.classList.add(correct?"cok":"cno");
+    var fb=document.createElement("div"); fb.className="fb "+(correct?"good":"bad");
+    fb.textContent=correct?"✓ Correcto":"✗ Incorrecto";
+    card.appendChild(fb);
+    var ex=document.createElement("div"); ex.className="expl"; ex.innerHTML="<b>Por qué:</b> "+q.expl;
+    card.appendChild(ex);
+    updateStats();
+  }
+
+  function updateStats(){
+    var ans=0,cor=0;
+    Object.keys(state).forEach(function(k){ ans++; if(state[k].correct)cor++; });
+    var total=QUESTIONS.length;
+    document.getElementById("bar").style.width=Math.round(ans/total*100)+"%";
+    var pct=ans?Math.round(cor/total*100):0;
+    document.getElementById("score").innerHTML=ans+"/"+total+" · <b>"+cor+"</b> correctas<span class='pct'>"+pct+"%</span>";
+    if(ans===total) showResult(cor,total);
+  }
+
+  function showResult(cor,total){
+    var pct=Math.round(cor/total*100);
+    var msg = pct>=90?"Excelente, dominado.":pct>=70?"Bien, repasá los que fallaste.":pct>=50?"Aprobado justo — conviene reforzar.":"A repasar el módulo con el resumen.";
+    var r=document.getElementById("result");
+    r.className="result show";
+    r.innerHTML='<div style="font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Resultado</div>'+
+      '<div class="big" style="color:'+(pct>=70?"var(--ok)":pct>=50?"var(--warn)":"var(--no)")+'">'+pct+'%</div>'+
+      '<div style="font-weight:700">'+cor+' de '+total+' correctas</div><p>'+msg+'</p>';
+    r.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+
+  // controles
+  document.getElementById("resetBtn").addEventListener("click",build);
+  document.getElementById("shufBtn").addEventListener("click",function(){
+    shuffle=!shuffle; this.classList.toggle("on",shuffle);
+    order = shuffle ? shuf(QUESTIONS.map(function(_,i){return i;})) : QUESTIONS.map(function(_,i){return i;});
+    build();
+  });
+  var mem={};
+  var st; try{ st=localStorage.getItem("comii-theme"); }catch(e){ st=mem["comii-theme"]; }
+  if(st==="dark" || (!st && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+  document.getElementById("themeBtn").addEventListener("click",function(){
+    document.documentElement.classList.toggle("dark");
+    var v=document.documentElement.classList.contains("dark")?"dark":"light";
+    try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+  });
+
+  build();
+})();
+</script>
+</body>
+</html>

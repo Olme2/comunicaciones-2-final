@@ -3,97 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Calendario de estudio · Comunicaciones II</title>
+<title>Calendario · Comunicaciones II</title>
 <style>
   :root{
-    --bg:#f5f7fa; --card:#ffffff; --text:#1b2531; --muted:#6a7685; --border:#e4e8ee;
-    --accent:#2e6fb0; --accent-soft:#e9f1f9; --ok:#1f8a4c; --ok-bg:#e9f7ef;
-    --shadow:0 1px 3px rgba(20,30,45,.06),0 1px 2px rgba(20,30,45,.04);
-    --c-mod:#2e6fb0; --c-mod-bg:#e9f1f9;
-    --c-parc:#b8860b; --c-parc-bg:#fbf3e2;
-    --c-colch:#6a7685; --c-colch-bg:#eef1f4;
-    --c-integ:#7a5cc0; --c-integ-bg:#efeaf8;
-    --c-exam:#1f8a4c; --c-exam-bg:#e9f7ef;
+    --bg:#f5f7fa; --card:#ffffff; --ink:#1f2933; --muted:#66727f; --border:#e2e8f0;
+    --accent:#2e6fb0; --accent-soft:#e9f1f9;
+    --ok:#1f8a4c; --ok-bg:#e9f7ef; --ok-bd:#b7e2c8;
+    --warn:#b45309; --warn-bg:#fef3e2; --warn-bd:#f5d9a8;
+    --hot:#b03030; --hot-bg:#fdecea; --hot-bd:#f3c2bb;
+    --rest:#6f56b0; --rest-bg:#f1ecfa; --rest-bd:#d9cdf0;
+    --shadow:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   }
   html.dark{
-    --bg:#0f141a; --card:#19212b; --text:#e6ebf1; --muted:#93a1b0; --border:#2a3542;
-    --accent:#5fa8e0; --accent-soft:#1d2c3a; --ok:#54c483; --ok-bg:#142a1e;
+    --bg:#0f1319; --card:#181d26; --ink:#e6eaf0; --muted:#98a3b2; --border:#28303c;
+    --accent:#5fa8e0; --accent-soft:#1d2c3a;
+    --ok:#54c483; --ok-bg:#142a1e; --ok-bd:#2f6b47;
+    --warn:#e0a458; --warn-bg:#2a2110; --warn-bd:#4d3c1c;
+    --hot:#e08a7f; --hot-bg:#2e1a18; --hot-bd:#5e332e;
+    --rest:#b7a3ec; --rest-bg:#211b33; --rest-bd:#3a2f57;
     --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
-    --c-mod:#5fa8e0; --c-mod-bg:#16283a;
-    --c-parc:#d6a94a; --c-parc-bg:#2c2413;
-    --c-colch:#93a1b0; --c-colch-bg:#20272f;
-    --c-integ:#9b82d8; --c-integ-bg:#211b33;
-    --c-exam:#54c483; --c-exam-bg:#142a1e;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;font-size:16px;padding-bottom:env(safe-area-inset-bottom)}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.6;font-size:16px;padding-bottom:env(safe-area-inset-bottom)}
 
-  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:12px 14px}
-  .htop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;max-width:840px;margin:0 auto}
-  .title h1{font-size:1.08rem;margin:0;font-weight:700;letter-spacing:-.01em}
-  .title span{font-size:.74rem;color:var(--muted)}
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:1000px;margin:0 auto}
+  .htop .lbl{font-size:.74rem;color:var(--muted)}
+  .htop h1{font-size:1.02rem;margin:1px 0 0;font-weight:700}
   .hbtns{display:flex;gap:8px;flex-shrink:0}
-  .iconbtn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.76rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+  .iconbtn{background:var(--bg);color:var(--ink);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.76rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;font-family:var(--font)}
 
-  main{max-width:840px;margin:0 auto;padding:14px}
-  .intro{font-size:.82rem;color:var(--muted);margin:2px 4px 14px;line-height:1.5}
-  .intro b{color:var(--text)}
+  .wrap{max-width:1000px;margin:0 auto;padding:18px 16px 44px}
 
-  .legend{display:flex;flex-wrap:wrap;gap:7px;margin:0 4px 18px}
-  .lchip{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:99px;padding:4px 10px}
-  .lchip .sw{width:9px;height:9px;border-radius:3px}
+  .hero{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:18px;box-shadow:var(--shadow)}
+  .hero h2{margin:0 0 4px;font-size:1.05rem}
+  .hero p{margin:6px 0;color:var(--muted);font-size:.92rem}
+  .hero b{color:var(--ink)}
+  .cuenta{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+  .chip{background:var(--accent-soft);color:var(--accent);border:1px solid var(--border);border-radius:99px;padding:5px 13px;font-size:.8rem;font-weight:700}
+  .chip.hot{background:var(--hot-bg);color:var(--hot);border-color:var(--hot-bd)}
+  .chip.ok{background:var(--ok-bg);color:var(--ok);border-color:var(--ok-bd)}
 
-  .wkhead{margin:20px 4px 10px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+  .metodo{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:12px;padding:14px 17px;margin-bottom:20px;box-shadow:var(--shadow)}
+  .metodo h3{margin:0 0 8px;font-size:.9rem;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+  .metodo ol{margin:6px 0;padding-left:20px;font-size:.92rem}
+  .metodo li{margin:5px 0}
+  .metodo .nota{font-size:.85rem;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)}
+
+  .wkhead{display:flex;align-items:center;gap:10px;margin:26px 0 10px}
   .wkhead h2{margin:0;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);font-weight:800}
-  .wkhead span{font-size:.74rem;color:var(--muted)}
+  .wkhead .line{flex:1;height:1px;background:var(--border)}
 
-  .day{display:flex;gap:12px;background:var(--card);border:1px solid var(--border);border-left:4px solid var(--c-colch);border-radius:12px;padding:11px 13px;margin-bottom:9px;box-shadow:var(--shadow)}
-  .day.mod{border-left-color:var(--c-mod)}
-  .day.parc{border-left-color:var(--c-parc)}
-  .day.colch{border-left-color:var(--c-colch)}
-  .day.integ{border-left-color:var(--c-integ)}
-  .day.exam{border-left-color:var(--c-exam)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+
+  .day{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:13px 15px;box-shadow:var(--shadow);position:relative;overflow:hidden}
   .day.today{box-shadow:0 0 0 2px var(--accent), var(--shadow)}
   .day.past{opacity:.5}
-  .day.past .dtitle{text-decoration:line-through;text-decoration-color:var(--muted)}
-  .examband.today{box-shadow:0 0 0 2px var(--c-exam), var(--shadow)}
-  @media (prefers-reduced-motion: no-preference){
-    .day.today{transition:box-shadow .3s ease}
-  }
+  .day.past .dtitle{text-decoration:line-through}
+  .dhead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:7px}
+  .dfecha{font-size:.78rem;color:var(--muted);font-weight:600;text-transform:capitalize}
+  .dbadge{font-size:.68rem;font-weight:800;padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+  .b-mod{background:var(--accent-soft);color:var(--accent)}
+  .b-off{background:var(--rest-bg);color:var(--rest)}
+  .b-hot{background:var(--hot-bg);color:var(--hot)}
+  .b-int{background:var(--warn-bg);color:var(--warn)}
+  .b-hoy{background:var(--ok-bg);color:var(--ok)}
+  .dtitle{font-size:1rem;font-weight:700;margin:0 0 6px}
 
-  .date{flex:none;width:52px;text-align:center;border-right:1px solid var(--border);padding-right:10px}
-  .date .dw{font-size:.64rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700}
-  .date .dn{font-size:1.5rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
-  .date .dm{font-size:.64rem;color:var(--muted);text-transform:uppercase;font-weight:700}
+  .bloque{font-size:.86rem;margin:5px 0;padding-left:16px;position:relative;color:var(--ink)}
+  .bloque::before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .bloque.b1::before{background:var(--warn)}
+  .bloque .et{font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em;display:block}
 
-  .body{flex:1;min-width:0}
-  .toprow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:3px}
-  .tag{font-size:.64rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em;padding:2px 8px;border-radius:6px}
-  .tag.mod{color:var(--c-mod);background:var(--c-mod-bg)}
-  .tag.parc{color:var(--c-parc);background:var(--c-parc-bg)}
-  .tag.colch{color:var(--c-colch);background:var(--c-colch-bg)}
-  .tag.integ{color:var(--c-integ);background:var(--c-integ-bg)}
-  .tag.exam{color:var(--c-exam);background:var(--c-exam-bg)}
-  .todaytag{font-size:.62rem;font-weight:800;color:#fff;background:var(--accent);padding:2px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.03em}
-  .dtitle{font-weight:700;font-size:.96rem;letter-spacing:-.01em}
-  .ddetail{font-size:.82rem;color:var(--muted);margin-top:3px;line-height:1.5}
-  .ddetail code{background:var(--accent-soft);color:var(--accent);padding:.03em .3em;border-radius:4px;font-size:.9em;font-family:ui-monospace,Menlo,monospace}
+  .day .nota{font-size:.78rem;color:var(--muted);margin-top:8px;padding-top:7px;border-top:1px dashed var(--border)}
 
-  .examband{background:var(--c-exam-bg);border:1px solid var(--border);border-left:4px solid var(--c-exam);border-radius:12px;padding:14px;margin-bottom:9px}
-  .examband .dtitle{font-size:1rem}
-  .examband .ddetail{color:var(--text)}
+  .ventana{background:var(--hot-bg);border:1px solid var(--hot-bd);border-radius:13px;padding:14px 17px;margin-top:22px}
+  .ventana h3{margin:0 0 6px;font-size:.95rem;color:var(--hot)}
+  .ventana p{margin:6px 0;font-size:.9rem}
+  .ventana ul{margin:6px 0;padding-left:20px;font-size:.9rem}
 
-  footer{max-width:840px;margin:22px auto 34px;padding:0 14px;font-size:.74rem;color:var(--muted);line-height:1.55}
-  footer b{color:var(--text)}
+  .valvula{background:var(--warn-bg);border:1px solid var(--warn-bd);border-radius:13px;padding:14px 17px;margin-top:16px}
+  .valvula h3{margin:0 0 6px;font-size:.95rem;color:var(--warn)}
+  .valvula p{margin:6px 0;font-size:.9rem}
+  .valvula ol{margin:6px 0;padding-left:20px;font-size:.9rem}
+
+  .tips{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:16px}
+  .tip{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 15px;box-shadow:var(--shadow)}
+  .tip h4{margin:0 0 6px;font-size:.85rem;color:var(--accent)}
+  .tip p{margin:5px 0;font-size:.85rem;color:var(--muted)}
+  .tip b{color:var(--ink)}
 </style>
 </head>
 <body>
 <header>
   <div class="htop">
-    <div class="title">
-      <h1>Calendario de estudio</h1>
-      <span>Comunicaciones II · Final libre — 14 jul → examen 2–7 ago</span>
-    </div>
+    <div><span class="lbl">Comunicaciones II</span><h1>Calendario hasta el final</h1></div>
     <div class="hbtns">
       <a class="iconbtn" href="index.html">← Centro</a>
       <button class="iconbtn" id="themeBtn">◐ Tema</button>
@@ -101,274 +106,197 @@
   </div>
 </header>
 
-<main>
-  <p class="intro">
-    <b>19 días útiles</b> a 2–4 h. La idea es el <b>ciclo rodante</b>: cada módulo se hace entero
-    (PDF → TP → resumen → quiz → punteros) antes de pasar al siguiente. Los <b>colchones</b> son tu
-    margen de error: si un día no estudiás o algo se atrasa, se recupera ahí sin mover la fecha final.
-    El <b>núcleo</b> queda listo el 31/7, con el examen recién a partir del 2/8.
-  </p>
+<div class="wrap">
 
-  <p class="intro" id="outnote" style="display:none;color:var(--c-parc);font-weight:600"></p>
-
-  <div class="legend">
-    <span class="lchip"><span class="sw" style="background:var(--c-mod)"></span>Módulo</span>
-    <span class="lchip"><span class="sw" style="background:var(--c-parc)"></span>Parcial</span>
-    <span class="lchip"><span class="sw" style="background:var(--c-integ)"></span>Integración</span>
-    <span class="lchip"><span class="sw" style="background:var(--c-colch)"></span>Colchón</span>
-    <span class="lchip"><span class="sw" style="background:var(--c-exam)"></span>Examen</span>
-  </div>
-
-  <!-- SEMANA 1 -->
-  <div class="wkhead"><h2>Semana 1</h2><span>14–20 jul · Módulos 1–5 + 1er parcial</span></div>
-
-  <div class="day mod" data-date="2026-07-14">
-    <div class="date"><div class="dw">Mar</div><div class="dn">14</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag mod">Módulo 1</span></div>
-      <div class="dtitle">Introducción a redes WAN</div>
-      <div class="ddetail">Ciclo completo: leer PDF → TP1 → resumen principal → quiz → punteros en voz alta. Anotá tu % de quiz en el tracker.</div>
+  <div class="hero">
+    <h2>Meta: estar listo el domingo 2 de agosto</h2>
+    <p>El profe asigna la fecha dentro de la ventana del <b>3 al 7 de agosto</b>, así que el plan apunta al <b>lunes 3</b>. Todo lo que venga después es margen, y se usa en modo mantenimiento.</p>
+    <p><b>Presupuesto:</b> 3–4 h por día = <b>4 bloques de 50′</b>. Un módulo completo con el método (PDF de cátedra + resumen principal + quiz + punteros) ocupa 3 bloques. De ahí la regla: <b>un módulo por día</b>.</p>
+    <div class="cuenta">
+      <span class="chip ok" id="chipDias">—</span>
+      <span class="chip">7 módulos hechos · 3 por hacer</span>
+      <span class="chip hot">M10 se lleva 2 días</span>
     </div>
   </div>
 
-  <div class="day mod" data-date="2026-07-15">
-    <div class="date"><div class="dw">Mié</div><div class="dn">15</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag mod">Módulo 2</span></div>
-      <div class="dtitle">Acceso de usuario: última milla</div>
-      <div class="ddetail">Mismo ciclo. Ojo con rangos y velocidades (ADSL, VDSL, DMT): son detalle de examen.</div>
+  <div class="metodo">
+    <h3>Cómo se usa cada día</h3>
+    <ol>
+      <li><b>Bloque 1 (50′) — repaso.</b> Punteros del módulo de <u>ayer</u> (15′, el repaso a las 24 h es el que más rinde) + acortado rápido y quiz de un módulo viejo (35′).</li>
+      <li><b>Bloques 2 a 4 (2h30′) — módulo nuevo.</b> PDF de la cátedra → resumen principal → quiz → punteros.</li>
+    </ol>
+    <p class="nota"><b>El orden importa:</b> en el bloque 1, <u>primero el quiz y después releer sólo lo fallado</u>. Si releés antes, el quiz sale fácil por recencia y te vas creyendo que ese módulo está listo cuando no lo está.</p>
+  </div>
+
+  <div class="wkhead"><h2>Esta semana</h2><div class="line"></div></div>
+  <div class="grid">
+
+    <div class="day" data-date="2026-07-24">
+      <div class="dhead"><span class="dfecha">viernes 24 · julio</span><span class="dbadge b-mod">Módulo</span></div>
+      <div class="dtitle">Módulo 6 · Direccionamiento IP</div>
+      <div class="bloque"><span class="et">Bloques 1–4</span>PDF del M6 → resumen principal → quiz → punteros</div>
+      <div class="nota">Frecuencia alta y con cálculo. Practicá el VLSM del parcial hasta que salga sin mirar la tabla.</div>
+    </div>
+
+    <div class="day" data-date="2026-07-25">
+      <div class="dhead"><span class="dfecha">sábado 25 · julio</span><span class="dbadge b-off">Off</span></div>
+      <div class="dtitle">Termas de Río Hondo</div>
+      <div class="bloque"><span class="et">Sin culpa</span>Descanso completo</div>
+      <div class="nota">Descansar también consolida. No arrastres el material al viaje.</div>
+    </div>
+
+    <div class="day" data-date="2026-07-26">
+      <div class="dhead"><span class="dfecha">domingo 26 · julio</span><span class="dbadge b-mod">Módulo</span></div>
+      <div class="dtitle">Módulo 7 · Ruteo</div>
+      <div class="bloque b1"><span class="et">Bloque 1 · tarde</span>Punteros M6 + quiz M1</div>
+      <div class="bloque"><span class="et">Bloques 2–4</span>PDF del M7 → resumen principal → quiz → punteros</div>
+      <div class="nota">Prioridad del M7: el método de <b>tablas de ruteo</b>. Es lo que fallaste dos veces en el Quiz 7.</div>
+    </div>
+
+    <div class="day" data-date="2026-07-27">
+      <div class="dhead"><span class="dfecha">lunes 27 · julio</span><span class="dbadge b-mod">Módulo</span></div>
+      <div class="dtitle">Módulo 8 · Transporte</div>
+      <div class="bloque b1"><span class="et">Bloque 1</span>Punteros M7 + quiz M2</div>
+      <div class="bloque"><span class="et">Bloques 2–4</span>PDF del M8 → resumen principal → quiz → punteros</div>
+      <div class="nota">Es la contracara del M6: todo lo que IP no hace, lo hace TCP.</div>
+    </div>
+
+    <div class="day" data-date="2026-07-28">
+      <div class="dhead"><span class="dfecha">martes 28 · julio</span><span class="dbadge b-mod">Módulo</span></div>
+      <div class="dtitle">Módulo 9 · Servicios TCP/IP</div>
+      <div class="bloque b1"><span class="et">Bloque 1</span>Punteros M8 + quiz M3</div>
+      <div class="bloque"><span class="et">Bloques 2–4</span>PDF del M9 → resumen principal → quiz → punteros</div>
+      <div class="nota">El más largo (84 págs). DNS y DHCP entran en el punto 2 del 2do parcial.</div>
+    </div>
+
+    <div class="day" data-date="2026-07-29">
+      <div class="dhead"><span class="dfecha">miércoles 29 · julio</span><span class="dbadge b-hot">Punto flojo</span></div>
+      <div class="dtitle">Módulo 10 · Seguridad</div>
+      <div class="bloque b1"><span class="et">Bloque 1</span>Punteros M9 + quiz M4</div>
+      <div class="bloque"><span class="et">Bloques 2–4</span>Ataques · criptografía · proxy · firewall</div>
+      <div class="nota">Las 4 primeras secciones del módulo. iptables queda para mañana.</div>
+    </div>
+
+    <div class="day" data-date="2026-07-30">
+      <div class="dhead"><span class="dfecha">jueves 30 · julio</span><span class="dbadge b-hot">Punto flojo</span></div>
+      <div class="dtitle">Módulo 10 · iptables</div>
+      <div class="bloque b1"><span class="et">Bloque 1</span>Punteros M10 + quiz M5</div>
+      <div class="bloque"><span class="et">Bloques 2–4</span>Tablas, cadenas y reglas + TP10 resuelto</div>
+      <div class="nota">Tu punto más flojo, con día completo. Hay 14 págs del TP10 resuelto con reglas explicadas caso por caso.</div>
+    </div>
+
+  </div>
+
+  <div class="wkhead"><h2>Fin de semana · integración</h2><div class="line"></div></div>
+  <div class="grid">
+
+    <div class="day" data-date="2026-07-31">
+      <div class="dhead"><span class="dfecha">viernes 31 · julio</span><span class="dbadge b-int">Integración</span></div>
+      <div class="dtitle">Simulacro escrito</div>
+      <div class="bloque b1"><span class="et">Bloque 1</span>Punteros M10 + quiz M6</div>
+      <div class="bloque"><span class="et">Bloques 2–3</span>Simulacro completo, con reloj y sin apuntes</div>
+      <div class="bloque"><span class="et">Bloque 4</span>Corrección honesta y lista de errores</div>
+      <div class="nota">Hay 26 págs de parciales con resolución para armarlo realista.</div>
+    </div>
+
+    <div class="day" data-date="2026-08-01">
+      <div class="dhead"><span class="dfecha">sábado 1 · agosto</span><span class="dbadge b-int">Integración</span></div>
+      <div class="dtitle">Errores + práctica oral</div>
+      <div class="bloque b1"><span class="et">Bloque 1</span>Quiz M7 + quiz M8</div>
+      <div class="bloque"><span class="et">Bloques 2–3</span>Repasar sólo lo que falló el simulacro</div>
+      <div class="bloque"><span class="et">Bloque 4</span>Oral: explicar punteros en voz alta, cronometrado</div>
+      <div class="nota">El final es mixto y nunca practicaste hablando. Hacelo en silencio, sin música.</div>
+    </div>
+
+    <div class="day" data-date="2026-08-02">
+      <div class="dhead"><span class="dfecha">domingo 2 · agosto</span><span class="dbadge b-hoy">Liviano</span></div>
+      <div class="dtitle">Cheat sheet · día suave</div>
+      <div class="bloque b1"><span class="et">Bloque 1</span>Quiz M9 + quiz M10</div>
+      <div class="bloque"><span class="et">Bloque 2</span>Cheat sheet de una página: fórmulas, RFCs, números</div>
+      <div class="nota">Y nada más. Llegar descansado rinde más que la hora extra: la consolidación pasa durmiendo.</div>
+    </div>
+
+  </div>
+
+  <div class="ventana">
+    <h3>Semana del examen · 3 al 7 de agosto</h3>
+    <p>A partir del lunes 3, <b>modo mantenimiento</b>. Nada de contenido nuevo: a esta altura lo que rinde es consolidar.</p>
+    <ul>
+      <li><b>Mañana:</b> un módulo de repaso con su acortado + quiz (rotando).</li>
+      <li><b>Tarde:</b> punteros en voz alta + una tanda de VLSM y una tabla de ruteo.</li>
+      <li><b>Noche:</b> cheat sheet y a dormir temprano.</li>
+    </ul>
+    <p>El día anterior al examen: <b>solo cheat sheet y punteros</b>. Nada de material nuevo ni simulacros largos.</p>
+  </div>
+
+  <div class="valvula">
+    <h3>Si un día viene apretado</h3>
+    <p>Este plan no tiene día de colchón, así que conviene tener claro el orden de recorte:</p>
+    <ol>
+      <li><b>Primero:</b> recortá el bloque 1 (el repaso de módulos viejos).</li>
+      <li><b>Después:</b> movés los punteros del módulo nuevo al día siguiente.</li>
+      <li><b>Nunca:</b> el módulo nuevo del día, ni los dos días de M10.</li>
+    </ol>
+    <p>Si vas holgado en M8 o M9 (que los tenés más frescos por el 2do parcial), usá ese tiempo ganado para adelantar M10.</p>
+  </div>
+
+  <div class="tips">
+    <div class="tip">
+      <h4>Pomodoro</h4>
+      <p>Para bloques de <b>cálculo</b> (subnetting, tablas de ruteo, rehacer ejercicios) usá <b>50/10</b> en vez de 25/5: hay un costo de arranque en meterse en un problema y 25′ te corta justo cuando entraste.</p>
+      <p>Usá el descanso para <b>recordar, no para el celular</b>: antes de mirar nada, preguntate "¿qué acabo de leer?".</p>
+    </div>
+    <div class="tip">
+      <h4>Música</h4>
+      <p><b>Con música:</b> tareas mecánicas — rehacer ejercicios que ya entendés, transcribir, armar el cheat sheet.</p>
+      <p><b>En silencio:</b> primera lectura de material nuevo, memorizar, y <b>siempre</b> la práctica oral.</p>
+      <p>Si vas con clásica, priorizá dinámica pareja: Bach (Goldberg, Clave bien temperado, Brandeburgo) y barroco en general. Evitá el romanticismo con crescendos.</p>
+    </div>
+    <div class="tip">
+      <h4>El orden que más rinde</h4>
+      <p><b>Quiz primero, relectura después.</b> Releer se siente productivo porque el texto resulta fluido, pero esa fluidez es la ilusión: reconocer no es recordar.</p>
+      <p>El quiz te da el diagnóstico honesto, y ahí la relectura va dirigida a los 5 o 6 puntos flojos en vez de repartirse pareja sobre lo que ya sabés.</p>
+    </div>
+    <div class="tip">
+      <h4>Los tres focos</h4>
+      <p><b>M6:</b> VLSM sin mirar la tabla de prefijos.</p>
+      <p><b>M7:</b> el chequeo de coherencia de tablas de ruteo (interfaz vs gateway).</p>
+      <p><b>M10:</b> leer reglas de iptables y decir qué hacen.</p>
+      <p>Son los tres lugares donde ya perdiste puntos. Si esos tres salen, el resto está.</p>
     </div>
   </div>
 
-  <div class="day mod" data-date="2026-07-16">
-    <div class="date"><div class="dw">Jue</div><div class="dn">16</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag mod">Módulo 3</span></div>
-      <div class="dtitle">Multiplexión</div>
-      <div class="ddetail">Fórmulas clave: PCM 64 kbps, E1/T1, cálculo de %e. Módulo con cuentas: practicá el quiz numérico.</div>
-    </div>
-  </div>
-
-  <div class="day mod" data-date="2026-07-17">
-    <div class="date"><div class="dw">Vie</div><div class="dn">17</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag mod">Módulo 4</span></div>
-      <div class="dtitle">Conmutación de circuitos y paquetes</div>
-      <div class="ddetail">Tiempos de transmisión y comparación circuitos vs paquetes. Es tema de peso en el 1er parcial.</div>
-    </div>
-  </div>
-
-  <div class="day mod" data-date="2026-07-18">
-    <div class="date"><div class="dw">Sáb</div><div class="dn">18</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag mod">Módulo 5</span></div>
-      <div class="dtitle">Frame Relay · ATM · MPLS</div>
-      <div class="ddetail">Cierra el bloque 1–5. Con esto ya podés rendir el 1er parcial de práctica.</div>
-    </div>
-  </div>
-
-  <div class="day parc" data-date="2026-07-19">
-    <div class="date"><div class="dw">Dom</div><div class="dn">19</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag parc">1er parcial</span></div>
-      <div class="dtitle">1er parcial de práctica (módulos 1–5)</div>
-      <div class="ddetail">Completo, cronometrado, a libro cerrado. Después: te lo corrijo y re-quiz de lo que haya fallado.</div>
-    </div>
-  </div>
-
-  <div class="day colch" data-date="2026-07-20">
-    <div class="date"><div class="dw">Lun</div><div class="dn">20</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag colch">Colchón 1</span></div>
-      <div class="dtitle">Recuperar / reforzar</div>
-      <div class="ddetail">Sin material nuevo. Recuperás lo atrasado o reforzás el módulo más flojo de 1–5. Si vas al día, es repaso extra.</div>
-    </div>
-  </div>
-
-  <!-- SEMANA 2 -->
-  <div class="wkhead"><h2>Semana 2</h2><span>21–27 jul · Módulos 6–10 + 2do parcial</span></div>
-
-  <div class="day mod" data-date="2026-07-21">
-    <div class="date"><div class="dw">Mar</div><div class="dn">21</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag mod">Módulo 6</span></div>
-      <div class="dtitle">Protocolos de red · Direccionamiento IP</div>
-      <div class="ddetail">Subredes / VLSM: <b>alta frecuencia</b> en el 2do parcial. Practicá subnetting hasta que salga solo.</div>
-    </div>
-  </div>
-
-  <div class="day mod" data-date="2026-07-22">
-    <div class="date"><div class="dw">Mié</div><div class="dn">22</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag mod">Módulo 7</span></div>
-      <div class="dtitle">Protocolos de ruteo</div>
-      <div class="ddetail">Tabla de ruteo estática: <b>alta frecuencia</b>. También RIP, OSPF, BGP a nivel concepto.</div>
-    </div>
-  </div>
-
-  <div class="day mod" data-date="2026-07-23">
-    <div class="date"><div class="dw">Jue</div><div class="dn">23</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag mod">Módulo 8</span></div>
-      <div class="dtitle">Protocolos de transporte</div>
-      <div class="ddetail">TCP (handshake, ventana, congestión) y UDP. Aparece en el análisis de captura del parcial.</div>
-    </div>
-  </div>
-
-  <div class="day mod" data-date="2026-07-24">
-    <div class="date"><div class="dw">Vie</div><div class="dn">24</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag mod">Módulo 9</span></div>
-      <div class="dtitle">Servicios TCP/IP</div>
-      <div class="ddetail">DHCP y DNS: <b>alta frecuencia</b> (resolución de nombres, tipos de registro, TTL). SMTP y HTTP.</div>
-    </div>
-  </div>
-
-  <div class="day mod" data-date="2026-07-25">
-    <div class="date"><div class="dw">Sáb</div><div class="dn">25</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag mod">Módulo 10</span></div>
-      <div class="dtitle">Seguridad de redes</div>
-      <div class="ddetail">iptables: <b>alta frecuencia</b> (NAT, DNAT, SNAT, políticas). Criptografía y proxy a nivel concepto.</div>
-    </div>
-  </div>
-
-  <div class="day parc" data-date="2026-07-26">
-    <div class="date"><div class="dw">Dom</div><div class="dn">26</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag parc">2do parcial</span></div>
-      <div class="dtitle">2do parcial · variante 1 (módulos 6–10)</div>
-      <div class="ddetail">Completo y cronometrado. Corrección conmigo. Las variantes 2 y 3 quedan para la semana de integración.</div>
-    </div>
-  </div>
-
-  <div class="day colch" data-date="2026-07-27">
-    <div class="date"><div class="dw">Lun</div><div class="dn">27</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag colch">Colchón 2</span></div>
-      <div class="dtitle">Recuperar / reforzar</div>
-      <div class="ddetail">Igual que el colchón 1, pero para el bloque 6–10.</div>
-    </div>
-  </div>
-
-  <!-- SEMANA 3 -->
-  <div class="wkhead"><h2>Semana 3</h2><span>28 jul–1 ago · Integración y repaso</span></div>
-
-  <div class="day integ" data-date="2026-07-28">
-    <div class="date"><div class="dw">Mar</div><div class="dn">28</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag integ">Integración</span></div>
-      <div class="dtitle">Resumen general + arrancar quiz general</div>
-      <div class="ddetail">Leer el resumen acortado general (une conceptos entre módulos) y empezar el quiz general grande.</div>
-    </div>
-  </div>
-
-  <div class="day integ" data-date="2026-07-29">
-    <div class="date"><div class="dw">Mié</div><div class="dn">29</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag integ">Integración</span></div>
-      <div class="dtitle">2do parcial · variantes 2 y 3</div>
-      <div class="ddetail">Las dos variantes restantes, cronometradas, con corrección. Detectar cualquier hueco que quede.</div>
-    </div>
-  </div>
-
-  <div class="day integ" data-date="2026-07-30">
-    <div class="date"><div class="dw">Jue</div><div class="dn">30</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag integ">Integración</span></div>
-      <div class="dtitle">Simulacro mixto + cheat sheet</div>
-      <div class="ddetail">Simulacro que combina varios temas (como el final real) y armado/repaso de la hoja única de fórmulas.</div>
-    </div>
-  </div>
-
-  <div class="day integ" data-date="2026-07-31">
-    <div class="date"><div class="dw">Vie</div><div class="dn">31</div><div class="dm">Jul</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag integ">Integración</span><span class="tag exam">Núcleo listo</span></div>
-      <div class="dtitle">Rehacer parciales flojos + quiz general completo</div>
-      <div class="ddetail">Rehacés los parciales donde sacaste menos y cerrás el quiz general. Acá el estudio "pesado" está terminado.</div>
-    </div>
-  </div>
-
-  <div class="day colch" data-date="2026-08-01">
-    <div class="date"><div class="dw">Sáb</div><div class="dn">01</div><div class="dm">Ago</div></div>
-    <div class="body">
-      <div class="toprow"><span class="tag colch">Colchón 3</span></div>
-      <div class="dtitle">Repaso ligero</div>
-      <div class="ddetail">Resúmenes acortados + punteros en voz alta. Sin contenido nuevo. Margen final por si algo quedó pendiente.</div>
-    </div>
-  </div>
-
-  <!-- EXAMEN -->
-  <div class="wkhead"><h2>Ventana de examen</h2><span>2–7 ago</span></div>
-
-  <div class="examband" data-from="2026-08-02" data-to="2026-08-07">
-    <div class="toprow"><span class="tag exam">Examen</span></div>
-    <div class="dtitle">Repaso liviano hasta el día que te toque</div>
-    <div class="ddetail">Leés tus resúmenes acortados, repasás punteros y la cheat sheet. Rehacés algún quiz si querés mantener el ritmo. <b>El día previo al examen: descanso, nada nuevo.</b> Llegás con todo consolidado desde el 31/7.</div>
-  </div>
-</main>
-
-<footer>
-  <b>Cómo leer este calendario:</b> cada día tiene su tarea concreta. Los colchones absorben imprevistos —
-  si perdés 2–3 días sueltos, igual cerrás el núcleo el 31/7 con el examen recién a partir del 2/8. Volvé
-  al <a href="index.html" style="color:var(--accent)">Centro de estudio</a> para marcar tu progreso.
-</footer>
+</div>
 
 <script>
   (function(){
-    // ---- tema ----
     var mem={};
-    var saved; try{ saved=localStorage.getItem("comii-theme"); }catch(e){ saved=mem["comii-theme"]; }
-    if(saved==="dark" || (!saved && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)){
-      document.documentElement.classList.add("dark");
-    }
+    var s; try{ s=localStorage.getItem("comii-theme"); }catch(e){ s=mem["comii-theme"]; }
+    if(s==="dark" || (!s && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
     document.getElementById("themeBtn").addEventListener("click",function(){
       document.documentElement.classList.toggle("dark");
       var v=document.documentElement.classList.contains("dark")?"dark":"light";
       try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
     });
 
-    // ---- marcar HOY y los días ya pasados (se recalcula en cada carga) ----
-    function midnight(d){ var x=new Date(d); x.setHours(0,0,0,0); return x; }
-    function parse(s){ var p=s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
-
-    var today=midnight(new Date());
-    var todayEl=null;
-
-    document.querySelectorAll(".day[data-date]").forEach(function(el){
-      var d=parse(el.getAttribute("data-date"));
-      if(d.getTime()===today.getTime()){
-        el.classList.add("today");
-        var row=el.querySelector(".toprow");
-        if(row){ var b=document.createElement("span"); b.className="todaytag"; b.textContent="Hoy"; row.appendChild(b); }
-        todayEl=el;
-      } else if(d<today){
-        el.classList.add("past");
-      }
-    });
-
-    // ventana de examen (rango de fechas)
-    var band=document.querySelector(".examband[data-from]");
-    if(band){
-      var f=parse(band.getAttribute("data-from")), t=parse(band.getAttribute("data-to"));
-      if(today>=f && today<=t){
-        band.classList.add("today");
-        var r=band.querySelector(".toprow");
-        if(r){ var b2=document.createElement("span"); b2.className="todaytag"; b2.textContent="Hoy"; r.appendChild(b2); }
-      }
+    // marcador de hoy y dias pasados, calculado en cada carga
+    var hoy=new Date(); hoy.setHours(0,0,0,0);
+    var dias=document.querySelectorAll(".day[data-date]");
+    for(var i=0;i<dias.length;i++){
+      var p=dias[i].getAttribute("data-date").split("-");
+      var d=new Date(+p[0], +p[1]-1, +p[2]); d.setHours(0,0,0,0);
+      if(d.getTime()===hoy.getTime()) dias[i].classList.add("today");
+      else if(d<hoy) dias[i].classList.add("past");
     }
 
-    // aviso si la fecha cae fuera del plan
-    if(!todayEl && !(band && band.classList.contains("today"))){
-      var n=document.getElementById("outnote");
-      if(n){
-        n.style.display="block";
-        n.textContent = (today < parse("2026-07-14"))
-          ? "El plan arranca el 14 de julio."
-          : "La fecha de hoy quedó fuera del plan (terminó el 7 de agosto).";
-      }
-    }
+    // cuenta regresiva al domingo 2
+    var meta=new Date(2026,7,2); meta.setHours(0,0,0,0);
+    var falta=Math.round((meta-hoy)/86400000);
+    var chip=document.getElementById("chipDias");
+    if(falta>1) chip.textContent="Faltan "+falta+" días para el 2 de agosto";
+    else if(falta===1) chip.textContent="Falta 1 día para el 2 de agosto";
+    else if(falta===0) chip.textContent="Hoy es el 2 de agosto";
+    else chip.textContent="Ventana de examen en curso";
   })();
 </script>
 </body>

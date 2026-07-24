@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 6 · Protocolos de red · Direccionamiento IP — Resumen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f6f1; --card:#ffffff; --ink:#2b2b2b; --muted:#6d6a60; --border:#e7e2d5;
+    --accent:#2e6fb0;
+    --hl-pink:#ffc6cd; --hl-green:#c6ecca; --hl-yellow:#ffe6a3;
+    --diag:#6f56b0; --diag-bg:#efeaf8; --diag-bd:#d6c9ee;
+    --key:#c78a00; --key-bg:#fff4d4; --key-bd:#ecd58c;
+    --calc:#0e7c86; --calc-bg:#e2f6f7; --calc-bd:#a5dde1;
+    --link:#1f8a4c; --link-bg:#e6f6ec; --link-bd:#a9dcbb;
+    --note:#b8860b; --note-bg:#fbf2df; --note-bd:#e6d3a0;
+    --warn:#b03030; --warn-bg:#fbe9e7; --warn-bd:#eab8b0;
+    --shadow:0 1px 3px rgba(40,35,20,.06),0 1px 2px rgba(40,35,20,.04);
+    --font:"Comic Sans MS","Comic Neue","Chalkboard SE","Segoe Print",cursive;
+  }
+  html.dark{
+    --bg:#13151a; --card:#1b1f27; --ink:#e9e5d9; --muted:#9b988c; --border:#2c303a;
+    --accent:#5fa8e0;
+    --diag:#b7a3ec; --diag-bg:#211b33; --diag-bd:#3a2f57;
+    --key:#e6bd52; --key-bg:#2b2410; --key-bd:#4a3d1c;
+    --calc:#4fc9d4; --calc-bg:#0f2a2d; --calc-bd:#245055;
+    --link:#54c483; --link-bg:#142a1e; --link-bd:#2f6b47;
+    --note:#d6a94a; --note-bg:#2b2410; --note-bd:#4a3d1c;
+    --warn:#e08a7f; --warn-bg:#2e1a18; --warn-bd:#5e332e;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.72;font-size:17px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:#eef1f5;color:#245a92;padding:.04em .34em;border-radius:5px;font-size:.84em;font-family:ui-monospace,Menlo,monospace;word-break:break-word}
+  html.dark code{background:#20262f;color:#7fb6e6}
+
+  mark{color:#2b2b2b;padding:.02em .16em;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  mark.p{background:var(--hl-pink)}
+  mark.s{background:var(--hl-green)}
+  mark.y{background:var(--hl-yellow)}
+  u.w{text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:820px;margin:0 auto}
+  .htop .lbl{font-size:.74rem;color:var(--muted)}
+  .htop h1{font-size:1.02rem;margin:1px 0 0;font-weight:700}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--ink);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;font-family:var(--font)}
+
+  .wrap{max-width:820px;margin:0 auto;padding:18px 18px 44px}
+  .meta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+  .tag{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--muted)}
+  .tag.freq{color:var(--warn);border-color:var(--warn-bd);background:var(--warn-bg)}
+
+  nav.toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 17px;margin-bottom:24px;box-shadow:var(--shadow)}
+  nav.toc h2{margin:0 0 8px;font-size:.9rem;color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
+  nav.toc ol{margin:0;padding-left:22px;columns:2;column-gap:26px;font-size:.9rem}
+  nav.toc li{margin:3px 0;break-inside:avoid}
+  nav.toc a{color:var(--ink);text-decoration:none}
+  nav.toc a:hover{color:var(--accent);text-decoration:underline}
+  @media(max-width:560px){nav.toc ol{columns:1}}
+
+  h2.sec{font-size:1.24rem;margin:34px 0 6px;scroll-margin-top:74px;display:inline-block;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:5px}
+  h2.sec .n{color:var(--accent);font-size:.95rem;margin-right:8px}
+  h3{font-size:1.06rem;margin:20px 0 4px}
+  p{margin:9px 0}
+  .lead{color:var(--muted);font-size:1rem}
+  ul{margin:9px 0;padding-left:26px;list-style:none}
+  ul>li{position:relative}
+  ul>li::before{content:"–";position:absolute;left:-20px;color:var(--accent);font-weight:700}
+  ul ul>li::before{content:"○";font-size:.7em;left:-18px}
+  li{margin:6px 0}
+  hr{border:none;border-top:1px dashed var(--border);margin:30px 0}
+  b,strong{font-weight:700}
+
+  .callout{border-radius:12px;padding:13px 16px;margin:16px 0;font-size:.96rem;border:1px solid var(--border);border-left-width:5px}
+  .callout .ct{font-size:.78rem;font-weight:700;margin-bottom:5px;display:block;text-decoration:underline;text-underline-offset:3px}
+  .callout ul{margin:6px 0 0}
+  .diagram{background:var(--diag-bg);border-color:var(--diag-bd);border-left-color:var(--diag)}
+  .diagram .ct{color:var(--diag)}
+  .key{background:var(--key-bg);border-color:var(--key-bd);border-left-color:var(--key)}
+  .key .ct{color:var(--key)}
+  .link{background:var(--link-bg);border-color:var(--link-bd);border-left-color:var(--link)}
+  .link .ct{color:var(--link)}
+  .note{background:var(--note-bg);border-color:var(--note-bd);border-left-color:var(--note)}
+  .note .ct{color:var(--note)}
+  .warn{background:var(--warn-bg);border-color:var(--warn-bd);border-left-color:var(--warn)}
+  .warn .ct{color:var(--warn)}
+
+  .calc{background:var(--calc-bg);border:1px solid var(--calc-bd);border-left:5px solid var(--calc);border-radius:12px;padding:14px 16px;margin:16px 0}
+  .calc .ct{font-size:.78rem;font-weight:700;color:var(--calc);margin-bottom:6px;display:block;text-decoration:underline;text-underline-offset:3px}
+  .calc .step{font-family:ui-monospace,Menlo,monospace;font-size:.85rem;background:var(--card);border:1px solid var(--calc-bd);border-radius:8px;padding:8px 11px;margin:7px 0;line-height:1.6;overflow-x:auto;white-space:pre}
+  html.dark .calc .step{background:#12181d}
+  .calc .res{font-weight:700;color:var(--calc)}
+  .formula{font-family:ui-monospace,Menlo,monospace;font-size:.9em;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:.1em .4em;display:inline-block;margin:2px 0}
+  html.dark .formula{background:#12181d}
+
+  dl.defs{margin:10px 0}
+  dl.defs dt{margin-top:9px}
+  dl.defs dt mark{font-weight:700}
+  dl.defs dd{margin:2px 0 0 4px;font-size:.96rem}
+
+  .tablewrap{overflow-x:auto;margin:14px 0;border:1px solid var(--border);border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;font-size:.85rem;min-width:480px}
+  th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:var(--accent);color:#fff;font-weight:700;font-size:.8rem}
+  td:first-child{font-weight:700;color:var(--accent);white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  tbody tr:nth-child(even){background:rgba(0,0,0,.02)}
+  html.dark tbody tr:nth-child(even){background:rgba(255,255,255,.03)}
+  .tnote{font-size:.78rem;color:var(--muted);margin:4px 2px 0}
+  table.mono td{font-family:ui-monospace,Menlo,monospace;font-size:.82rem}
+  table.mono td:first-child{font-family:var(--font)}
+
+  .bits{display:flex;flex-wrap:wrap;gap:3px;margin:10px 0;font-family:ui-monospace,Menlo,monospace;font-size:.74rem}
+  .bits .o{border:1px solid var(--accent);border-radius:6px;padding:5px 8px;text-align:center;background:var(--card);flex:1;min-width:74px}
+  .bits .o b{display:block;font-size:.9em;color:var(--accent)}
+  .bits .o span{color:var(--muted);font-size:.88em}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 6 · Resumen</span><h1>Protocolos de red · Direccionamiento IP</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <a class="iconbtn" href="../../glosario.html">Glosario</a>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="meta">
+    <span class="tag freq">Frecuencia: alta</span>
+    <span class="tag">Fuentes: Módulo 6 · TP6 · Quiz 6 · 2do parcial</span>
+  </div>
+
+  <nav class="toc">
+    <h2>Contenido</h2>
+    <ol>
+      <li><a href="#porque">Por qué importa</a></li>
+      <li><a href="#interred">Interconexión de redes</a></li>
+      <li><a href="#ip">Protocolo IP (RFC 791)</a></li>
+      <li><a href="#consid">Las 5 consideraciones</a></li>
+      <li><a href="#dir">La dirección IP</a></li>
+      <li><a href="#clases">Clases de direcciones</a></li>
+      <li><a href="#espec">Direcciones especiales</a></li>
+      <li><a href="#mascara">La máscara de red</a></li>
+      <li><a href="#pubpriv">Públicas y privadas · NAT</a></li>
+      <li><a href="#tabla">⭐ Tabla de prefijos</a></li>
+      <li><a href="#flsm">Subnetting FLSM: las 4 etapas</a></li>
+      <li><a href="#vlsm">VLSM: el método</a></li>
+      <li><a href="#vlsm-ej">VLSM: ejercicio resuelto</a></li>
+      <li><a href="#cidr">CIDR</a></li>
+      <li><a href="#ruteo">Tablas de ruteo</a></li>
+      <li><a href="#parcial">⭐ El ejercicio del 2do parcial</a></li>
+      <li><a href="#arp">ARP</a></li>
+      <li><a href="#icmp">ICMP</a></li>
+      <li><a href="#igmp">IGMP</a></li>
+      <li><a href="#ipv6">IPv6</a></li>
+      <li><a href="#quiz">Las preguntas del Quiz 6</a></li>
+      <li><a href="#datos">Datos clave</a></li>
+      <li><a href="#conex">Conexión con otros módulos</a></li>
+    </ol>
+  </nav>
+
+  <p class="lead"><b>Este es el módulo que más se practica y menos se lee.</b> El Quiz 6 fue mitad subnetting y el 2do parcial arranca con un ejercicio completo de VLSM + tablas de ruteo. Toda la teoría de IP, ARP, ICMP e IPv6 importa, pero <u class="w">lo que decide la nota es que las cuentas de direccionamiento te salgan solas</u>. Por eso este resumen tiene una tabla de prefijos para memorizar y varios ejercicios resueltos.</p>
+
+  <h2 class="sec" id="porque"><span class="n">01</span>Objetivos del módulo</h2>
+  <p>La cátedra los declara así. Al terminar tenés que poder:</p>
+  <ul>
+    <li>Conocer los <b>protocolos de red</b> que permiten la interconexión de dispositivos en Internet.</li>
+    <li>Comprender el <b>funcionamiento del protocolo IP</b>.</li>
+    <li><u class="w">Definir esquemas de direccionamiento IPv4 e IPv6 para redes de distintos tamaños.</u></li>
+    <li>Comprender los <b>protocolos auxiliares de IP</b>: ARP, ICMP e IGMP.</li>
+  </ul>
+  <p class="tnote">Fijate que el tercer objetivo es el único que empieza con un verbo de acción ("definir esquemas"). Es el que se evalúa con ejercicios.</p>
+
+  <h2 class="sec" id="interred"><span class="n">02</span>Fundamentos de la interconexión de redes</h2>
+  <div class="callout key">
+    <span class="ct">La lógica de funcionamiento de una interred (los 3 pasos)</span>
+    <ul>
+      <li><b>1.</b> El <b>SF origen</b> (sistema final) debe decidir <b>a qué router</b> enviar el datagrama para que alcance al SF destino.</li>
+      <li><b>2.</b> Cada <b>router intermedio</b> decide a qué otro router reenviarlo. Cuando el datagrama llega al router que tiene conexión con la red del SF destino, <b>se lo entrega</b>.</li>
+      <li><b>3.</b> Esta forma de operar se llama <mark class="p">paso por paso</mark>. Para que funcione, <u class="w">todos los SF y routers deben compartir el mismo protocolo de la capa de interred</u> — en Internet, IP.</li>
+    </ul>
+  </div>
+  <div class="callout diagram">
+    <span class="ct">Qué muestra el diagrama (slide 6, la pila de protocolos)</span>
+    Es la <b>arquitectura TCP/IP en cuatro capas</b>, con los protocolos de cada una:
+    <ul>
+      <li><b>Aplicación:</b> TELNET, FTP, DNS, HTTP, SMTP</li>
+      <li><b>Transporte:</b> TCP, UDP</li>
+      <li><b>Interred:</b> <mark class="p">IP</mark>, y a su lado <b>ICMP, IGMP, OSPF, RSVP</b></li>
+      <li><b>Acceso de red y física:</b> LAN, Frame Relay, X.25, ATM</li>
+    </ul>
+    Lo que el diagrama deja ver: <b>ICMP e IGMP están al lado de IP, en la misma capa</b> (son auxiliares de IP, no de transporte), y debajo de todo aparecen las tecnologías del Módulo 5. Es el mapa de cómo se enchufa todo el programa.
+  </div>
+
+  <h2 class="sec" id="ip"><span class="n">03</span>El protocolo IP — RFC 791</h2>
+  <p><b>IP conecta redes más allá de sus diferencias</b> en: esquemas de direccionamiento · tamaño de paquete (variable, fijo, máximo, mínimo) · valores de expiración de temporizadores · recuperación de errores · informes de estado de la red · técnicas de ruteo · servicio de comunicación sin conexión.</p>
+  <div class="callout key">
+    <span class="ct">Las 11 características de IP — pregunta clásica de oral</span>
+    <ul>
+      <li>Es el <b>protocolo fundamental</b> para el desarrollo de Internet.</li>
+      <li><b>Direcciona y encamina</b> los datagramas recibidos.</li>
+      <li><b>Fragmenta y reensambla</b> los datagramas si es necesario.</li>
+      <li>Realiza el <mark class="p">mejor esfuerzo</mark> para la distribución (<i>Best Effort</i>).</li>
+      <li>El <b>tamaño máximo del datagrama es de 65.536 bytes</b>.</li>
+      <li><u class="w">NO es orientado a conexión.</u></li>
+      <li><u class="w">NO detecta datagramas dañados o perdidos.</u></li>
+      <li><u class="w">NO genera ni recibe ACK.</u></li>
+      <li><u class="w">NO controla el orden de los datagramas.</u></li>
+      <li>Está definido en el <b>RFC 791</b>.</li>
+      <li>Los <b>protocolos de capas superiores</b> se encargan de las funciones de confiabilidad.</li>
+    </ul>
+    <b>La forma corta de recordarlo:</b> IP hace <u class="w">dos cosas</u> (direccionar/encaminar y fragmentar/reensamblar) y <u class="w">no hace cuatro</u> (conexión, detección, ACK, orden). Todo lo que no hace, lo hace TCP.
+  </div>
+
+  <h2 class="sec" id="consid"><span class="n">04</span>Las 5 consideraciones de IP</h2>
+  <dl class="defs">
+    <dt><b>1.</b> <mark class="p">Ruteo</mark></dt>
+    <dd>La <b>tabla de ruteo</b> está en routers <u class="w">y también en dispositivos finales</u>, y contiene la información necesaria para encaminar los datagramas. Cuando un router recibe un datagrama, usa la tabla para decidir a qué siguiente router enviarlo. Según cómo se actualice:
+      <ul>
+        <li><b>Estática:</b> ingreso <b>manual</b> de la información.</li>
+        <li><b>Dinámica:</b> los routers se comunican <b>automáticamente</b> entre ellos, enviándose información de estado de la red cada cierto tiempo o cuando hay una variación.</li>
+      </ul>
+    </dd>
+
+    <dt><b>2.</b> <mark class="p">Tiempo de vida del datagrama</mark></dt>
+    <dd>Al ser sin conexión, un datagrama con errores en la cabecera (por ejemplo en la dirección destino) podría <b>viajar indefinidamente</b>. Para evitarlo, IP le asigna un tiempo de vida <u class="w">cuantificado en cantidad de saltos</u>: se graba un número en la cabecera, <b>cada router lo decrementa en uno</b>, y al llegar a cero el datagrama se descarta.</dd>
+
+    <dt><b>3.</b> <mark class="p">Segmentación y reensamblado</mark></dt>
+    <dd>Las redes (LAN, FR, ATM, MPLS) especifican <b>distintos tamaños máximos de paquete</b>, así que los routers deben segmentar los datagramas y luego reensamblarlos.
+      <br><u class="w">La decisión de diseño clave:</u> los fragmentos se reensamblan <b>en el destino final</b>, no en los routers intermedios. ¿Por qué? Para permitir que <b>segmentos de un mismo datagrama sigan rutas distintas</b>, flexibilizando el ruteo.</dd>
+
+    <dt><b>4.</b> <mark class="p">Control de errores</mark></dt>
+    <dd>IP no garantiza distribución sin errores. Lo que hace: el módulo IP de cada router <b>comprueba el error en la cabecera</b> de cada datagrama; si detecta uno, <b>lo descarta</b>. Después intenta avisarle al SF origen <b>a través de ICMP</b>. El origen puede usar esa información para retransmitir y avisar a capas superiores.
+      <br><u class="w">Condición importante:</u> para poder informar el error, ICMP necesita que <b>el campo cabecera no esté dañado</b>.</dd>
+
+    <dt><b>5.</b> <mark class="p">Control de flujo</mark></dt>
+    <dd>Permite a routers y estaciones receptoras <b>limitar la velocidad de recepción</b>. Pero un control de flujo efectivo requiere mecanismos de envío y confirmación (ida y vuelta), que son propios de servicios <b>con conexión</b>. Como IP opera sin conexión, su control de flujo es <mark class="s">rudimentario</mark>: cuando un router necesita reducir la velocidad, activa el módulo ICMP para pedirle a la estación fuente que baje la transmisión.</dd>
+  </dl>
+  <p class="tnote">Fijate el patrón: <b>en dos de las cinco consideraciones (errores y flujo), IP delega en ICMP</b>. Por eso ICMP es "el auxiliar" de IP y va en la misma capa.</p>
+
+  <h2 class="sec" id="dir"><span class="n">05</span>La dirección IP</h2>
+  <p>IPv4 usa una dirección de <mark class="p">32 bits</mark> compuesta por <b>dos identificadores</b>:</p>
+  <ul>
+    <li><mark class="s">Net ID</mark> (identificador de red): identifica una red en la interred mediante un número de red.</li>
+    <li><mark class="s">Host ID</mark> (identificador de dispositivo): identifica un dispositivo dentro de esa red.</li>
+  </ul>
+  <div class="bits">
+    <div class="o"><b>Net ID</b><span>identifica la red</span></div>
+    <div class="o"><b>Host ID</b><span>identifica el dispositivo</span></div>
+  </div>
+  <p>Ejemplo de la cátedra: <code>134.14.14.5</code>. Dónde termina el Net ID y dónde empieza el Host ID <b>lo define la máscara</b> (sección 08).</p>
+
+  <h2 class="sec" id="clases"><span class="n">06</span>Clases de direcciones</h2>
+  <div class="tablewrap">
+  <table class="mono">
+    <thead><tr><th>Clase</th><th>Bits iniciales</th><th>1er byte (binario)</th><th>1er byte (decimal)</th><th>Estructura</th></tr></thead>
+    <tbody>
+      <tr><td>A</td><td>0</td><td>00000000 – 01111111</td><td><b>0 a 127</b></td><td>net ID (1 byte) + host ID (3 bytes)</td></tr>
+      <tr><td>B</td><td>10</td><td>10000000 – 10111111</td><td><b>128 a 191</b></td><td>net ID (2 bytes) + host ID (2 bytes)</td></tr>
+      <tr><td>C</td><td>110</td><td>11000000 – 11011111</td><td><b>192 a 223</b></td><td>net ID (3 bytes) + host ID (1 byte)</td></tr>
+      <tr><td>D</td><td>1110</td><td>11100000 – 11101111</td><td><b>224 a 239</b></td><td>dirección de <b>multidifusión</b></td></tr>
+      <tr><td>E</td><td>1111</td><td>11110000 – 11111111</td><td><b>240 a 255</b></td><td>reservada para uso futuro</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout key">
+    <span class="ct">Cómo identificar la clase en 2 segundos</span>
+    Mirás <b>solo el primer número</b>: hasta 127 → <b>A</b> · 128–191 → <b>B</b> · 192–223 → <b>C</b> · 224–239 → <b>D (multicast)</b> · 240+ → <b>E</b>.
+    <br><br>Los cortes salen de los bits iniciales: 128 = 2⁷, 192 = 128+64, 224 = 192+32, 240 = 224+16. <u class="w">Cada clase agrega un 1 adelante y se come la mitad del espacio restante.</u>
+    <br><br><b>Capacidad:</b> clase A tiene 3 bytes de host (más de 16 millones), clase B tiene 2 bytes (65.534), clase C tiene 1 byte (<b>254 hosts</b>). Del TP6: <i>"¿qué clase permite más de 1000 hosts?"</i> → A y B. <i>"¿cuál permite como máximo 254?"</i> → <b>C</b>.
+  </div>
+
+  <h2 class="sec" id="espec"><span class="n">07</span>Direcciones especiales (NO usar para numerar dispositivos)</h2>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Tipo</th><th>Cómo se forma</th><th>Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td>Dirección de red</td><td>net ID seguido de <b>ceros</b></td><td><code>132.25.0.0</code> (B) · <code>34.0.0.0</code> (A)</td></tr>
+      <tr><td>Difusión dirigida</td><td>net ID seguido de <b>unos</b> (a una red específica)</td><td><code>56.255.255.255</code></td></tr>
+      <tr><td>Difusión limitada</td><td><b>todos</b> los bits en 1 (dentro de la red origen)</td><td><code>255.255.255.255</code></td></tr>
+      <tr><td>Todas las otras redes</td><td>todos los bits en <b>0</b></td><td><code>0.0.0.0</code></td></tr>
+      <tr><td>Dirección de lazo</td><td>red <b>127</b> seguida de cualquier número</td><td><code>127.0.0.1</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout warn">
+    <span class="ct">Ejercicio del TP6: identificar direcciones inválidas</span>
+    El TP da una lista y pide <b>qué parte es inválida y por qué</b>. Los criterios:
+    <ul>
+      <li><code>151.127.<b>256</b>.80</code> → <b>256 no existe</b>: un octeto va de 0 a 255.</li>
+      <li><code>231.200.1.1</code> → empieza en 231 = <b>clase D (multicast)</b>, no se asigna a hosts.</li>
+      <li><code>126.1.<b>0.0</b></code> → clase A con host ID todo en ceros = <b>dirección de red</b>.</li>
+      <li><code><b>0</b>.127.4.100</code> → empieza en 0, reservado.</li>
+      <li><code>190.7.<b>2.0</b></code> → clase B, host ID = 2.0 … <u class="w">acá hay que pensar</u>: en clase B el host ID son los <b>dos últimos bytes</b>, y 2.0 no es todo ceros, así que <b>es válida</b> si la máscara es la por defecto /16. Sería inválida solo si la red fuera /24.</li>
+      <li><code>127.1.1.1</code> → red <b>127 = loopback</b>.</li>
+      <li><code>198.121.254.<b>255</b></code> → clase C con host ID todo en unos = <b>broadcast</b> de esa red.</li>
+      <li><code>255.255.255.255</code> → <b>difusión limitada</b>.</li>
+      <li><code>222.222.255.222</code> → clase C, host = 222. <b>Válida.</b></li>
+    </ul>
+    <b>La regla general:</b> una dirección es inválida para un host si (a) tiene un octeto &gt; 255, (b) es clase D o E, (c) su host ID es <b>todo ceros</b> (red) o <b>todo unos</b> (broadcast), o (d) cae en 0.x o 127.x.
+  </div>
+
+  <h2 class="sec" id="mascara"><span class="n">08</span>La máscara de red</h2>
+  <div class="tablewrap">
+  <table class="mono">
+    <thead><tr><th>Clase</th><th>Máscara en binario</th><th>Decimal</th><th>Prefijo</th></tr></thead>
+    <tbody>
+      <tr><td>A</td><td>11111111 00000000 00000000 00000000</td><td>255.0.0.0</td><td>/8</td></tr>
+      <tr><td>B</td><td>11111111 11111111 00000000 00000000</td><td>255.255.0.0</td><td>/16</td></tr>
+      <tr><td>C</td><td>11111111 11111111 11111111 00000000</td><td>255.255.255.0</td><td>/24</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="calc">
+    <span class="ct">Cómo se obtiene la dirección de red (los ejemplos de la cátedra)</span>
+    <div class="step">IP 5.131.2.45      máscara 255.0.0.0        → red <span class="res">5.0.0.0</span>
+IP 131.107.16.200  máscara 255.255.0.0      → red <span class="res">131.107.0.0</span>
+IP 193.154.16.190  máscara 255.255.255.0    → red <span class="res">193.154.16.0</span></div>
+    <b>La operación es un AND bit a bit</b> entre la IP y la máscara. Donde la máscara tiene 1, se conserva el bit de la IP; donde tiene 0, se pone 0.
+  </div>
+
+  <h2 class="sec" id="pubpriv"><span class="n">09</span>Direcciones públicas y privadas · NAT</h2>
+  <h3>Públicas (globales)</h3>
+  <ul>
+    <li>Se asignan a cualquier dispositivo que se conecte <b>de forma directa a Internet</b>. Son <b>visibles desde Internet</b>.</li>
+    <li>Son <b>únicas y nunca se repiten</b>. Las asignan los <b>ISP</b>.</li>
+    <li>La administración la llevan organismos internacionales: <mark class="s">IANA</mark> (autoridad máxima) y <mark class="s">LACNIC</mark> (para América Latina y Caribe; ONG internacional establecida en <b>Uruguay en 2002</b>).</li>
+    <li>Pueden ser <b>fijas o dinámicas</b> (asignadas por <b>DHCP</b>).</li>
+  </ul>
+  <p class="tnote">Ojo con la sigla: la slide escribe "LANIC" pero el organismo real es <b>LACNIC</b> (Latin American and Caribbean Internet Addresses Registry), y el propio link de la slide apunta a <code>lacnic.net</code>. Yo escribiría LACNIC.</p>
+
+  <h3>Privadas — RFC 1918</h3>
+  <div class="callout key">
+    <span class="ct">Los cuatro rangos — memorizar sí o sí</span>
+    <ul>
+      <li><b>10.0.0.0</b> – 10.255.255.255 &nbsp;(<code>10.0.0.0/8</code>) — clase A</li>
+      <li><b>172.16.0.0</b> – 172.31.255.255 &nbsp;(<code>172.16.0.0/12</code>) — clase B</li>
+      <li><b>192.168.0.0</b> – 192.168.255.255 &nbsp;(<code>192.168.0.0/16</code>) — clase C</li>
+      <li><b>169.254.0.0</b> – 169.254.255.255 &nbsp;(<code>169.254.0.0/16</code>) — reservada para <mark class="p">APIPA</mark></li>
+    </ul>
+    Se usan cuando los dispositivos de una red <u class="w">se comunican entre sí pero NO lo harán en forma directa</u> con dispositivos de redes conectadas a Internet. Para salir necesitan un <b>NAT o firewall</b>.
+    <br><br><b>Ojo con el 172:</b> el rango llega hasta <b>172.31</b>, no hasta 172.255. Es el que más se falla.
+  </div>
+  <div class="callout warn">
+    <span class="ct">Error en tu resumen</span>
+    Escribiste el tercer rango como <b>"192.166.0.0 – 192.168.255.255"</b>. Es <b>192.168.0.0</b>. Un 6 por un 8.
+  </div>
+
+  <h3>Traducción de privadas a públicas: las 2 formas</h3>
+  <dl class="defs">
+    <dt><b>1.</b> <mark class="p">Router NAT</mark> (Network Address Translation)</dt>
+    <dd>El router de borde del emisor <b>cambia la dirección IP privada de origen</b> del datagrama por su dirección IP pública. El router de borde del receptor lee la IP pública destino (que es la suya) y <b>la traduce a una IP destino privada</b> de la LAN a la que está conectado.</dd>
+    <dt><b>2.</b> <mark class="p">Servidor proxy</mark> (proxy = intermediario)</dt>
+    <dd>Software, hardware o combinación que <b>captura pedidos de dispositivos clientes y los reenvía a destino con su propia identidad</b>. Su finalidad más habitual es interceptar las conexiones que los clientes hacen a Internet, por motivos de <b>seguridad, rendimiento y anonimato</b>.</dd>
+  </dl>
+
+  <hr>
+
+  <h2 class="sec" id="tabla"><span class="n">10</span>⭐ La tabla de prefijos (la herramienta más útil del módulo)</h2>
+  <p class="lead">Si memorizás <b>una sola cosa</b> de este módulo, que sea esta tabla. Con ella resolvés cualquier ejercicio de subnetting sin hacer binario.</p>
+  <div class="tablewrap">
+  <table class="mono">
+    <thead><tr><th>Prefijo</th><th>Máscara</th><th>Bits host</th><th>Direcciones</th><th>Hosts útiles</th><th>Salto</th></tr></thead>
+    <tbody>
+      <tr><td>/24</td><td>255.255.255.0</td><td>8</td><td>256</td><td><b>254</b></td><td>1 en el 3er octeto</td></tr>
+      <tr><td>/25</td><td>255.255.255.128</td><td>7</td><td>128</td><td><b>126</b></td><td>128</td></tr>
+      <tr><td>/26</td><td>255.255.255.192</td><td>6</td><td>64</td><td><b>62</b></td><td>64</td></tr>
+      <tr><td>/27</td><td>255.255.255.224</td><td>5</td><td>32</td><td><b>30</b></td><td>32</td></tr>
+      <tr><td>/28</td><td>255.255.255.240</td><td>4</td><td>16</td><td><b>14</b></td><td>16</td></tr>
+      <tr><td>/29</td><td>255.255.255.248</td><td>3</td><td>8</td><td><b>6</b></td><td>8</td></tr>
+      <tr><td>/30</td><td>255.255.255.252</td><td>2</td><td>4</td><td><b>2</b></td><td>4</td></tr>
+      <tr><td>/23</td><td>255.255.254.0</td><td>9</td><td>512</td><td><b>510</b></td><td>2 en el 3er octeto</td></tr>
+      <tr><td>/22</td><td>255.255.252.0</td><td>10</td><td>1024</td><td><b>1022</b></td><td>4</td></tr>
+      <tr><td>/21</td><td>255.255.248.0</td><td>11</td><td>2048</td><td><b>2046</b></td><td>8</td></tr>
+      <tr><td>/20</td><td>255.255.240.0</td><td>12</td><td>4096</td><td><b>4094</b></td><td>16</td></tr>
+      <tr><td>/16</td><td>255.255.0.0</td><td>16</td><td>65536</td><td><b>65534</b></td><td>1 en el 2do octeto</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout key">
+    <span class="ct">Las 3 fórmulas y cómo usar la tabla</span>
+    <div class="formula">hosts útiles = 2ⁿ − 2</div> &nbsp; (n = bits de host; se restan la dirección de red y la de broadcast)<br>
+    <div class="formula">prefijo = 32 − n</div> &nbsp;
+    <div class="formula">subredes con k bits prestados = 2ᵏ</div>
+    <br><b>El método en 3 pasos, sin binario:</b>
+    <ul>
+      <li><b>1.</b> Mirás cuántos hosts necesitás y buscás en la columna "hosts útiles" <u class="w">el primer valor que alcance</u>.</li>
+      <li><b>2.</b> De esa fila sacás el <b>prefijo</b> y el <b>salto</b>.</li>
+      <li><b>3.</b> Las subredes van de salto en salto: 0, salto, 2×salto, 3×salto…</li>
+    </ul>
+    Ejemplo: necesito 100 hosts → 126 alcanza → <b>/25</b>, salto 128 → subredes en .0, .128, y sigo en el octeto siguiente.
+  </div>
+  <div class="callout warn">
+    <span class="ct">El error de restar mal — el más caro del módulo</span>
+    Para <b>N hosts</b> necesitás <code>2ⁿ − 2 ≥ N</code>, <u class="w">no</u> <code>2ⁿ ≥ N</code>. Los dos que se restan son la <b>dirección de red</b> (host ID todo en ceros) y la de <b>broadcast</b> (todo en unos).
+    <br><br>Caso típico de trampa: <b>necesito 64 hosts</b>. Tentación: 2⁶ = 64, uso /26. <b>Mal</b>: 2⁶ − 2 = 62 &lt; 64. Hay que ir a 2⁷ − 2 = 126, o sea <b>/25</b>. Este caso exacto aparece en el TP6.
+  </div>
+
+  <h2 class="sec" id="flsm"><span class="n">11</span>Subnetting FLSM: las 4 etapas</h2>
+  <p><mark class="p">FLSM</mark> (Fixed Length Subnet Mask) usa <b>máscaras de igual tamaño</b> para todas las subredes. Es el método que enseña la cátedra primero.</p>
+  <p><b>El mecanismo:</b> se toma del host ID un grupo de bits para <b>numerar subredes</b> y otro grupo para <b>numerar dispositivos</b> en cada subred. La "zona de variación" es el rango donde se puede mover ese corte.</p>
+  <div class="calc">
+    <span class="ct">Ejemplo completo de la cátedra: clase B, 6 subredes</span>
+    <div class="step"><b>ETAPA 1 — Planificación</b>
+  Nº de subredes que se necesitan:  6
+  Valor en binario:                 110
+  Cantidad de bits usados:          <span class="res">3 bits</span></div>
+    <div class="step"><b>ETAPA 2 — Determinar la máscara</b>
+  Se empieza en el extremo IZQUIERDO del host ID y se ponen tantos 1
+  como bits de la Etapa 1; el resto del byte se completa con ceros.
+
+  11111111 11111111 111 00000 00000000
+   255   .   255   .  224  .    0
+
+  Máscara de subred: <span class="res">255.255.224.0</span>  (equivale a /19)</div>
+    <div class="step"><b>ETAPA 3 — Direcciones de subred</b>
+  Se hacen variar los 3 bits prestados:
+    000 00000 =   0      110 00000 = 192
+    001 00000 =  32      111 00000 = 224
+    010 00000 =  64
+    011 00000 =  96      salto = <span class="res">32</span>
+    100 00000 = 128
+    101 00000 = 160</div>
+    <div class="step"><b>ETAPA 4 — Rango de hosts por subred</b>
+  x.y.  0.0  → INVÁLIDA (todos los bits de subred en 0)
+  x.y. 32.0  → x.y.32.1   a  x.y.63.254
+  x.y. 64.0  → x.y.64.1   a  x.y.95.254
+  x.y. 96.0  → x.y.96.1   a  x.y.127.254
+  x.y.128.0  → x.y.128.1  a  x.y.159.254
+  x.y.160.0  → x.y.160.1  a  x.y.191.254
+  x.y.192.0  → x.y.192.1  a  x.y.223.254
+  x.y.224.0  → INVÁLIDA (todos los bits de subred en 1)
+
+  Quedan exactamente <span class="res">6 subredes útiles</span>, que es lo pedido.</div>
+  </div>
+  <div class="callout note">
+    <span class="ct">Sobre las subredes "inválidas"</span>
+    La cátedra descarta la <b>primera</b> (subnet zero) y la <b>última</b> (all-ones), por eso con 3 bits quedan 6 subredes y no 8. Es la regla clásica del RFC 950.
+    <br><br><u class="w">Aviso honesto:</u> en el equipamiento moderno esa restricción está levantada hace años (CIDR permite usar ambas, y en Cisco es el default desde IOS 12.0). Pero <b>en el examen seguí el criterio de la cátedra</b>: si pide N subredes, calculá con <code>2ᵏ − 2 ≥ N</code>. Si querés cubrirte, aclarálo en una nota.
+  </div>
+
+  <h2 class="sec" id="vlsm"><span class="n">12</span>VLSM: máscara de longitud variable</h2>
+  <p><mark class="p">VLSM</mark> (Variable Length Subnet Mask) nace como respuesta al <b>agotamiento de direcciones IP (1987)</b>, junto con <b>CIDR (1993)</b> y <b>NAT (2001)</b>.</p>
+  <div class="callout key">
+    <span class="ct">FLSM vs VLSM</span>
+    <ul>
+      <li><b>Limitaciones de FLSM:</b> usa máscaras de subred <u class="w">de igual tamaño</u> · es <b>poco escalable</b> · hace un <b>uso poco optimizado</b> del espacio de direcciones.</li>
+      <li><b>Características de VLSM:</b> máscara de longitud <b>variable</b> · puede asignar <b>distintos números de bits a cada subred</b> según necesidades específicas · permite subredes con <b>distinto número de hosts</b> · notación <code>/N</code> indicando la cantidad de bits en 1.</li>
+    </ul>
+    <b>En una frase:</b> FLSM le da el mismo tamaño a todas las subredes (y desperdicia en las chicas); VLSM le da a cada una <u class="w">el tamaño que necesita</u>.
+  </div>
+  <div class="callout key">
+    <span class="ct">El método VLSM en 5 pasos (así se resuelve siempre)</span>
+    <ul>
+      <li><b>1.</b> Listar cuántos hosts necesita cada subred. <u class="w">Contar las interfaces de router como hosts.</u></li>
+      <li><b>2.</b> <b>Ordenar de mayor a menor.</b> Este paso no es opcional: si asignás desordenado, quedan huecos y no cierra.</li>
+      <li><b>3.</b> Verificar que la red base alcance: sumar todos los hosts y compararlo con la capacidad.</li>
+      <li><b>4.</b> Para cada subred, buscar el prefijo con <code>2ⁿ − 2 ≥ hosts</code> (tabla de la sección 10).</li>
+      <li><b>5.</b> Asignar <b>en forma contigua</b>: cada subred arranca donde terminó la anterior (después de su broadcast).</li>
+    </ul>
+  </div>
+
+  <h2 class="sec" id="vlsm-ej"><span class="n">13</span>VLSM: ejercicio resuelto</h2>
+  <div class="calc">
+    <span class="ct">Ejercicio del TP6: 1 red de 240, 1 de 120 y 2 de 64 hosts</span>
+    <div class="step"><b>Paso 1-2 — ordenar de mayor a menor:</b> 240, 120, 64, 64
+
+<b>Paso 4 — prefijo de cada una:</b>
+  240 hosts → 2⁸−2 = 254 ✓ → 8 bits host → <span class="res">/24</span> (bloque 256)
+  120 hosts → 2⁷−2 = 126 ✓ → 7 bits host → <span class="res">/25</span> (bloque 128)
+   64 hosts → 2⁶−2 =  62 ✗  ← ¡NO alcanza!
+              2⁷−2 = 126 ✓ → 7 bits host → <span class="res">/25</span> (bloque 128)
+   64 hosts → ídem                        → <span class="res">/25</span> (bloque 128)
+
+  Total consumido: 256 + 128 + 128 + 128 = <span class="res">640 direcciones</span></div>
+    <div class="step"><b>Paso 5 — asignación contigua desde 192.168.1.0:</b>
+
+  Red A (240)  192.168.1.0/24    host .1     a .254     bcast .255
+  Red B (120)  192.168.2.0/25    host .1     a .126     bcast .127
+  Red C (64)   192.168.2.128/25  host .129   a .254     bcast .255
+  Red D (64)   192.168.3.0/25    host .1     a .126     bcast .127
+
+  Próxima libre: 192.168.3.128</div>
+    <b>El punto fino del ejercicio</b> es el de las redes de 64 hosts: la tentación es usar /26, pero <u class="w">2⁶−2 = 62 &lt; 64</u>. Hay que subir a /25. Ese detalle es el que el ejercicio está probando.
+  </div>
+
+  <h2 class="sec" id="cidr"><span class="n">14</span>CIDR — Classless Inter-Domain Routing</h2>
+  <div class="callout key">
+    <span class="ct">Lo que hay que saber de CIDR</span>
+    <ul>
+      <li><b>Elimina las clases</b> de red. Uso más eficiente de IPv4: permite <b>subnetting y supernetting</b>.</li>
+      <li>Crea <b>jerarquía de direcciones</b> ⇒ <u class="w">menor tamaño de tablas de ruteo y menor carga en los routers</u>.</li>
+      <li>Opera <b>junto con VLSM</b>, especificando prefijos de longitud variada.</li>
+      <li>Permite <b>agregar múltiples prefijos contiguos en superredes</b>, reduciendo entradas en las tablas.</li>
+      <li>Las asignaciones se hacen <b>por bloques</b>, sin importar las clases: un bloque puede ser /20, otro /25.</li>
+      <li>Notación <code>a.b.c.d/N</code>, donde N es el número de <b>bits comunes</b> a todas las direcciones del bloque.</li>
+      <li><u class="w">Cada vez que el prefijo /N decrece en 1, la red duplica su tamaño.</u></li>
+      <li>Es <b>compatible hacia atrás</b> con todo el sistema de direccionamiento.</li>
+      <li>Requiere organización geográfica para entregar bloques: lo hace a través de los <mark class="s">RIR</mark> (Regional Internet Registry).</li>
+    </ul>
+  </div>
+  <div class="callout warn">
+    <span class="ct">Una errata de la cátedra</span>
+    La slide dice: <i>"cada vez que el prefijo /N decrece en 1, se genera una red del doble de tamaño, <b>/30 tiene el doble de tamaño que el /31</b>"</i>.
+    <br>La <b>regla es correcta</b> (menos prefijo = red más grande) y el <b>ejemplo también</b> (/30 son 4 direcciones y /31 son 2). Solo que el ejemplo va al revés de como uno lo lee: no es que /30 "decreció" desde /31, sino que /31 creció. Si te lo preguntan, la forma clara es: <b>/23 es el doble de /24</b>.
+  </div>
+
+  <h2 class="sec" id="ruteo"><span class="n">15</span>Tablas de ruteo</h2>
+  <div class="callout warn">
+    <span class="ct">⚠ Acá perdiste puntos en el recuperatorio</span>
+    El 2do parcial pide, en el mismo ejercicio: <b>(c) asignar direcciones a cada una de las interfaces</b> y <b>(d) escribir la tabla de ruteo estática</b>. Es la parte donde se pierden puntos por detalles. Vale la pena tenerla clara.
+  </div>
+  <p><b>Las columnas de una tabla de ruteo</b> (formato de la cátedra):</p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Dirección de red</th><th>Máscara</th><th>Interfaz</th><th>Gateway</th></tr></thead>
+    <tbody>
+      <tr><td>10.0.2.0</td><td>/26</td><td>10.0.2.1</td><td><b>local</b></td></tr>
+      <tr><td>10.0.2.160</td><td>/28</td><td>10.0.2.161</td><td><b>local</b></td></tr>
+      <tr><td>0.0.0.0</td><td>/0</td><td>10.0.2.181</td><td>10.0.2.182</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout key">
+    <span class="ct">Las reglas para no equivocarse</span>
+    <ul>
+      <li><b>La columna "Interfaz" lleva la IP de la interfaz PROPIA del router</b> por la que sale el tráfico, <u class="w">no la del vecino</u>. Ése es el error clásico.</li>
+      <li><b>Gateway = "local"</b> cuando la red está <b>directamente conectada</b> a ese router (no hay que saltar a nadie).</li>
+      <li><b>Gateway = IP del vecino</b> cuando hay que reenviar. Esa IP debe pertenecer <u class="w">a la misma subred que la interfaz de salida</u>. Si no, la fila está mal: es el chequeo más rápido para autocorregirse.</li>
+      <li>La <b>ruta por defecto</b> es <code>0.0.0.0 /0</code> y va <b>al final</b>. Si está, <u class="w">todas las filas que apuntan al mismo gateway se pueden eliminar</u> porque quedan cubiertas por ella. La resolución oficial hace exactamente eso.</li>
+      <li>Cada red <b>directamente conectada</b> genera una fila; las <b>remotas</b> generan una fila cada una (o desaparecen bajo la ruta por defecto).</li>
+    </ul>
+  </div>
+  <div class="calc">
+    <span class="ct">Chequeo de coherencia (hacelo siempre antes de entregar)</span>
+    <div class="step">Para cada fila con gateway ≠ local:
+  ¿la IP del gateway está en la MISMA subred que la IP de la interfaz?
+  Ej: interfaz 10.0.2.181 con gateway 10.0.2.182 y máscara /30
+      → el /30 abarca .180 a .183, así que .181 y .182 conviven ✓
+
+Para cada fila con gateway = local:
+  ¿la IP de la interfaz pertenece a la red de la primera columna?
+  Ej: red 10.0.2.0/26 (abarca .0 a .63) con interfaz 10.0.2.1 ✓</div>
+  </div>
+
+  <h2 class="sec" id="parcial"><span class="n">16</span>⭐ El ejercicio del 2do parcial, resuelto</h2>
+  <div class="calc">
+    <span class="ct">Enunciado (formato real del parcial)</span>
+    Diseñar un esquema de direccionamiento haciendo <b>uso eficiente de subredes</b>. La telefónica otorga una IP pública para acceder a Internet; se sugiere aplicar el esquema interno a partir de una dirección privada dada.
+    <ul>
+      <li><b>a)</b> Asignar una dirección de subred a cada subred, que <b>mejor se ajuste</b> a la cantidad de equipos.</li>
+      <li><b>b)</b> Determinar el <b>rango de direcciones host</b> posibles en cada subred.</li>
+      <li><b>c)</b> <b>Asignar direcciones a cada una de las interfaces.</b></li>
+      <li><b>d)</b> Escribir la <b>tabla de ruteo estática</b> para el Router 1.</li>
+    </ul>
+    <span class="ct" style="margin-top:10px">El paso 0 que define todo: contar bien los hosts</span>
+    <div class="step">Subred 1 = 100 PC + <b>1 interfaz</b> = <span class="res">101 hosts</span>
+Subred 2 = 490 PC + <b>1 interfaz</b> = <span class="res">491 hosts</span>
+Subred 3 =   9 servidores + <b>1 interfaz</b> = <span class="res">10 hosts</span>
+Subred 4 =  29 PC + <b>1 interfaz</b> = <span class="res">30 hosts</span>
+Subred 5 =   1 servidor + 1 interfaz = <span class="res">2 hosts</span>
+Subred 6 =   <b>2 interfaces</b> (enlace router-router) = <span class="res">2 hosts</span>
+Subred 7 =   <b>2 interfaces</b> = <span class="res">2 hosts</span></div>
+    <b>Ésta es la parte que se pasa por alto:</b> la interfaz del router <u class="w">también consume una dirección de host</u>. Y los enlaces entre routers son subredes de 2 hosts (siempre /30). Si contás 100 en vez de 101, o te olvidás de las subredes de enlace, se cae todo lo demás.
+    <span class="ct" style="margin-top:10px">Resolución (ordenando de mayor a menor)</span>
+    <div class="step">Subred 2: 491 hosts → 2⁹−2 = 510 ✓ → <span class="res">/23</span>
+   red 10.0.0.0/23    host 10.0.0.1 a 10.0.1.254    bcast 10.0.1.255
+
+Subred 1: 101 hosts → 2⁷−2 = 126 ✓ → <span class="res">/25</span>
+   red 10.0.2.0/25    host 10.0.2.1 a 10.0.2.126    bcast 10.0.2.127
+
+Subred 4:  30 hosts → 2⁵−2 =  30 ✓ → <span class="res">/27</span>  (¡justo!)
+   red 10.0.2.128/27  host 10.0.2.129 a 10.0.2.158  bcast 10.0.2.159
+
+Subred 3:  10 hosts → 2⁴−2 =  14 ✓ → <span class="res">/28</span>
+   red 10.0.2.160/28  host 10.0.2.161 a 10.0.2.174  bcast 10.0.2.175
+
+Subred 5:   2 hosts → 2²−2 =   2 ✓ → <span class="res">/30</span>
+   red 10.0.2.176/30  host 10.0.2.177 a 10.0.2.178  bcast 10.0.2.179
+
+Subred 6:   2 hosts → <span class="res">/30</span>  → red 10.0.2.180/30  (host .181 y .182)
+Subred 7:   2 hosts → <span class="res">/30</span>  → red 10.0.2.184/30  (host .185 y .186)</div>
+  </div>
+  <div class="callout warn">
+    <span class="ct">⚠ La resolución que circula tiene DOS prefijos mal</span>
+    Verifiqué la resolución completa. Las subredes 4, 3 y 5 están perfectas, pero <b>las dos más grandes tienen el prefijo equivocado</b>:
+    <ul>
+      <li><b>Subred 2 (491 hosts):</b> la resolución dice <i>"2⁸ = 512"</i> y pone <b>/24</b>. Pero <u class="w">2⁸ = 256, no 512</u>. Son 2⁹ = 512 ⇒ 9 bits de host ⇒ <b>/23</b>.</li>
+      <li><b>Subred 1 (101 hosts):</b> dice <i>"2⁶ = 128"</i> y pone <b>/26</b>. Pero <u class="w">2⁶ = 64</u>. Son 2⁷ = 128 ⇒ 7 bits ⇒ <b>/25</b>.</li>
+    </ul>
+    <b>Lo interesante:</b> los <u class="w">rangos de direcciones que da son los correctos</u> (10.0.0.1–10.0.1.254 es exactamente un /23; 10.0.2.1–10.0.2.126 es exactamente un /25). O sea, el reparto está bien y el error es solo de <b>notación del prefijo</b>. Pero si copiás el /24 y el /26 en el examen, entregás una tabla incoherente: el prefijo no coincidiría con el rango que vos mismo escribiste.
+    <br><br><b>Cómo no caer:</b> después de elegir el prefijo, <u class="w">verificá que el broadcast coincida</u>. Un /24 que arranca en 10.0.0.0 tiene broadcast en 10.0.0.255, no en 10.0.1.255.
+  </div>
+
+  <hr>
+
+  <h2 class="sec" id="arp"><span class="n">17</span>ARP — Address Resolution Protocol (RFC 826)</h2>
+  <div class="callout key">
+    <span class="ct">Para qué existe y cómo funciona</span>
+    <ul>
+      <li><b>El problema:</b> la dirección IP es una dirección <b>lógica</b> que entiende el protocolo IP, pero <u class="w">en la capa de enlace hace falta la dirección física (MAC)</u> del dispositivo.</li>
+      <li><b>La función de ARP:</b> obtener la dirección física asociada a la IP del dispositivo destino.</li>
+      <li><b>El procedimiento:</b>
+        <ul>
+          <li>El módulo ARP <b>chequea primero el caché ARP</b> (un lugar en memoria RAM) para ver si ya tiene la dirección física de esa IP.</li>
+          <li>Si <b>no está</b>, hace una <b>difusión</b> (broadcast) en la red pidiendo la dirección física.</li>
+          <li>Una vez obtenida, <b>guarda el par IP + física en una tabla</b> del caché ARP.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="callout diagram">
+    <span class="ct">Qué muestran los diagramas (slides 44 y 45: resolución local vs remota)</span>
+    <b>Resolución LOCAL</b> (mismo segmento): (1) el host mira su caché ARP y no encuentra la IP destino; (2) hace una <b>difusión ARP</b> en la red; (3) el dueño de esa IP responde con su dirección física; (4) el origen <b>guarda el par en su caché</b> y ya puede enviar.
+    <br><br><b>Resolución REMOTA</b> (a través de un router): el proceso es el mismo pero <u class="w">en dos etapas</u>. El origen hace la difusión ARP <b>en su propio segmento (puerto A del router)</b> y obtiene la MAC del <b>router</b>, no la del destino final. Después, el router hace <b>otra difusión ARP en el puerto B</b> para resolver la MAC del destino. Cada router mantiene su propio caché.
+    <br><br><b>La idea que hay que llevarse:</b> ARP <u class="w">no atraviesa routers</u>. Siempre resuelve la MAC del <b>próximo salto</b>, que puede ser el destino final (si está en la misma red) o el router (si está en otra).
+  </div>
+
+  <h2 class="sec" id="icmp"><span class="n">18</span>ICMP — Internet Control Message Protocol (RFC 792)</h2>
+  <div class="callout key">
+    <span class="ct">Las 6 características</span>
+    <ul>
+      <li>Actúa en la <b>capa de interred</b> y se usa para <b>reportar errores y controlar mensajes</b> para IP.</li>
+      <li><u class="w">NO intenta hacer que la operación de IP sea confiable.</u> Sólo pretende <b>reportar errores hacia el origen</b> y proveer realimentación en determinadas situaciones (ej: control de flujo).</li>
+      <li>Los mensajes ICMP <b>son transportados en los datagramas IP</b> y, por lo tanto, <b>son no confiables</b>.</li>
+      <li>La <b>cabecera del mensaje ICMP tiene 8 bytes</b>; luego se agregan los datos.</li>
+      <li>IPv6 tiene definido un protocolo <b>ICMPv6</b>.</li>
+      <li>La cabecera y los datos ICMP <b>se agregan dentro del datagrama IP</b>.</li>
+    </ul>
+  </div>
+  <div class="callout warn">
+    <span class="ct">Error en tu resumen</span>
+    Escribiste <b>"IPv7 tiene definido un protocolo ICMPv6"</b>. Es <b>IPv6</b>. El mismo error aparece más abajo: <i>"IPv7 habilita el etiquetado de los paquetes"</i> → también es IPv6. <u class="w">IPv7 no existe</u> como protocolo desplegado; después de IPv4 viene IPv6 directamente (el 5 quedó asignado a un protocolo experimental de streaming).
+  </div>
+  <p class="tnote">Un detalle lindo que conecta con la práctica: cuando en el TP hacés <code>ping</code> o <code>traceroute</code>, estás usando ICMP. Y el "control de flujo rudimentario" de la sección 04 es el mensaje ICMP <i>Source Quench</i>.</p>
+
+  <h2 class="sec" id="igmp"><span class="n">19</span>IGMP — Internet Group Management Protocol (RFC 3376)</h2>
+  <ul>
+    <li>Actúa en la <b>capa de interred</b> e informa a los routers <b>cuáles son los computadores que pertenecen a un grupo de difusión</b> específico en una red determinada.</li>
+    <li>Esa información <b>se pasa a otros routers</b>, y así cada router que soporta grupos de difusión <b>conoce cuáles grupos están en qué red</b>.</li>
+    <li>Los paquetes IGMP <b>son transportados por datagramas IP</b>, así que el servicio <b>no es confiable</b>.</li>
+    <li>En <b>IPv6, IGMP es reemplazado por MLD</b> (Multicast Listener Discovery).</li>
+  </ul>
+  <div class="callout key">
+    <span class="ct">Formato de la trama IGMP</span>
+    <ul>
+      <li><b>Vers:</b> versión IP de 4 bits. <b>Siempre 1.</b></li>
+      <li><b>Tipo:</b> especifica una recuperación o un informe.
+        <ul>
+          <li><b>1</b> = <i>Membership Query</i> (consulta de pertenencia a grupo) — <u class="w">la envían los routers</u>.</li>
+          <li><b>2</b> = <i>Membership Report</i> (informe de pertenencia) — <u class="w">la envían los hosts</u>.</li>
+        </ul>
+      </li>
+      <li><b>Checksum:</b> suma de comprobación de 16 bits, calculada como en ICMP.</li>
+      <li><b>Dirección de clase D:</b> es <b>cero para una petición</b>, y una <b>dirección de grupo multicast válida para un informe</b>.</li>
+    </ul>
+    Fijate la coherencia: IGMP maneja multidifusión, y las direcciones de multidifusión son las de <b>clase D (224–239)</b>.
+  </div>
+
+  <h2 class="sec" id="ipv6"><span class="n">20</span>IPv6 — RFC 2460</h2>
+  <ul>
+    <li>Es un protocolo de <b>encapsulación de paquetes</b> a nivel de capa de internet en TCP/IP.</li>
+    <li>Diseñado para <b>reemplazar a IPv4</b>; su objetivo inmediato es <b>expandir el direccionamiento</b>.</li>
+    <li><b>Direccionamiento de 128 bits.</b> En desarrollo desde mediados de los 90.</li>
+    <li>En lugar del campo <i>tipo de servicio</i> de IPv4, habilita el <b>etiquetado de paquetes como pertenecientes a un flujo de tráfico particular</b> para el que el emisor solicita un tratamiento especial.</li>
+    <li>Incluye el concepto de dirección <mark class="p">anycast</mark> (monodifusión).</li>
+  </ul>
+  <div class="callout key">
+    <span class="ct">Las 8 características de IPv6</span>
+    <ul>
+      <li>Direcciones de <b>128 bits</b> = <b>2¹²⁸</b> direcciones (340 sextillones).</li>
+      <li><b>Direccionamiento simple.</b></li>
+      <li>Direccionamiento <b>extremo a extremo</b>, haciendo que <u class="w">el NAT no sea necesario</u>.</li>
+      <li>Seguridad con <b>IPsec</b>.</li>
+      <li><u class="w">NO hay dirección de broadcast</u> ni es necesario procesar <b>checksum</b>.</li>
+      <li>Mejoras en <b>QoS</b> y <b>etiquetas de flujo</b> en el encabezado.</li>
+      <li><b>Movilidad mejorada</b> por incorporar IP Mobile nativamente.</li>
+      <li>Clase de servicio <b>CoS</b>.</li>
+    </ul>
+  </div>
+
+  <h3>Formato y abreviación — ¡esto se toma!</h3>
+  <div class="calc">
+    <span class="ct">Las 3 reglas</span>
+    <div class="step">Formato: <b>x:x:x:x:x:x:x:x</b>  — cada x son 16 bits en hexadecimal (8 grupos)
+
+  1. Los <b>ceros a la izquierda</b> de cada grupo pueden suprimirse
+  2. Los <b>ceros sucesivos</b> pueden representarse como <b>::</b>
+  3. El <b>::</b> se puede usar UNA SOLA VEZ por dirección</div>
+    <div class="step">Ejemplos de la cátedra:
+  2031:0000:130F:0000:0000:09C0:876A:130B
+    → <span class="res">2031:0:130F::9C0:876A:130B</span>   ✓
+    → 2031::130F::9C0:876A:130B          ✗ (dos veces "::")
+
+  FF01:0:0:0:0:0:0:1   →  <span class="res">FF01::1</span>
+  0:0:0:0:0:0:0:1      →  <span class="res">::1</span>   (loopback de IPv6)
+  0:0:0:0:0:0:0:0      →  <span class="res">::</span></div>
+  </div>
+  <div class="callout warn">
+    <span class="ct">La regla que te costó medio punto en el Quiz 6</span>
+    Te pidieron abreviar <code>2001:0000:0000:0012:0000:0000:1234:56</code> eligiendo <i>"la que haga mejor uso de las reglas"</i>. Hay <b>dos rachas de ceros, ambas de dos grupos</b>:
+    <div class="step">2001:[0000:0000]:0012:[0000:0000]:1234:56
+       └── racha 1 ──┘      └── racha 2 ──┘</div>
+    Como el <code>::</code> se usa <b>una sola vez</b>, hay que elegir. <u class="w">Cuando hay empate en longitud, el <code>::</code> va en la PRIMERA racha</u> (regla del RFC 5952). Por eso la correcta es:
+    <br><br><b>2001::12:0:0:1234:56</b> ✓ &nbsp;&nbsp;&nbsp; y no &nbsp; <s>2001:0:0:12::1234:56</s>
+    <br><br>Las dos son técnicamente válidas y una máquina las interpreta igual, pero la <b>forma canónica</b> es la primera. Por eso el quiz te dio puntaje parcial.
+  </div>
+
+  <h3>Tipos de dirección IPv6</h3>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Tipo</th><th>A quién va</th><th>Características</th></tr></thead>
+    <tbody>
+      <tr><td>Unicast</td><td>a <b>una única interfaz</b></td><td>Hay varios tipos: <b>global, reservadas, link-local</b></td></tr>
+      <tr><td>Multicast</td><td>de uno <b>a varios</b> hosts</td><td>Uso más eficiente de la red · rango mayor de direcciones</td></tr>
+      <tr><td>Anycast</td><td>de uno <b>al más cercano</b></td><td>Identifica una <b>lista</b> de nodos; la dirección se comparte entre varios. <u>No tiene direccionamiento distinguible.</u> <b>No puede usarse como dirección de origen</b> ni para direccionar a un host: <b>sólo se asigna a la interfaz de un router</b>. Se usa para balanceo de carga o servicios de contenido.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout key">
+    <span class="ct">Los rangos que pregunta el TP6</span>
+    <ul>
+      <li><mark class="p">FE80::/10</mark> — <b>link-local</b> (local de enlace). Es el <u class="w">equivalente a APIPA en IPv6</u>: se genera automáticamente en todas las interfaces IPv6.</li>
+      <li><mark class="p">FC00::/7</mark> — <b>unique local addresses (ULA)</b>. El equivalente a las direcciones privadas de IPv4.</li>
+      <li><mark class="p">FEC0::/10</mark> — <b>site-local</b>, el antecesor de las ULA. <u class="w">Está obsoleto</u> (deprecado por el RFC 3879): fue reemplazado justamente por FC00::/7.</li>
+      <li><mark class="p">FF00::/8</mark> — <b>multicast</b>. Los primeros ocho bits son todos 1 (1111 1111). Se pueden enviar con distintos <b>ámbitos</b>: mundial, sitio local (la red) o enlace local (la misma LAN).</li>
+      <li><b>2000::/3</b> — unicast global (el equivalente a las públicas ruteables).</li>
+    </ul>
+    <b>Cuidado con el desarrollo del TP que circula:</b> dice que las FEC0::/10 son "link-local" y que las link-local están "en el rango FE80::/8 – FE80::/10". Ambas cosas están confundidas: <u class="w">FE80::/10 es link-local y FEC0::/10 es site-local (obsoleto)</u>, y son cosas distintas.
+  </div>
+  <p class="tnote">Sobre la diferencia que pide investigar el TP (site-local vs unique local): <b>site-local (FEC0::/10)</b> fue la primera propuesta de direcciones privadas en IPv6 y se abandonó porque su alcance era ambiguo; <b>unique local (FC00::/7)</b> la reemplaza, agregando un identificador global pseudoaleatorio que hace muy improbable la colisión al fusionar redes. Este punto lo desarrollo con conocimiento general de IPv6, porque las slides del módulo no lo tratan — conviene que lo confirmes.</p>
+
+  <hr>
+
+  <h2 class="sec" id="quiz"><span class="n">21</span>Las preguntas del Quiz 6</h2>
+  <div class="callout key">
+    <span class="ct">Las cuatro reales, con su resolución</span>
+    <ul>
+      <li><b>Q1 — ¿Cuáles son IP privadas asignables a un host?</b> → <code>10.0.0.254</code>, <code>172.18.0.1</code>, <code>192.168.155.100</code>.
+        <br>Las trampas de las otras opciones: <code>127.0.0.1</code> es loopback (no asignable); <code>10.0.0.0</code> / <code>172.18.0.0</code> / <code>192.168.0.0</code> son <b>direcciones de red</b>; <code>224.100.100.1</code> es clase D; <code>172.31.254</code> tiene <b>solo tres octetos</b>.</li>
+      <li><b>Q2 — Abreviación IPv6</b> → ver la caja roja de la sección 20.</li>
+      <li><b>Q3 — ¿A qué red pertenece 172.31.250.100/18?</b> → <b>172.31.192.0</b>.
+        <div class="step">/18 = 255.255.192.0
+tercer octeto:  250 = 11111010
+máscara:        192 = 11000000
+AND:            192 = 11000000  → red 172.31.<span class="res">192</span>.0</div>
+      </li>
+      <li><b>Q4 — 172.31.250.0/23, hacer 4 subredes de 126 hosts. ¿Último host de la subred 3?</b> → <b>172.31.251.126/25</b>.
+        <div class="step">/23 abarca 172.31.250.0 a 172.31.251.255 (512 direcciones)
+126 hosts útiles → 2⁷−2 = 126 → 7 bits host → <b>/25</b> (bloques de 128)
+
+  Subred 1: 172.31.250.0/25    → .1 a .126     bcast .127
+  Subred 2: 172.31.250.128/25  → .129 a .254   bcast .255
+  Subred 3: 172.31.251.0/25    → .1 a <span class="res">.126</span>     bcast .127  ← ésta
+  Subred 4: 172.31.251.128/25  → .129 a .254   bcast .255</div>
+      </li>
+    </ul>
+    <b>Conclusión:</b> 3 de las 4 preguntas fueron <u class="w">cálculo puro de direccionamiento</u>. Si las cuentas te salen rápido, este módulo está resuelto.
+  </div>
+
+  <h2 class="sec" id="datos"><span class="n">22</span>Datos clave para el escrito</h2>
+  <div class="callout key">
+    <span class="ct">Números y RFCs</span>
+    <ul>
+      <li><b>IP:</b> RFC 791 · 32 bits · datagrama máximo <b>65.536 bytes</b> · Best Effort · sin conexión.</li>
+      <li><b>ARP:</b> RFC 826 · <b>ICMP:</b> RFC 792, cabecera de <b>8 bytes</b> · <b>IGMP:</b> RFC 3376 · <b>IPv6:</b> RFC 2460 · <b>privadas:</b> RFC 1918.</li>
+      <li><b>Clases:</b> A 0–127 · B 128–191 · C 192–223 · D 224–239 (multicast) · E 240–255.</li>
+      <li><b>Máscaras por defecto:</b> A /8 · B /16 · C /24.</li>
+      <li><b>Privadas:</b> 10.0.0.0/8 · 172.16.0.0/12 (¡hasta 172.<b>31</b>!) · 192.168.0.0/16 · 169.254.0.0/16 (APIPA).</li>
+      <li><b>Especiales:</b> red (host en 0) · difusión dirigida (host en 1) · difusión limitada 255.255.255.255 · 0.0.0.0 · loopback 127.x.</li>
+      <li><b>VLSM/CIDR/NAT:</b> 1987 / 1993 / 2001.</li>
+      <li><b>IPv6:</b> 128 bits = 2¹²⁸ · sin broadcast · sin checksum · IPsec · FE80::/10 link-local · FC00::/7 ULA · FF00::/8 multicast · <code>::1</code> loopback.</li>
+      <li><b>IGMP:</b> Vers siempre 1 · Tipo 1 = query (routers) · Tipo 2 = report (hosts).</li>
+    </ul>
+    <span class="ct" style="margin-top:10px">Fórmulas</span>
+    <ul>
+      <li><b>hosts útiles = 2ⁿ − 2</b> (n = bits de host)</li>
+      <li><b>prefijo = 32 − n</b></li>
+      <li><b>subredes = 2ᵏ</b> (k = bits prestados; la cátedra descuenta la primera y la última ⇒ 2ᵏ − 2)</li>
+      <li><b>dirección de red = IP AND máscara</b></li>
+      <li>Método VLSM: contar hosts (¡+ interfaces!) → ordenar de mayor a menor → prefijo con 2ⁿ−2 ≥ hosts → asignar contiguo.</li>
+    </ul>
+  </div>
+
+  <h2 class="sec" id="conex"><span class="n">23</span>Conexión con otros módulos</h2>
+  <div class="callout link">
+    <span class="ct">Cómo se enlaza con el resto del programa</span>
+    <ul>
+      <li><b>Conmutación (M4):</b> IP es <u class="w">el datagrama del M4 hecho protocolo</u>: sin conexión, cada paquete independiente, posible desorden y pérdida, y el destino se encarga de arreglarlo. Todo lo que estudiaste como "técnica de datagrama" es literalmente cómo funciona IP.</li>
+      <li><b>FR · ATM · MPLS (M5):</b> MPLS es "capa 2,5" justamente porque se mete <b>debajo de IP</b>. Y una de sus motivaciones era mejorar las prestaciones de IP: ruteo lento y tablas enormes — problemas que CIDR también ataca.</li>
+      <li><b>Ruteo (M7):</b> es la continuación directa. Acá viste <b>qué</b> es una tabla de ruteo; allá vas a ver <b>cómo se llena sola</b> (RIP, OSPF, BGP).</li>
+      <li><b>Transporte (M8):</b> todo lo que IP <u class="w">no</u> hace (conexión, ACK, orden, detección de pérdidas) lo hace TCP. Los dos módulos son complementarios y se leen juntos.</li>
+      <li><b>Servicios (M9):</b> DHCP asigna estas direcciones y DNS traduce nombres a ellas. El 2do parcial combina los tres módulos en un solo ejercicio.</li>
+      <li><b>Seguridad (M10):</b> iptables filtra por dirección IP, red y máscara. Sin subnetting no se entiende una regla.</li>
+    </ul>
+  </div>
+
+  <div class="callout note">
+    <span class="ct">Nota de fidelidad</span>
+    Todo sale de las slides del M6, el TP6, el Quiz 6 y las resoluciones del 2do parcial. <b>Correcciones sobre tu resumen:</b> (1) dos veces escribiste <b>IPv7</b> donde va IPv6; (2) el rango privado es <b>192.168</b>.0.0, no 192.166; (3) <b>falta todo el ejemplo de FLSM</b> (las 4 etapas) y el <b>ejemplo de VLSM</b>, que son el corazón práctico del módulo. <b>Errores del material de la cátedra:</b> la resolución del 2do parcial tiene mal el prefijo de las dos subredes más grandes (ver caja roja de la sección 16), y el desarrollo del TP6 confunde FE80::/10 con FEC0::/10. <b>Agregado de conocimiento general (no está en las slides):</b> la regla del RFC 5952 sobre dónde va el <code>::</code> cuando hay empate, y la diferencia entre site-local y unique local — conviene que las confirmes.
+  </div>
+</div>
+
+<script>
+  (function(){
+    var mem={};
+    var s; try{ s=localStorage.getItem("comii-theme"); }catch(e){ s=mem["comii-theme"]; }
+    if(s==="dark" || (!s && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+    document.getElementById("themeBtn").addEventListener("click",function(){
+      document.documentElement.classList.toggle("dark");
+      var v=document.documentElement.classList.contains("dark")?"dark":"light";
+      try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+    });
+  })();
+</script>
+</body>
+</html>

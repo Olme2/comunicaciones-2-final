@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 7 · Protocolos de ruteo — Resumen acortado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f6f1; --card:#ffffff; --ink:#2b2b2b; --muted:#6d6a60; --border:#e7e2d5;
+    --accent:#2e6fb0;
+    --hl-pink:#ffc6cd; --hl-green:#c6ecca;
+    --key:#c78a00; --key-bg:#fff4d4; --key-bd:#ecd58c;
+    --calc:#0e7c86; --calc-bg:#e2f6f7; --calc-bd:#a5dde1;
+    --shadow:0 1px 3px rgba(40,35,20,.06),0 1px 2px rgba(40,35,20,.04);
+    --font:"Comic Sans MS","Comic Neue","Chalkboard SE","Segoe Print",cursive;
+  }
+  html.dark{
+    --bg:#13151a; --card:#1b1f27; --ink:#e9e5d9; --muted:#9b988c; --border:#2c303a;
+    --accent:#5fa8e0;
+    --key:#e6bd52; --key-bg:#2b2410; --key-bd:#4a3d1c;
+    --calc:#4fc9d4; --calc-bg:#0f2a2d; --calc-bd:#245055;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.72;font-size:17px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:#eef1f5;color:#245a92;padding:.04em .34em;border-radius:5px;font-size:.82em;font-family:ui-monospace,Menlo,monospace}
+  html.dark code{background:#20262f;color:#7fb6e6}
+  mark{color:#2b2b2b;padding:.02em .16em;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  mark.p{background:var(--hl-pink)}
+  mark.s{background:var(--hl-green)}
+  u.w{text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:820px;margin:0 auto}
+  .htop .lbl{font-size:.74rem;color:var(--muted)}
+  .htop h1{font-size:1.02rem;margin:1px 0 0;font-weight:700}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--ink);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;font-family:var(--font)}
+
+  .wrap{max-width:820px;margin:0 auto;padding:18px 18px 44px}
+  .meta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+  .tag{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--muted)}
+  .tag.freq{color:var(--key);border-color:var(--key-bd);background:var(--key-bg)}
+
+  .lead{color:var(--muted);font-size:1rem;margin:2px 0 18px}
+  .lead b{color:var(--ink)}
+
+  h2.sec{font-size:1.22rem;margin:26px 0 6px;display:inline-block;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:5px}
+  p{margin:8px 0}
+  .idea{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;margin:10px 0 4px;box-shadow:var(--shadow)}
+
+  .fbox{background:var(--calc-bg);border:1px solid var(--calc-bd);border-left:5px solid var(--calc);border-radius:12px;padding:12px 15px;margin:16px 0}
+  .fbox .ct{font-size:.78rem;font-weight:700;color:var(--calc);margin-bottom:6px;display:block;text-decoration:underline;text-underline-offset:3px}
+  .fbox .f{font-family:ui-monospace,Menlo,monospace;font-size:.82rem;background:var(--card);border:1px solid var(--calc-bd);border-radius:7px;padding:7px 10px;margin:6px 0;line-height:1.6;overflow-x:auto;white-space:pre}
+  html.dark .fbox .f{background:#12181d}
+
+  .warnbox{background:var(--key-bg);border:1px solid var(--key-bd);border-left:5px solid var(--key);border-radius:12px;padding:12px 15px;margin:16px 0;font-size:.94rem}
+  .warnbox b{color:var(--key)}
+
+  h2.big{font-size:1rem;color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px;margin:34px 0 4px}
+  .subt{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+  .grupo{font-size:.8rem;font-weight:700;color:var(--muted);margin:20px 2px 6px;text-transform:uppercase;letter-spacing:.04em}
+
+  .punteros{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:620px){.punteros{grid-template-columns:1fr}}
+  details.punt{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:11px;padding:11px 14px;box-shadow:var(--shadow)}
+  details.punt summary{font-weight:700;cursor:pointer;list-style:none;outline:none;display:flex;align-items:flex-start;gap:7px}
+  details.punt summary::-webkit-details-marker{display:none}
+  details.punt summary::before{content:"▸";color:var(--accent);flex:none}
+  details.punt[open] summary::before{content:"▾"}
+  details.punt summary:focus-visible{text-decoration:underline}
+  details.punt .exp{margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);font-size:.92rem;color:var(--ink);line-height:1.6}
+  details.punt .exp code{background:#eef1f5;color:#245a92;padding:.03em .3em;border-radius:4px;font-size:.86em;font-family:ui-monospace,Menlo,monospace}
+  html.dark details.punt .exp code{background:#20262f;color:#7fb6e6}
+  .hint{font-size:.82rem;color:var(--muted);margin:8px 2px 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 7 · Resumen acortado</span><h1>Protocolos de ruteo</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <a class="iconbtn" href="resumen-principal.html">Principal</a>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="meta">
+    <span class="tag freq">Frecuencia: alta</span>
+    <span class="tag">Para leer y absorber · + oral</span>
+  </div>
+
+  <p class="lead">La teoría de este módulo la tenés bien (acertaste las tres preguntas conceptuales del Quiz 7). <b>Lo que falta es el método para armar tablas de ruteo</b>, que es lo que fallaste dos veces. Por eso lo primero acá abajo es ese método.</p>
+
+  <div class="fbox">
+    <span class="ct">⭐ Armar una tabla de ruteo — el método y el chequeo</span>
+    <div class="f">1. Redes DIRECTAMENTE conectadas → una fila con gateway vacío
+   La columna Interfaz lleva MI IP en esa red
+
+2. Redes REMOTAS → una fila cada una
+   Interfaz = MI IP en el enlace de salida
+   Gateway  = la IP del VECINO en ese mismo enlace
+
+3. Contá: ¿hay tantas filas como redes en el dibujo?</div>
+    <div class="f">EL CHEQUEO DE 10 SEGUNDOS
+
+(a) Gateway vacío  → ¿la Interfaz pertenece a la red de la 1ª columna?
+      red 172.18.0.0/16 · interfaz 172.18.0.3   ✓
+      red 172.18.0.0/16 · interfaz 172.17.0.3   ✗
+
+(b) Gateway con IP → ¿Interfaz y Gateway están en la MISMA red?
+      interfaz 172.18.0.3 · gateway 172.18.0.2  ✓
+      interfaz 172.18.0.3 · gateway 172.17.0.2  ✗</div>
+    <b>Los 3 errores a cazar en un múltiple choice:</b> interfaz que no pertenece a su red · interfaz y gateway en redes distintas (suelen estar invertidos) · <b>falta una fila</b>.
+    <br><br><b>Truco:</b> escribí vos la tabla en el margen <u class="w">antes</u> de mirar las opciones. Si mirás primero, todas parecen razonables.
+  </div>
+
+  <h2 class="sec">La idea en seis trazos</h2>
+
+  <div class="idea"><b>1. Dos verbos distintos.</b> <mark class="p">Forwarding</mark> es elegir el puerto de salida de <u class="w">cada paquete</u> consultando la tabla. <mark class="p">Ruteo</mark> es <u class="w">construir esa tabla</u>, por detrás y sin que haya tráfico. Todo el módulo trata del segundo.</div>
+
+  <div class="idea"><b>2. El problema de fondo.</b> Nadie tiene el mapa de Internet. Hay cinco requisitos en tensión: <b>consistencia</b> (siempre encontrar ruta), <b>mínima información</b> en las tablas, <b>mejor ruta</b> (rápida para el usuario y equilibrada para la red), <b>completitud</b> (más info local = converge más rápido) y <b>escalabilidad</b>. Fijate el conflicto: el requisito 2 pide <u class="w">menos</u> información y el 4 pide <u class="w">más</u>. Todo el diseño de protocolos vive en ese equilibrio.</div>
+
+  <div class="idea"><b>3. Las dos generaciones.</b> <mark class="p">Vector distancia</mark> (Bellman-Ford): "le cuento a mis <u class="w">vecinos</u> todo lo que sé". Nadie ve el grafo, las tablas se arman iterativamente. <mark class="p">Estado del enlace</mark> (Dijkstra): "le cuento a <u class="w">todos</u> sólo lo que veo yo". Cada uno arma su propio grafo y calcula. Esa diferencia explica todo lo demás.</div>
+
+  <div class="idea"><b>4. El pecado del vector distancia.</b> La <mark class="s">cuenta a infinito</mark>: si se cae un enlace, un vecino puede seguir anunciando una ruta que en realidad pasaba por el caído, y las métricas suben de a uno eternamente. Pasa porque <u class="w">nadie puede darse cuenta de que la ruta que le ofrecen pasa por él mismo</u>. Se parchea con <b>split horizon</b> (no le cuento lo que aprendí de él), <b>poison reverse</b> (se lo cuento con ∞), timers, triggered update y hold-down.</div>
+
+  <div class="idea"><b>5. Los tres protocolos que hay que distinguir.</b> <mark class="s">RIP</mark>: interno, vector distancia, UDP 520, v2 agrega VLSM. <mark class="s">OSPF</mark>: interno, estado del enlace, <u class="w">directo sobre IP protocolo 89</u>, con áreas y router designado. <mark class="s">BGP</mark>: externo, <b>path-vector</b>, sobre TCP. Si te preguntan "cuál es externo", siempre es BGP.</div>
+
+  <div class="idea"><b>6. BGP y el truco del path.</b> Cuando Internet creció, la estructura plana colapsó y hubo que partirla en <mark class="p">Sistemas Autónomos</mark> (cada uno con su política de ruteo). BGP los conecta, y su idea genial es que <u class="w">cada ruta lleva la lista de AS que atravesó</u>: si un router ve su propio AS en la lista, detecta el bucle al instante. Eso es lo que el vector distancia clásico no podía hacer.</div>
+
+  <div class="warnbox">
+    <b>Tu diagnóstico en este módulo:</b> en el Quiz 7 sacaste 60 %, acertando las <u class="w">tres preguntas conceptuales</u> y fallando las <u class="w">dos de tablas de ruteo</u>. La teoría la tenés. Practicá el chequeo de coherencia de arriba hasta que sea automático y este módulo pasa a ser de los seguros.
+  </div>
+
+  <h2 class="big">Punteros para rendir</h2>
+  <p class="subt">Leé el gatillo → explicalo en voz alta → abrí para verificar. Si no te sale completo, volvé al resumen principal.</p>
+
+  <div class="grupo">Fundamentos</div>
+  <div class="punteros">
+    <details class="punt"><summary>Forwarding, ruteo y router</summary><div class="exp">Forwarding: selecciona un puerto de salida en función de la dirección de destino y de la tabla de ruteo; ocurre con cada paquete. Ruteo: el proceso mediante el cual se CONSTRUYE la tabla de ruteo. Router: dispositivo de hardware capaz de interconectar redes heterogéneas usando protocolos de ruteo y haciendo forwarding de datagramas.</div></details>
+
+    <details class="punt"><summary>Los 5 requisitos elementales</summary><div class="exp">1) Consistencia: siempre poder encontrar una ruta entre cualquier par de dispositivos, salvo caída de routers o enlaces vitales. 2) Mínima información en la tabla: en interredes grandes las tablas explotan si no se minimiza. 3) Elección de la mejor ruta: desde el usuario (rapidez y confiabilidad) y desde lo global (distribución equilibrada del tráfico, evitar congestión). 4) Completitud: información suficiente para hallar todos los caminos; más info local = convergencia más rápida. 5) Escalabilidad.</div></details>
+
+    <details class="punt"><summary>Ruteo interno vs externo</summary><div class="exp">Interno: administra las rutas DENTRO de un Sistema Autónomo (conjunto de redes con una única política de enrutamiento). Ejemplos: IGRP, EIGRP (Cisco), RIP y OSPF. Externo: administra las rutas que CONECTAN diferentes Sistemas Autónomos. Ejemplos: EGP y BGP.</div></details>
+
+    <details class="punt"><summary>Estático vs dinámico: ventajas y desventajas</summary><div class="exp">Estático: configuración manual de las tablas, mayor control, PERO no es escalable y es lento para adaptarse a los cambios. Dinámico o adaptativo: se obtienen caminos óptimos, rápida adaptación a los cambios y es escalable, PERO consume CPU, ancho de banda y memoria, y el debugging es complejo.</div></details>
+
+    <details class="punt"><summary>Información de ruteo y las 4 métricas</summary><div class="exp">La información tiene dos aspectos: 1) la topología de la interred (cuántas redes hay y cómo están conectadas, para saber a qué redes se accede por qué routers) y 2) el estado actual de redes y enlaces, asignándole a cada enlace un costo llamado métrica. Las cuatro métricas: ancho de banda, retardo (RTT), carga de trabajo y confiabilidad.</div></details>
+
+    <details class="punt"><summary>Los 3 algoritmos de ruteo</summary><div class="exp">Centralizado: se reúne la información en un solo lugar para armar el grafo, se calcula y se difunden las tablas. Vector distancia: ningún nodo tiene el grafo; cada uno envía su información a sus vecinos y las tablas se arman iterativamente. Estado del enlace: cada nodo reúne información y arma su propio grafo, computa el camino y arma su tabla.</div></details>
+
+    <details class="punt"><summary>El método para armar una tabla de ruteo</summary><div class="exp">1) Listar las redes directamente conectadas: una fila cada una, con gateway vacío o "local", y en Interfaz la IP propia del router en esa red. 2) Listar todas las demás redes de la topología, sin saltearse ninguna. 3) Para cada red remota: Interfaz = mi IP en el enlace de salida; Gateway = la IP del router vecino en ese mismo enlace. 4) Verificar coherencia.</div></details>
+
+    <details class="punt"><summary>El chequeo de coherencia</summary><div class="exp">Si el gateway está vacío: ¿la IP de la columna Interfaz pertenece a la red de la primera columna? Si el gateway tiene IP: ¿la interfaz y el gateway están en la misma red? Y siempre: ¿hay tantas filas como redes tiene la topología? Los tres errores típicos son interfaz que no pertenece a su red, interfaz y gateway invertidos, y falta de una fila.</div></details>
+  </div>
+
+  <div class="grupo">Vector distancia y RIP</div>
+  <div class="punteros">
+    <details class="punt"><summary>Vector distancia: las 4 características</summary><div class="exp">Objetivo: encontrar el mejor camino a cualquier destino; se lo conoce como algoritmo de Bellman-Ford. Cada nodo construye un arreglo unidimensional (vector) con las distancias a todos los otros nodos y lo distribuye a sus vecinos inmediatos. Supone que cada nodo conoce el costo del enlace a cada vecino conectado. Al comienzo sólo conoce a los vecinos y usa costo infinito para lo que no conoce.</div></details>
+
+    <details class="punt"><summary>Cómo avanza el algoritmo hasta converger</summary><div class="exp">Luego del estado inicial, cada T segundos cada router envía sus tablas a sus vecinos. Cada router actualiza sus tablas con la nueva información, calcula las distancias según lo que recibió, y envía una nueva tabla a sus vecinos con los nuevos valores. El intercambio sigue hasta que se logra la convergencia.</div></details>
+
+    <details class="punt"><summary>Los 3 problemas del vector distancia</summary><div class="exp">1) Respuesta rápida a buenas noticias y lenta a malas noticias: el conteo a infinito. 2) Utiliza demasiados mensajes de actualización. 3) Múltiples rutas con la misma métrica (no sabe cuál elegir; se resuelve eligiendo la primera ruta aprendida).</div></details>
+
+    <details class="punt"><summary>Qué es la cuenta a infinito y por qué pasa</summary><div class="exp">Cuando se cae un enlace, el router afectado pone infinito, pero su vecino le sigue anunciando que él llega, con un costo que en realidad pasaba por el router caído. El primero aprende esa ruta fantasma con costo+1, se lo cuenta al vecino, éste incrementa otra vez, y las métricas suben de a uno indefinidamente. La causa de fondo: ningún nodo tiene el grafo completo, así que nadie puede detectar que la ruta ofrecida pasa por él mismo.</div></details>
+
+    <details class="punt"><summary>Split horizon vs poison reverse</summary><div class="exp">Split horizon: las rutas que se alcanzan a través de la interfaz X NO se publican en la actualización enviada a la interfaz X; así no se publica la entrada que genera la cuenta a infinito. Poison reverse: esas rutas SÍ se publican, pero con valor infinito. Diferencia: poison reverse logra una convergencia más rápida a costa de enviar más información.</div></details>
+
+    <details class="punt"><summary>Las otras soluciones a la cuenta a infinito</summary><div class="exp">Timer por entrada: si no se actualiza al cabo del temporizador, la entrada se marca con infinito; se configura en 6 veces el intervalo de transmisión. Triggered update: un cambio en la tabla provoca su publicación inmediata. Publicación periódica cada 90 segundos. Hold-down: si se recibe un incremento en una ruta, se pasa su métrica a infinito durante el timer; si luego se recibe el incremento otra vez, se lo adopta. Ante rutas de igual métrica, elige la primera aprendida.</div></details>
+
+    <details class="punt"><summary>RIP: las tres versiones</summary><div class="exp">RIP v1: RFC 1058 (1988), UDP 520; NO soporta VLSM ni autenticación, sí soporta subnetting. RIP v2: RFC 1388 (1993), estandarizado en RFC 2453 (1998), UDP 520; soporta VLSM, autenticación y multicast. RIPng: RFC 2080, UDP 521, para IPv6.</div></details>
+
+    <details class="punt"><summary>Funcionamiento de RIP</summary><div class="exp">Broadcasting de responses cada 30 o 90 segundos, o disparado por una actualización de tablas. Cada entrada contiene: dirección de destino, métrica asociada, dirección del próximo salto, flag de "recién actualizado" y timers. El mensaje de triggered update no incluye todas las entradas. Si la tabla supera las 25 entradas, se envían múltiples mensajes.</div></details>
+  </div>
+
+  <div class="grupo">Estado del enlace y OSPF</div>
+  <div class="punteros">
+    <details class="punt"><summary>Estado del enlace: las 2 operaciones básicas</summary><div class="exp">1) Generar en cada router una tabla con todas las rutas (el grafo completo): cada router identifica sus vecinos y a qué distancia están, y comunica esa información a todos los nodos, que la procesan y generan la tabla. 2) Encontrar el camino más corto: con la tabla completa, cada router aplica un algoritmo de camino mínimo hacia cada destino.</div></details>
+
+    <details class="punt"><summary>Los 5 pasos del funcionamiento</summary><div class="exp">1) Descubrir a sus vecinos y conocer sus direcciones de red, con paquetes "Hello". 2) Establecer la métrica de distancia o costo para cada vecino (una técnica importante es calcular el retardo con un "eco"). 3) Construir un paquete que indique todo lo aprendido. 4) Enviar ese paquete a todos los demás routers y recibir los de ellos: inundación o flooding. 5) Calcular la ruta más corta con el algoritmo de Dijkstra. Ejemplos: OSPF e IS-IS.</div></details>
+
+    <details class="punt"><summary>Los desafíos del flooding</summary><div class="exp">Flooding confiable: asegurar que todos los nodos reciban la información y usen la última versión. Problemas: errores, pérdida de paquetes y llegadas fuera de orden. Soluciones: acknowledgements y retransmisiones, números de secuencia, y time-to-live para cada paquete. Beaconing: mensajes hello periódicos en ambas direcciones; se detecta la falla tras algunos hello perdidos y se inicia el flooding. El flooding también se dispara si cambia el costo de un enlace o tras 30 minutos sin cambios.</div></details>
+
+    <details class="punt"><summary>Dijkstra y sus conjuntos</summary><div class="exp">Algoritmo SPF (Shortest Path First): computa el camino más corto entre un nodo y el resto. Divide los nodos en dos conjuntos: {E} los evaluados, para cuyos elementos ya se conoce el camino mínimo, y {R} el resto. Además mantiene {O}, una lista ordenada de rutas. En cada iteración pasa de {R} a {E} el nodo de menor costo conocido.</div></details>
+
+    <details class="punt"><summary>Por qué existen las áreas</summary><div class="exp">El ruteo link-state tiene dos costos altos: el flooding de paquetes de estado del enlace por toda la red y la ejecución del algoritmo de Dijkstra. Para reducir ese overhead se introduce jerarquía a través de "áreas". Un área constituye una frontera para el cálculo en la base de datos del estado del enlace, de modo que un router no necesita conocer la topología completa.</div></details>
+
+    <details class="punt"><summary>Vector distancia vs estado del enlace</summary><div class="exp">Qué comparte: VD toda su tabla de distancias, LE sólo el estado de sus propios enlaces. Con quién: VD sólo con sus vecinos inmediatos, LE con todos por flooding. Visión: en VD ninguno tiene el grafo, en LE cada uno arma el suyo. Algoritmo: Bellman-Ford vs Dijkstra. Construcción: iterativa vs calculada localmente. Problema típico: cuenta a infinito vs overhead de flooding y CPU.</div></details>
+
+    <details class="punt"><summary>OSPF: datos y características</summary><div class="exp">Versión 2, abril 1998, RFC 2328, STD 54 (update de seguridad RFC 7474 de 2015). Encapsulado DIRECTAMENTE en IP, protocolo 89. Convergencia más rápida, IGP muy usado en el mundo. Mayor escalabilidad: soporta sistemas jerárquicos y define áreas, sin necesidad de conocer la topología completa. Soporta autenticación, métricas configurables por el usuario, mensajes cortos y triggered update.</div></details>
+
+    <details class="punt"><summary>Los conceptos propios de OSPF</summary><div class="exp">Adyacencia: relación para el intercambio de datos entre dos routers vecinos. LSA (Link State Advertisement): el paquete de estado del enlace. Hello packet. DR (Designated Router): designado para generar y difundir confiablemente los LSA en redes broadcast o NBMA. BDR: su backup. Full flooding cada 30 minutos. Soporta VLSM. Área: frontera para el cálculo. ABR (Area Border Router): tiene enlaces en varias áreas. IR (Internal Router): todos sus enlaces son de un área.</div></details>
+
+    <details class="punt"><summary>El router designado: por qué y cómo</summary><div class="exp">Basta un solo router que propague el estado de los enlaces, así que uno se elige como designado. Representa a la red y sus routers ante el resto, y administra el flooding. La red misma se considera un pseudo-nodo o router virtual. La elección resulta del protocolo hello; una vez elegido, los demás le envían sus adyacencias. El designado genera una tabla con menor cantidad de entradas. Por criticidad se elige también un backup.</div></details>
+
+    <details class="punt"><summary>Las dos multicast del DR</summary><div class="exp">Si un router debe transmitir el estado de un enlace, sólo lo transmite AL designado, usando la dirección multicast 224.0.0.6 (AllDRouters). Si es un aviso nuevo, el designado lo reenvía por flooding a la dirección multicast 224.0.0.5 (AllRouters). Truco: el .6 va HACIA el designado, el .5 va DESDE el designado hacia todos.</div></details>
+
+    <details class="punt"><summary>Los 3 protocolos del paquete OSPF</summary><div class="exp">Los tres comparten un header común. Hello: verifica la operatividad de los enlaces, elige el router designado y elige el backup en redes broadcast y no broadcast. Exchange: realiza la sincronización inicial de las bases de datos; es asimétrico, con master y slave; después el flooding las mantiene sincronizadas. Flooding: mantiene actualizados los enlaces.</div></details>
+
+    <details class="punt"><summary>Redes NBMA</summary><div class="exp">En redes no broadcast los routers se interconectan en forma estática, generando múltiples enlaces punto a punto; cada circuito virtual constituye una subred independiente y consume una dirección de subred. El problema es aún peor que en broadcast antes del designado, y la solución es la misma: elegir un DR y un BDR. La adyacencia se define entre un router y su DR/BDR en un segmento multiacceso.</div></details>
+  </div>
+
+  <div class="grupo">Sistemas Autónomos y BGP</div>
+  <div class="punteros">
+    <details class="punt"><summary>Por qué aparecen los Sistemas Autónomos</summary><div class="exp">El crecimiento exponencial de Internet hizo colapsar la estructura plana: crecimiento de las tablas de ruteo (memoria y procesamiento), aumento del tiempo de convergencia, y aumento del tamaño y cantidad de mensajes de intercambio. Hubo que abandonar el modelo de una única red, y la solución fue definir subredes autónomas.</div></details>
+
+    <details class="punt"><summary>Definición de Sistema Autónomo (RFC 1930)</summary><div class="exp">"Un conjunto de routers bajo una o más administraciones que presenta una política de ruteo común a Internet". Es un dominio de ruteo autónomo al que se le asignó un Número de Sistema Autónomo. Ante los demás SA se presenta como que tiene un plan de ruteo interno coherente y muestra las redes alcanzables a través de él. Garantiza que las rutas internas permanezcan consistentes y alcanzables.</div></details>
+
+    <details class="punt"><summary>Las 3 notaciones de AS</summary><div class="exp">asplain: todos los AS en notación entera decimal (AS 65546). asdot+: dos enteros unidos por un punto, los 16 bits más significativos y los 16 menos significativos (AS 65526 = AS 0.65526; AS 65546 = AS 1.10, porque 65546 = 1×65536 + 10). asdot: mezcla, los menores a 65536 en asplain y los mayores en asdot+.</div></details>
+
+    <details class="punt"><summary>Los 3 tipos de SA</summary><div class="exp">1) Stub: una red con una sola entrada y una sola salida; no necesita aprender rutas de Internet. 2) Multihomed No Transit: conectado a más de un SA pero no permite que el tráfico ajeno lo atraviese. 3) Multihomed Transit: conectado a más de un SA y sí permite el tránsito de tráfico entre otros SA.</div></details>
+
+    <details class="punt"><summary>BGP: características</summary><div class="exp">Protocolo de distancia vectorial con actualizaciones confiables, sólo triggered updates y métrica múltiple (vector de ruta). Escala a redes de alta complejidad. Utiliza TCP como protocolo de transporte. Es un protocolo muy complejo. Usa keepalives periódicos para verificar la conectividad TCP. Los updates se almacenan temporariamente y se envían cada 5 segundos al par interno y cada 30 segundos al par externo.</div></details>
+
+    <details class="punt"><summary>Path vectors: la clave de BGP</summary><div class="exp">Cada ruta incluye los AS atravesados entre origen y destino. Al recibir una ruta, el router externo detecta inmediatamente el loop al ver que su propio AS ya existe en ella; si no, agrega su identificación local antes de propagarla. BGP intercambia paths entre AS, descriptos por sus atributos: lista de AS atravesados y lista de redes alcanzables. Los atributos facilitan elegir el mejor camino porque permiten incorporar múltiples métricas.</div></details>
+
+    <details class="punt"><summary>iBGP vs eBGP</summary><div class="exp">iBGP, uso interno: actualiza información y transporta prefijos del ISP dentro del propio AS; interactúa con los IGP (RIP, OSPF, IS-IS). eBGP, uso externo: intercambia rutas con otros Sistemas Autónomos e implementa políticas. Funcionamiento general: aprende múltiples rutas por interlocutores externos e internos, elige la mejor y la incorpora a la tabla de forwarding, y la envía a los BGP externos. Las políticas influyen en esa elección.</div></details>
+
+    <details class="punt"><summary>Por qué BGP es tan complejo</summary><div class="exp">El ruteo entre AS está sujeto a políticas de control, y la gestión de esas políticas explica la creación de BGP y su complejidad: se requiere una autorización antes de usar los recursos ajenos. Resumen: protocolo path-vector, actualizaciones incrementales, usa políticas para elegir la mejor ruta, soporta múltiples métricas, usa iBGP para distribuir rutas dentro del AS, interactúa con los IGP, y por su arquitectura es un protocolo de escala global.</div></details>
+  </div>
+
+  <p class="hint">Cuando puedas expandir los 28 punteros y armar una tabla de ruteo sin dudar, tenés el Módulo 7 listo. Prioridad absoluta: el método de tablas del recuadro celeste.</p>
+</div>
+
+<script>
+  (function(){
+    var mem={};
+    var s; try{ s=localStorage.getItem("comii-theme"); }catch(e){ s=mem["comii-theme"]; }
+    if(s==="dark" || (!s && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+    document.getElementById("themeBtn").addEventListener("click",function(){
+      document.documentElement.classList.toggle("dark");
+      var v=document.documentElement.classList.contains("dark")?"dark":"light";
+      try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+    });
+  })();
+</script>
+</body>
+</html>

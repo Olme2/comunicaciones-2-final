@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Módulo 7 · Protocolos de ruteo — Quiz</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --card:#ffffff; --text:#1b2531; --muted:#6a7685; --border:#e4e8ee;
+    --accent:#2e6fb0; --accent-soft:#e9f1f9; --ok:#1f8a4c; --ok-bg:#e9f7ef; --ok-bd:#9fd9b6;
+    --no:#c0392b; --no-bg:#fcebea; --no-bd:#eeb4ae; --warn:#b8860b;
+    --shadow:0 1px 3px rgba(20,30,45,.06),0 1px 2px rgba(20,30,45,.04);
+  }
+  html.dark{
+    --bg:#0f141a; --card:#19212b; --text:#e6ebf1; --muted:#93a1b0; --border:#2a3542;
+    --accent:#5fa8e0; --accent-soft:#1d2c3a; --ok:#54c483; --ok-bg:#142a1e; --ok-bd:#2f6b47;
+    --no:#e06a5f; --no-bg:#2c1a19; --no-bd:#6b332f; --warn:#d6a94a;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;font-size:16px;padding-bottom:env(safe-area-inset-bottom)}
+  code{background:var(--accent-soft);color:var(--accent);padding:.05em .35em;border-radius:5px;font-size:.86em;font-family:ui-monospace,Menlo,monospace}
+
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);padding:11px 16px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:780px;margin:0 auto}
+  .htop .lbl{font-size:.72rem;color:var(--muted)}
+  .htop h1{font-size:1.02rem;margin:1px 0 0;font-weight:700;letter-spacing:-.01em}
+  .hbtns{display:flex;gap:8px;flex-shrink:0}
+  .iconbtn{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+  #shufBtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+  .stats{max-width:780px;margin:11px auto 0;display:flex;align-items:center;gap:12px}
+  .progress{flex:1;height:9px;background:var(--border);border-radius:99px;overflow:hidden}
+  #bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#5ac8a8));border-radius:99px;transition:width .35s ease}
+  #score{font-size:.8rem;white-space:nowrap}
+  #score b{color:var(--ok)} #score .pct{font-weight:800;color:var(--accent);margin-left:3px}
+
+  main{max-width:780px;margin:0 auto;padding:14px}
+  .intro{font-size:.84rem;color:var(--muted);margin:2px 4px 14px;line-height:1.5}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;margin-bottom:12px;box-shadow:var(--shadow);border-left:4px solid var(--border)}
+  .card.cok{border-left-color:var(--ok)} .card.cno{border-left-color:var(--no)}
+  .qhead{display:flex;gap:8px;align-items:center;margin-bottom:9px;flex-wrap:wrap}
+  .badge{font-size:.66rem;font-weight:700;padding:3px 8px;border-radius:7px;background:var(--accent-soft);color:var(--accent);font-family:ui-monospace,Menlo,monospace}
+  .badge.ty{background:transparent;border:1px solid var(--border);color:var(--muted)}
+  .qprompt{font-size:1rem;line-height:1.5;margin-bottom:12px;font-weight:500}
+
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opt{width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--border);color:var(--text);border-radius:11px;padding:11px 13px;font-size:.94rem;line-height:1.4;cursor:pointer;display:flex;align-items:center;gap:11px;min-height:48px;transition:border-color .12s,background .12s;font-family:inherit}
+  .opts.vf .opt{justify-content:center;font-weight:700}
+  @media(hover:hover){.opt:not(.locked):hover{border-color:var(--accent);background:var(--accent-soft)}}
+  .okey{flex:none;width:25px;height:25px;border-radius:50%;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:var(--muted)}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .okey{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .opt.ok{border-color:var(--ok-bd);background:var(--ok-bg)} .opt.ok .okey{background:var(--ok);color:#fff;border-color:var(--ok)}
+  .opt.no{border-color:var(--no-bd);background:var(--no-bg)} .opt.no .okey{background:var(--no);color:#fff;border-color:var(--no)}
+  .opt.miss{border-color:var(--ok-bd);border-style:dashed}
+  .opt.locked{cursor:default}
+
+  .btn{background:var(--accent);color:#fff;border:none;border-radius:11px;padding:10px 15px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px}
+  .btn:disabled{opacity:.5;cursor:default}
+  .fb{margin-top:11px;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px}
+  .fb.good{color:var(--ok)} .fb.bad{color:var(--no)}
+  .expl{margin-top:9px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;font-size:.88rem;line-height:1.5}
+
+  .result{display:none;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:12px;box-shadow:var(--shadow);text-align:center}
+  .result.show{display:block}
+  .result .big{font-size:3rem;font-weight:800;line-height:1;margin:6px 0}
+  .result p{color:var(--muted);font-size:.9rem;margin:6px 0 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><span class="lbl">Módulo 7 · Quiz</span><h1>Protocolos de ruteo</h1></div>
+    <div class="hbtns">
+      <a class="iconbtn" href="../../index.html">← Centro</a>
+      <button class="iconbtn" id="shufBtn" title="Mezclar preguntas">⤨ Mezclar</button>
+      <button class="iconbtn" id="resetBtn" title="Reiniciar quiz">↺ Reiniciar</button>
+      <button class="iconbtn" id="themeBtn">◐ Tema</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="progress"><div id="bar"></div></div>
+    <span id="score">0/40 · <b>0</b> correctas<span class="pct">0%</span></span>
+  </div>
+</header>
+
+<main>
+  <p class="intro">40 preguntas sobre el Módulo 7. Las <b>Q1 a Q3 son las reales del Quiz 7</b>, y las <b>Q4 a Q6 atacan directamente las tablas de ruteo</b>, que es lo que fallaste dos veces. Los distractores son confusiones reales (split horizon vs poison reverse, Bellman-Ford vs Dijkstra, iBGP vs eBGP, DR vs BDR vs ABR). <b>Las opciones se mezclan solas en cada intento.</b></p>
+  <div class="result" id="result"></div>
+  <div id="quiz"></div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  var QUESTIONS = [
+    {id:1,type:"vf",prompt:"RIP es un tipo de ruteo dinámico basado en <b>Estado de enlace</b>.",
+     opts:[{t:"Verdadero"},{t:"Falso",ok:true}],
+     expl:"Pregunta real del Quiz 7. FALSO: RIP es vector distancia (algoritmo de Bellman-Ford). Los protocolos de estado del enlace son OSPF e IS-IS."},
+
+    {id:2,type:"single",prompt:"¿Cuál de estos protocolos se puede usar para <b>ruteo externo</b>?",
+     opts:[{t:"BGP, que administra las rutas entre Sistemas Autónomos",ok:true},
+           {t:"OSPF, que administra las rutas mediante estado del enlace"},
+           {t:"RIP, que administra las rutas mediante vector distancia"},
+           {t:"EIGRP, la versión extendida del protocolo IGRP de Cisco"}],
+     expl:"Pregunta real del Quiz 7. El ruteo externo administra las rutas que conectan diferentes Sistemas Autónomos: sus protocolos son EGP y BGP. OSPF, RIP, IGRP y EIGRP son todos protocolos de ruteo INTERNO (dentro de un mismo SA)."},
+
+    {id:3,type:"vf",prompt:"En los algoritmos basados en <b>estado de enlace</b>, cada router comparte toda su información con todos los routers de la red.",
+     opts:[{t:"Verdadero"},{t:"Falso",ok:true}],
+     expl:"Pregunta real del Quiz 7. FALSO, y es una afirmación mixta: 'con todos los routers' es cierto (eso es el flooding), pero 'toda su información' no. Cada router comparte únicamente el estado de SUS PROPIOS enlaces, no su tabla completa. Compartir toda la tabla, y sólo con los vecinos, es vector distancia."},
+
+    {id:4,type:"single",prompt:"En una tabla de ruteo, la fila <code>172.18.0.0 /16 · interfaz 172.17.0.3 · gateway (vacío)</code> está mal. ¿Por qué?",
+     opts:[{t:"Porque la interfaz no pertenece a la red de la primera columna",ok:true},
+           {t:"Porque una red directamente conectada siempre lleva gateway"},
+           {t:"Porque falta indicar la máscara en formato decimal punteado"},
+           {t:"Porque el prefijo /16 no admite direcciones que terminen en 3"}],
+     expl:"Si el gateway está vacío, la red está directamente conectada, y entonces la interfaz debe ser una IP DE ESA RED. Una interfaz 172.17.0.3 no puede pertenecer a la red 172.18.0.0/16. Es exactamente el error de una de las opciones del Quiz 7."},
+
+    {id:5,type:"single",prompt:"En una tabla de ruteo, la fila <code>172.16.0.0 /16 · interfaz 172.18.0.3 · gateway 172.17.0.2</code> está mal. ¿Por qué?",
+     opts:[{t:"Porque la interfaz y el gateway están en redes distintas",ok:true},
+           {t:"Porque el gateway debe pertenecer a la red de destino final"},
+           {t:"Porque una red remota nunca puede tener gateway asignado"},
+           {t:"Porque el gateway debe ser siempre la IP del propio router"}],
+     expl:"El gateway es el vecino al que le entrego el paquete, así que tiene que estar en el MISMO enlace que mi interfaz de salida. Con interfaz 172.18.0.3 el gateway debería ser algo tipo 172.18.0.x. Es el error de otra de las opciones del Quiz 7."},
+
+    {id:6,type:"single",prompt:"Un router tiene interfaces en las redes 172.18, 172.19 y 172.20, y alcanza 172.16 y 172.17 a través del vecino 172.18.0.2. ¿Cuántas filas debe tener su tabla completa?",
+     opts:[{t:"Cinco: tres directamente conectadas y dos remotas",ok:true},
+           {t:"Tres: solamente las redes directamente conectadas al router"},
+           {t:"Dos: solamente las redes remotas que requieren un gateway"},
+           {t:"Cuatro: las tres conectadas más una única ruta por defecto"}],
+     expl:"Una tabla completa lista TODAS las redes de la topología: las tres conectadas (con gateway vacío) más las dos remotas (con gateway 172.18.0.2). Olvidar una fila es uno de los errores típicos: contá las redes del dibujo y contá las filas."},
+
+    {id:7,type:"single",prompt:"¿Cuál es la diferencia entre <b>forwarding</b> y <b>ruteo</b>?",
+     opts:[{t:"El ruteo construye la tabla; el forwarding la consulta por cada paquete",ok:true},
+           {t:"El forwarding construye la tabla; el ruteo la consulta por cada paquete"},
+           {t:"El forwarding opera en capa 2 y el ruteo opera en capa 3"},
+           {t:"El forwarding es manual y el ruteo se actualiza automáticamente"}],
+     expl:"Forwarding: selecciona un puerto de salida en función de la dirección de destino y la tabla de ruteo; ocurre con cada paquete. Ruteo: el proceso mediante el cual se CONSTRUYE la tabla. Todo el módulo trata del segundo."},
+
+    {id:8,type:"multi",prompt:"¿Cuáles son <b>requisitos elementales</b> del ruteo según la cátedra? (múltiple)",
+     opts:[{t:"Consistencia: siempre poder hallar una ruta entre cualquier par",ok:true},
+           {t:"Mínima información necesaria en la tabla de ruteo",ok:true},
+           {t:"Elección de la mejor ruta posible, local y globalmente",ok:true},
+           {t:"Completitud: información suficiente para hallar los caminos",ok:true},
+           {t:"Confidencialidad: cifrado de las tablas entre routers vecinos"}],
+     expl:"Los cinco requisitos son consistencia, mínima información en la tabla, elección de la mejor ruta, completitud y escalabilidad. La confidencialidad no figura entre ellos (la autenticación aparece más adelante como característica de RIP v2 y OSPF, pero no es un requisito elemental)."},
+
+    {id:9,type:"single",prompt:"Los requisitos de <b>mínima información</b> y <b>completitud</b> están en tensión. ¿Por qué?",
+     opts:[{t:"Uno pide reducir el tamaño de las tablas y el otro pide más información local",ok:true},
+           {t:"Uno se aplica al ruteo interno y el otro solamente al ruteo externo"},
+           {t:"Uno exige tablas estáticas mientras que el otro exige tablas dinámicas"},
+           {t:"Uno se refiere a los routers y el otro a los dispositivos finales"}],
+     expl:"El requisito 2 pide minimizar la información porque en interredes grandes las tablas explotan. El requisito 4 dice que cuanta más información local haya, más rápido convergen los algoritmos. Todo el diseño de protocolos de ruteo vive en ese equilibrio."},
+
+    {id:10,type:"multi",prompt:"¿Cuáles son <b>desventajas del ruteo dinámico</b> frente al estático? (múltiple)",
+     opts:[{t:"Consume CPU, ancho de banda y memoria",ok:true},
+           {t:"El debugging resulta complejo",ok:true},
+           {t:"Es lento para adaptarse a los cambios en la red"},
+           {t:"No resulta escalable al crecer la cantidad de redes"},
+           {t:"Requiere configurar manualmente cada entrada de la tabla"}],
+     expl:"Las desventajas del dinámico son el consumo de recursos y la complejidad del debugging. La lentitud para adaptarse, la falta de escalabilidad y la configuración manual son características del ruteo ESTÁTICO, cuya única ventaja es el mayor control."},
+
+    {id:11,type:"multi",prompt:"¿Cuáles son <b>métricas</b> que puede usar un protocolo de ruteo? (múltiple)",
+     opts:[{t:"Ancho de banda del enlace",ok:true},
+           {t:"Retardo o RTT",ok:true},
+           {t:"Carga de trabajo del enlace",ok:true},
+           {t:"Confiabilidad del enlace",ok:true},
+           {t:"Cantidad de direcciones IP libres en la red destino"}],
+     expl:"Las cuatro métricas que enumera la cátedra son ancho de banda, retardo (RTT), carga de trabajo y confiabilidad. La cantidad de direcciones libres no es una métrica de ruteo: el protocolo elige caminos, no asigna direcciones."},
+
+    {id:12,type:"single",prompt:"¿Cómo funciona el algoritmo <b>vector distancia</b>?",
+     opts:[{t:"Cada nodo informa a sus vecinos y las tablas se arman iterativamente",ok:true},
+           {t:"Cada nodo reúne información, arma su propio grafo y computa el camino mínimo"},
+           {t:"Se reúne la información en un solo lugar, se calcula y se difunden las tablas"},
+           {t:"Cada nodo consulta a un servidor central que le devuelve el próximo salto"}],
+     expl:"La segunda opción describe el estado del enlace y la tercera el algoritmo centralizado. En vector distancia ningún nodo conoce el grafo completo: cada uno envía su vector de distancias a sus vecinos inmediatos y las tablas convergen de a poco."},
+
+    {id:13,type:"single",prompt:"¿Con qué nombre se conoce también al algoritmo de vector distancia?",
+     opts:[{t:"Bellman-Ford",ok:true},{t:"Dijkstra"},{t:"Shortest Path First"},{t:"Path Vector"}],
+     expl:"Vector distancia es el algoritmo de Bellman-Ford. Dijkstra (también llamado SPF) es el del estado del enlace. Path Vector es la variante que usa BGP, donde la ruta lleva la lista de AS atravesados."},
+
+    {id:14,type:"single",prompt:"¿Cuál es la causa de fondo del problema de la <b>cuenta a infinito</b>?",
+     opts:[{t:"Nadie tiene el grafo y no detecta que la ruta ofrecida pasa por él",ok:true},
+           {t:"Los temporizadores de las entradas son demasiado cortos para converger bien"},
+           {t:"El flooding de las actualizaciones satura los enlaces troncales de la red"},
+           {t:"Las métricas son de 8 bits y se desbordan al superar los 255 saltos"}],
+     expl:"Cuando se cae un enlace, un vecino puede seguir anunciando una ruta que en realidad pasaba por el router caído. Como nadie ve el grafo completo, no hay forma de detectar que la ruta ofrecida vuelve sobre uno mismo, y las métricas suben de a uno indefinidamente."},
+
+    {id:15,type:"single",prompt:"¿Qué hace exactamente <b>Split Horizon</b>?",
+     opts:[{t:"No publica por la interfaz X las rutas que se alcanzan a través de X",ok:true},
+           {t:"Publica con valor infinito por la interfaz X las rutas alcanzadas por X"},
+           {t:"Divide la red en áreas para reducir el alcance del flooding"},
+           {t:"Congela la métrica de una ruta durante un tiempo tras un incremento"}],
+     expl:"Split horizon simplemente NO publica esas rutas: no le cuento a alguien una ruta que aprendí de él. La segunda opción describe poison reverse, la tercera el concepto de áreas de OSPF y la cuarta el hold-down."},
+
+    {id:16,type:"single",prompt:"¿Qué diferencia hay entre <b>Poison Reverse</b> y Split Horizon?",
+     opts:[{t:"Poison reverse sí publica la ruta, pero con métrica infinita",ok:true},
+           {t:"Poison reverse omite la ruta mientras split horizon la publica"},
+           {t:"Poison reverse actúa en el emisor y split horizon en el receptor"},
+           {t:"Poison reverse se aplica a OSPF y split horizon solamente a RIP"}],
+     expl:"Los dos atacan la cuenta a infinito. Split horizon calla la ruta; poison reverse la publica envenenada con infinito. Poison reverse logra una convergencia más rápida, a costa de enviar más información."},
+
+    {id:17,type:"single",prompt:"En el mecanismo de <b>hold-down</b>, ¿qué ocurre al recibir un incremento en la métrica de una ruta?",
+     opts:[{t:"Se pasa su métrica a infinito, y si el incremento se repite se lo adopta",ok:true},
+           {t:"Se adopta el incremento de inmediato y se publica a los vecinos"},
+           {t:"Se descarta el incremento y se conserva la métrica anterior"},
+           {t:"Se elimina la entrada de la tabla hasta que llegue una nueva ruta"}],
+     expl:"Hold-down es un 'esperá a ver si es verdad': ante un incremento, la métrica se lleva a infinito durante el timer de hold-down; si el incremento se recibe nuevamente, entonces sí se lo adopta. Evita reaccionar a información transitoria o errónea."},
+
+    {id:18,type:"single",prompt:"¿Cuál es la diferencia principal entre <b>RIP v1 y RIP v2</b>?",
+     opts:[{t:"RIP v2 soporta VLSM, autenticación y multicast; RIP v1 no",ok:true},
+           {t:"RIP v1 soporta VLSM y autenticación; RIP v2 agrega el multicast"},
+           {t:"RIP v2 usa el puerto UDP 521 mientras RIP v1 usa el UDP 520"},
+           {t:"RIP v2 es de estado del enlace mientras RIP v1 es vector distancia"}],
+     expl:"RIP v1 (RFC 1058, 1988) no soporta VLSM ni autenticación, aunque sí subnetting. RIP v2 (RFC 1388/2453) agrega VLSM, autenticación y multicast. Ambos usan UDP 520: el 521 es de RIPng, la versión para IPv6."},
+
+    {id:19,type:"multi",prompt:"¿Qué contiene cada <b>entrada de la tabla RIP</b>? (múltiple)",
+     opts:[{t:"La dirección de destino",ok:true},
+           {t:"La métrica asociada con el destino",ok:true},
+           {t:"La dirección del próximo salto",ok:true},
+           {t:"Un flag de \"recién actualizado\" y timers",ok:true},
+           {t:"La lista completa de sistemas autónomos atravesados"}],
+     expl:"La entrada RIP lleva destino, métrica, próximo salto, flag de recién actualizado y timers. La lista de AS atravesados es propia de BGP (path vector), no de RIP."},
+
+    {id:20,type:"single",prompt:"¿Qué pasa en RIP si la tabla de ruteo supera las <b>25 entradas</b>?",
+     opts:[{t:"Se envían múltiples mensajes para transmitirla completa",ok:true},
+           {t:"Se descartan las entradas menos usadas hasta llegar al límite"},
+           {t:"Se cambia automáticamente a modo de actualización disparada"},
+           {t:"Se fragmenta el datagrama IP que transporta la actualización"}],
+     expl:"RIP limita cada mensaje a 25 entradas, así que si la tabla es más grande simplemente se envían varios mensajes. Es una de las razones por las que RIP no escala bien en redes grandes."},
+
+    {id:21,type:"single",prompt:"En el algoritmo de <b>estado del enlace</b>, ¿cuál es el primer paso del funcionamiento?",
+     opts:[{t:"Descubrir a sus vecinos con paquetes Hello y conocer sus direcciones",ok:true},
+           {t:"Enviar por flooding un paquete con todo lo que el router conoce"},
+           {t:"Calcular la ruta más corta a todos los destinos con Dijkstra"},
+           {t:"Establecer la métrica de costo hacia cada uno de los vecinos"}],
+     expl:"El orden es: 1) descubrir vecinos con paquetes Hello, 2) establecer la métrica (por ejemplo midiendo el retardo con un eco), 3) construir el paquete con lo aprendido, 4) enviarlo a todos por flooding y recibir los ajenos, 5) calcular la ruta más corta con Dijkstra."},
+
+    {id:22,type:"single",prompt:"¿Cómo divide el algoritmo de <b>Dijkstra</b> a los nodos de la red?",
+     opts:[{t:"En {E} los evaluados con camino mínimo conocido y {R} el resto",ok:true},
+           {t:"En {E} los que están en el mismo área y {R} los de otras áreas"},
+           {t:"En {E} los vecinos directos y {R} los alcanzables por otros routers"},
+           {t:"En {E} los que respondieron el Hello y {R} los que no lo hicieron"}],
+     expl:"Dijkstra (SPF, Shortest Path First) divide los nodos en {E}, el conjunto de evaluados para cuyos elementos se conoce el camino mínimo, y {R}, el resto. Además mantiene {O}, una lista ordenada de rutas. En cada iteración pasa de {R} a {E} el nodo de menor costo."},
+
+    {id:23,type:"multi",prompt:"¿Cuándo se dispara el <b>flooding</b> en un protocolo de estado del enlace? (múltiple)",
+     opts:[{t:"Cuando se detecta una falla tras varios mensajes hello perdidos",ok:true},
+           {t:"Cuando cambia el costo de un enlace de la red",ok:true},
+           {t:"Luego de 30 minutos sin cambios, para evitar corrupciones",ok:true},
+           {t:"Cada vez que un router recibe un datagrama de datos de usuario"},
+           {t:"Cuando la tabla de ruteo supera las veinticinco entradas"}],
+     expl:"El flooding se dispara ante fallas detectadas por el beaconing, ante cambios en el costo de un enlace, y periódicamente cada 30 minutos aunque no haya cambios. No tiene nada que ver con el tráfico de datos (eso es forwarding) ni con el límite de 25 entradas, que es de RIP."},
+
+    {id:24,type:"single",prompt:"¿Por qué se introduce el concepto de <b>áreas</b> en el ruteo de estado del enlace?",
+     opts:[{t:"Para reducir el overhead del flooding y de la ejecución de Dijkstra",ok:true},
+           {t:"Para poder usar máscaras de longitud variable dentro de la red"},
+           {t:"Para separar el tráfico de datos del tráfico de las actualizaciones"},
+           {t:"Para permitir que convivan protocolos internos y externos en un router"}],
+     expl:"El link-state tiene dos costos altos: el flooding de los paquetes de estado por toda la red y la ejecución de Dijkstra. Las áreas introducen jerarquía y acotan ambos: un área es una frontera para el cálculo en la base de datos del estado del enlace."},
+
+    {id:25,type:"single",prompt:"¿Cómo se encapsula <b>OSPF</b> y qué número lo identifica?",
+     opts:[{t:"Directamente en IP, con el protocolo número 89",ok:true},
+           {t:"Sobre UDP, utilizando el puerto número 520"},
+           {t:"Sobre TCP, utilizando el puerto número 179"},
+           {t:"Sobre UDP, utilizando el puerto número 521"}],
+     expl:"OSPF va encapsulado directamente en IP, protocolo 89: no usa TCP ni UDP. RIP usa UDP 520 (RIPng el 521) y BGP usa TCP. Es un dato que se pregunta seguido porque los tres protocolos eligen transportes distintos."},
+
+    {id:26,type:"single",prompt:"¿Qué es un <b>ABR</b> en OSPF?",
+     opts:[{t:"Un router que contiene enlaces en varias áreas",ok:true},
+           {t:"Un router cuyos enlaces pertenecen todos a una misma área"},
+           {t:"El router designado para difundir los LSA en una red broadcast"},
+           {t:"El router de respaldo que sustituye al designado si éste cae"}],
+     expl:"ABR (Area Border Router) es el que tiene enlaces en varias áreas. El que tiene todos sus enlaces en un área es el IR (Internal Router). El designado es el DR y su respaldo el BDR."},
+
+    {id:27,type:"single",prompt:"¿Para qué se elige un <b>router designado</b> (DR) en OSPF?",
+     opts:[{t:"Para que baste un solo router propagando el estado de los enlaces",ok:true},
+           {t:"Para que un único router calcule Dijkstra y reparta el resultado"},
+           {t:"Para concentrar el tráfico de datos de todos los routers del área"},
+           {t:"Para autenticar a los routers nuevos que se suman al segmento"}],
+     expl:"La idea es que basta un solo router que propague el estado de los enlaces: el designado representa a la red y sus routers ante el resto, y administra el flooding. La red misma se considera un pseudo-nodo. Cada router sigue calculando Dijkstra por su cuenta."},
+
+    {id:28,type:"single",prompt:"En OSPF, ¿qué dirección multicast se usa para enviar un estado de enlace <b>al router designado</b>?",
+     opts:[{t:"224.0.0.6 (AllDRouters)",ok:true},
+           {t:"224.0.0.5 (AllRouters)"},
+           {t:"224.0.0.9 (RIP versión 2)"},
+           {t:"224.0.0.1 (todos los hosts del segmento)"}],
+     expl:"Hacia el designado se usa 224.0.0.6 (AllDRouters). Cuando el designado reenvía el aviso por flooding a todos, usa 224.0.0.5 (AllRouters). Truco: el .6 va HACIA el DR, el .5 va DESDE el DR."},
+
+    {id:29,type:"single",prompt:"¿Cuál de los tres protocolos de OSPF <b>elige al router designado</b>?",
+     opts:[{t:"Hello, que además verifica la operatividad de los enlaces",ok:true},
+           {t:"Exchange, que sincroniza inicialmente las bases de datos"},
+           {t:"Flooding, que mantiene actualizados los estados de los enlaces"},
+           {t:"LSA, que transporta los avisos de estado entre los vecinos"}],
+     expl:"El protocolo Hello verifica la operatividad de los enlaces, elige el router designado y elige el backup en redes broadcast y no broadcast. Exchange hace la sincronización inicial (asimétrico, con master y slave) y Flooding mantiene todo actualizado."},
+
+    {id:30,type:"single",prompt:"¿Qué caracteriza al protocolo <b>Exchange</b> de OSPF?",
+     opts:[{t:"Es asimétrico, con un master y un slave, y sincroniza las bases",ok:true},
+           {t:"Es simétrico y ambos routers intercambian bases al mismo tiempo"},
+           {t:"Se ejecuta cada 30 minutos para refrescar toda la información"},
+           {t:"Sólo se usa en redes no broadcast, donde no hay difusión nativa"}],
+     expl:"Exchange realiza la sincronización INICIAL de las bases de datos y es un protocolo asimétrico, con master y slave. Después de esa sincronización, el protocolo de flooding las mantiene actualizadas (con full flooding cada 30 minutos)."},
+
+    {id:31,type:"single",prompt:"En una red <b>NBMA</b>, ¿qué particularidad tiene la interconexión de los routers?",
+     opts:[{t:"Estáticamente, con enlaces punto a punto que consumen una subred cada uno",ok:true},
+           {t:"Por difusión nativa, igual que ocurre en las redes broadcast comunes"},
+           {t:"Mediante un único enlace compartido que no lleva direccionamiento propio"},
+           {t:"Exclusivamente a través del router designado, sin ningún enlace directo"}],
+     expl:"En NBMA los routers se interconectan en forma estática, generando múltiples enlaces punto a punto, y cada circuito virtual constituye una subred independiente que consume una dirección de subred. El problema es aún peor que en broadcast, y la solución es la misma: elegir DR y BDR."},
+
+    {id:32,type:"single",prompt:"Según el RFC 1930, ¿qué es un <b>Sistema Autónomo</b>?",
+     opts:[{t:"Un conjunto de routers bajo una o más administraciones con política de ruteo común",ok:true},
+           {t:"Un conjunto de redes que comparten el mismo bloque de direcciones públicas"},
+           {t:"Un conjunto de routers que ejecutan el mismo protocolo de ruteo interno"},
+           {t:"Un conjunto de redes administradas por un único proveedor de Internet"}],
+     expl:"La definición textual es 'un conjunto de routers bajo una o más administraciones que presenta una política de ruteo común a Internet'. Lo que lo define es la POLÍTICA común, no el bloque de direcciones ni el protocolo que corran adentro."},
+
+    {id:33,type:"single",prompt:"¿Qué motivó la aparición de los Sistemas Autónomos?",
+     opts:[{t:"El colapso de la estructura plana por el crecimiento exponencial de Internet",ok:true},
+           {t:"La necesidad de cifrar las tablas de ruteo entre operadores distintos"},
+           {t:"El agotamiento de las direcciones IPv4 disponibles en el mundo"},
+           {t:"La aparición de las redes ópticas de alta velocidad en los backbones"}],
+     expl:"El crecimiento exponencial hizo colapsar la estructura plana: crecimiento de las tablas (memoria y procesamiento), aumento del tiempo de convergencia y aumento del tamaño y cantidad de mensajes. El agotamiento de IPv4 es lo que motivó a VLSM, CIDR y NAT (Módulo 6)."},
+
+    {id:34,type:"single",prompt:"En notación <b>asdot+</b>, el AS 65546 se escribe como AS 1.10. ¿Por qué?",
+     opts:[{t:"Porque 65546 = 1 × 65536 + 10, separando los 16 bits altos de los bajos",ok:true},
+           {t:"Porque se le asignó el décimo AS del primer bloque administrativo"},
+           {t:"Porque el 1 indica la región y el 10 el número dentro de esa región"},
+           {t:"Porque 65546 dividido por 6554 da aproximadamente 10 como resultado"}],
+     expl:"asdot+ separa el número en dos enteros: los 16 bits más significativos y los 16 menos significativos. Como 65546 = 1×65536 + 10, queda 1.10. Por eso el AS 65526, que es menor a 65536, queda como 0.65526."},
+
+    {id:35,type:"single",prompt:"¿Qué caracteriza a un <b>SA de tipo stub</b>?",
+     opts:[{t:"Tiene una sola entrada y salida, y no aprende rutas de Internet",ok:true},
+           {t:"Está conectado a varios SA pero no permite el tránsito de tráfico ajeno"},
+           {t:"Está conectado a varios SA y permite el tránsito de tráfico entre ellos"},
+           {t:"Tiene una única administración pero varias políticas de ruteo internas"}],
+     expl:"El SA stub es una red con una sola entrada y una sola salida, así que no necesita aprender rutas de Internet: le alcanza con una ruta por defecto. Las otras dos opciones describen los tipos multihomed no transit y multihomed transit."},
+
+    {id:36,type:"single",prompt:"¿Qué protocolo de transporte utiliza <b>BGP</b>?",
+     opts:[{t:"TCP, y usa keepalives periódicos para verificar la conectividad",ok:true},
+           {t:"UDP, porque prioriza la velocidad sobre la confiabilidad"},
+           {t:"Ninguno: va encapsulado directamente sobre IP como OSPF"},
+           {t:"Ambos: TCP para las rutas y UDP para los mensajes de control"}],
+     expl:"BGP usa TCP como protocolo de transporte, lo que le da actualizaciones confiables, y envía keepalives periódicos para verificar que la conexión TCP siga viva. Compará: RIP usa UDP 520 y OSPF va directo sobre IP con protocolo 89."},
+
+    {id:37,type:"single",prompt:"¿Cómo detecta BGP un <b>bucle de ruteo</b>?",
+     opts:[{t:"Al ver que su propio AS ya figura en la lista de AS de la ruta recibida",ok:true},
+           {t:"Al comprobar que la métrica de la ruta superó el valor de infinito"},
+           {t:"Al recibir dos veces la misma ruta desde interlocutores distintos"},
+           {t:"Al expirar el time-to-live del paquete que transporta la ruta"}],
+     expl:"Ésta es la ventaja del path vector: cada ruta incluye los AS atravesados, así que el router detecta el loop inmediatamente al ver su propio AS en la lista. Si no lo ve, agrega su identificación antes de propagarla. Es justo lo que el vector distancia clásico no podía hacer, y por eso sufría la cuenta a infinito."},
+
+    {id:38,type:"single",prompt:"¿Cuál es la diferencia entre <b>iBGP</b> y <b>eBGP</b>?",
+     opts:[{t:"iBGP distribuye rutas dentro del propio AS; eBGP las intercambia con otros AS",ok:true},
+           {t:"iBGP intercambia rutas con otros AS; eBGP las distribuye dentro del propio"},
+           {t:"iBGP usa TCP mientras que eBGP va encapsulado directamente sobre IP"},
+           {t:"iBGP se usa en redes broadcast y eBGP en redes no broadcast o NBMA"}],
+     expl:"iBGP es de uso interno: actualiza información y transporta prefijos del ISP dentro del AS, interactuando con los IGP. eBGP es de uso externo: intercambia rutas con otros Sistemas Autónomos e implementa las políticas."},
+
+    {id:39,type:"single",prompt:"¿Cada cuánto envía BGP sus actualizaciones almacenadas?",
+     opts:[{t:"Cada 5 segundos al par interno y cada 30 segundos al par externo",ok:true},
+           {t:"Cada 30 segundos al par interno y cada 5 segundos al par externo"},
+           {t:"Cada 30 segundos a todos los pares, internos y externos por igual"},
+           {t:"Cada 90 segundos, igual que las publicaciones periódicas de RIP"}],
+     expl:"Los updates se almacenan temporariamente y luego se envían cada 5 segundos al par interno y cada 30 segundos al par externo. Tiene lógica: adentro del propio AS conviene converger rápido, y hacia afuera se agrupan más cambios para no saturar."},
+
+    {id:40,type:"single",prompt:"¿Por qué se dice que la complejidad de BGP se explica por las <b>políticas</b>?",
+     opts:[{t:"Porque hace falta autorización antes de usar los recursos ajenos",ok:true},
+           {t:"Porque cada AS debe publicar sus políticas en un registro público mundial"},
+           {t:"Porque las políticas obligan a recalcular Dijkstra ante cada cambio de ruta"},
+           {t:"Porque los operadores deben acordar una métrica común antes de conectarse"}],
+     expl:"El ruteo entre AS está sujeto a políticas de control, y su gestión explica la creación de BGP y su complejidad: se requiere autorización antes de usar los recursos ajenos. Por eso BGP no elige simplemente el camino más corto, sino el que las políticas permiten y prefieren."}
+  ];
+
+  var order=QUESTIONS.map(function(_,i){return i;});
+  var state={}; // id -> {answered, correct}
+  var rendered={}; // id -> array de opciones EN EL ORDEN MOSTRADO (la mezcla vive acá)
+  var shuffle=false;
+
+  function shuf(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+  function letter(i){ return String.fromCharCode(65+i); }
+
+  var quiz=document.getElementById("quiz");
+
+  function build(){
+    quiz.innerHTML=""; state={}; rendered={};
+    document.getElementById("result").className="result";
+    order.forEach(function(qi){
+      var q=QUESTIONS[qi];
+      // Las opciones se mezclan en CADA render, así la correcta nunca queda fija.
+      // V/F se deja en su orden natural (Verdadero, Falso).
+      var shown = (q.type==="vf") ? q.opts.slice() : shuf(q.opts.slice());
+      rendered[q.id]=shown;
+      var card=document.createElement("div"); card.className="card"; card.id="card-"+q.id;
+      var tyLabel=q.type==="multi"?"Selección múltiple":(q.type==="vf"?"Verdadero / Falso":"Opción única");
+      var head='<div class="qhead"><span class="badge">Q'+q.id+'</span><span class="badge ty">'+tyLabel+'</span></div>';
+      card.innerHTML=head+'<div class="qprompt">'+q.prompt+'</div>';
+      var opts=document.createElement("div"); opts.className="opts"+(q.type==="vf"?" vf":"");
+      shown.forEach(function(o,oi){
+        var b=document.createElement("button"); b.className="opt"; b.type="button";
+        b.innerHTML=(q.type==="vf"?"":'<span class="okey">'+letter(oi)+'</span>')+'<span>'+o.t+'</span>';
+        b.addEventListener("click",function(){ onOpt(q,oi,opts,card,b); });
+        opts.appendChild(b);
+      });
+      card.appendChild(opts);
+      if(q.type==="multi"){
+        var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Comprobar";
+        btn.addEventListener("click",function(){ checkMulti(q,opts,card,btn); });
+        card.appendChild(btn);
+      }
+      quiz.appendChild(card);
+    });
+    updateStats();
+  }
+
+  function onOpt(q,oi,opts,card,btn){
+    if(state[q.id]) return;                 // ya respondida
+    if(q.type==="multi"){ btn.classList.toggle("sel"); return; }  // multi: solo togglear
+    lockSingle(q,oi,opts);                  // single/vf: evaluar al instante
+  }
+
+  function lockSingle(q,chosen,opts){
+    var shown=rendered[q.id];
+    var kids=opts.querySelectorAll(".opt"); var correct=false;
+    kids.forEach(function(k,ki){
+      k.classList.add("locked");
+      if(shown[ki].ok) k.classList.add("ok");
+      if(ki===chosen && !shown[ki].ok) k.classList.add("no");
+      if(ki===chosen && shown[ki].ok) correct=true;
+    });
+    finish(q,opts.parentNode,correct);
+  }
+
+  function checkMulti(q,opts,card,btn){
+    if(state[q.id]) return;
+    var shown=rendered[q.id];
+    var kids=opts.querySelectorAll(".opt"); var allCorrect=true;
+    kids.forEach(function(k,ki){
+      var sel=k.classList.contains("sel"); var ok=!!shown[ki].ok;
+      k.classList.add("locked");
+      if(ok && sel) k.classList.add("ok");
+      else if(ok && !sel){ k.classList.add("miss"); allCorrect=false; }
+      else if(!ok && sel){ k.classList.add("no"); allCorrect=false; }
+    });
+    btn.disabled=true;
+    finish(q,card,allCorrect);
+  }
+
+  function finish(q,card,correct){
+    state[q.id]={answered:true,correct:correct};
+    card.classList.add(correct?"cok":"cno");
+    var fb=document.createElement("div"); fb.className="fb "+(correct?"good":"bad");
+    fb.textContent=correct?"✓ Correcto":"✗ Incorrecto";
+    card.appendChild(fb);
+    var ex=document.createElement("div"); ex.className="expl"; ex.innerHTML="<b>Por qué:</b> "+q.expl;
+    card.appendChild(ex);
+    updateStats();
+  }
+
+  function updateStats(){
+    var ans=0,cor=0;
+    Object.keys(state).forEach(function(k){ ans++; if(state[k].correct)cor++; });
+    var total=QUESTIONS.length;
+    document.getElementById("bar").style.width=Math.round(ans/total*100)+"%";
+    var pct=ans?Math.round(cor/total*100):0;
+    document.getElementById("score").innerHTML=ans+"/"+total+" · <b>"+cor+"</b> correctas<span class='pct'>"+pct+"%</span>";
+    if(ans===total) showResult(cor,total);
+  }
+
+  function showResult(cor,total){
+    var pct=Math.round(cor/total*100);
+    var msg = pct>=90?"Excelente, dominado.":pct>=70?"Bien, repasá los que fallaste.":pct>=50?"Aprobado justo — conviene reforzar.":"A repasar el módulo con el resumen.";
+    var r=document.getElementById("result");
+    r.className="result show";
+    r.innerHTML='<div style="font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Resultado</div>'+
+      '<div class="big" style="color:'+(pct>=70?"var(--ok)":pct>=50?"var(--warn)":"var(--no)")+'">'+pct+'%</div>'+
+      '<div style="font-weight:700">'+cor+' de '+total+' correctas</div><p>'+msg+'</p>';
+    r.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+
+  // controles
+  document.getElementById("resetBtn").addEventListener("click",build);
+  document.getElementById("shufBtn").addEventListener("click",function(){
+    shuffle=!shuffle; this.classList.toggle("on",shuffle);
+    order = shuffle ? shuf(QUESTIONS.map(function(_,i){return i;})) : QUESTIONS.map(function(_,i){return i;});
+    build();
+  });
+  var mem={};
+  var st; try{ st=localStorage.getItem("comii-theme"); }catch(e){ st=mem["comii-theme"]; }
+  if(st==="dark" || (!st && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark");
+  document.getElementById("themeBtn").addEventListener("click",function(){
+    document.documentElement.classList.toggle("dark");
+    var v=document.documentElement.classList.contains("dark")?"dark":"light";
+    try{ localStorage.setItem("comii-theme",v); }catch(e){ mem["comii-theme"]=v; }
+  });
+
+  build();
+})();
+</script>
+</body>
+</html>
